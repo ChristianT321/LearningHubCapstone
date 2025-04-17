@@ -83,9 +83,13 @@ export default function LoginPage() {
     }
   }
 
+  const toggleUserType = () => {
+    setIsTeacher(!isTeacher)
+    setError('')
+  }
+
   return (
     <main className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Background image container - DO NOT MODIFY */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/woods.png"
@@ -97,24 +101,23 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Content */}
       <div className="relative z-10 w-full max-w-xl px-6 text-center">
-        <h1 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] leading-tight">
-          Welcome to the <br />
+        <h1 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] leading-tight mb-2">
+          Welcome to <br />
           The Great Bear Rainforest Learning Hub!
         </h1>
 
-        <p className="text-white text-xl mt-6 drop-shadow-[2px_2px_0px_black]">
-          Please enter your name to get started
-        </p>
-
-        {error && (
-          <p className="text-red-600 text-xl font-semibold mt-6">
+        {error ? (
+          <p className="text-red-600 text-xl font-bold mt-4 mb-2 drop-shadow-[1px_1px_0px_black]">
             {error}
+          </p>
+        ) : (
+          <p className="text-white text-xl mt-4 mb-2 drop-shadow-[2px_2px_0px_black]">
+            Please enter your information to get started!
           </p>
         )}
 
-        <div className="mt-6 flex flex-col gap-4 items-center">
+        <div className="mt-4 flex flex-col gap-4 items-center">
           {isTeacher ? (
             <>
               <input
@@ -122,55 +125,55 @@ export default function LoginPage() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full max-w-md px-4 py-2 rounded text-lg border border-gray-300"
+                className="w-full max-w-md px-4 py-3 text-xl rounded border border-gray-300 bg-white text-black shadow"
               />
               <input
                 type="text"
                 placeholder="Create a Class Code"
                 value={classCode}
                 onChange={(e) => setClassCode(e.target.value)}
-                className="w-full max-w-md px-4 py-2 rounded text-lg border border-gray-300"
+                className="w-full max-w-md px-4 py-3 text-xl rounded border border-gray-300 bg-white text-black shadow"
               />
             </>
           ) : (
             <>
               <input
                 type="text"
+                placeholder="Class Code"
+                value={classCode}
+                onChange={(e) => setClassCode(e.target.value)}
+                className="w-full max-w-md px-4 py-3 text-xl rounded border border-gray-300 bg-white text-black shadow"
+              />
+              <input
+                type="text"
                 placeholder="First name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full max-w-md px-4 py-2 rounded text-lg border border-gray-300"
+                className="w-full max-w-md px-4 py-3 text-xl rounded border border-gray-300 bg-white text-black shadow"
               />
               <input
                 type="text"
                 placeholder="Last name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full max-w-md px-4 py-2 rounded text-lg border border-gray-300"
-              />
-              <input
-                type="text"
-                placeholder="Class Code"
-                value={classCode}
-                onChange={(e) => setClassCode(e.target.value)}
-                className="w-full max-w-md px-4 py-2 rounded text-lg border border-gray-300"
+                className="w-full max-w-md px-4 py-3 text-xl rounded border border-gray-300 bg-white text-black shadow"
               />
             </>
           )}
 
           <button
             onClick={handleSubmit}
-            className="bg-red-600 hover:bg-red-700 text-white text-xl font-semibold px-8 py-2 rounded mt-4"
+            className="bg-red-600 hover:bg-red-700 text-white text-2xl font-bold px-12 py-3 rounded shadow mt-2"
           >
             Submit
           </button>
         </div>
 
-        <div className="mt-6 text-white text-lg">
+        <div className="mt-6 text-white text-lg font-medium">
           {isTeacher ? "Are you a student?" : "Are you a teacher?"}{' '}
           <button
-            onClick={() => setIsTeacher(!isTeacher)}
-            className="underline font-semibold"
+            onClick={toggleUserType}
+            className="underline font-bold"
           >
             {isTeacher ? "Student Login" : "Teacher Signup"}
           </button>
