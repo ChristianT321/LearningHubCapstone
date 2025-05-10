@@ -51,27 +51,41 @@ export default function HomePage() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-6xl px-4">
-        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
-          Welcome to the Great Bear Rainforest Learning Hub!
+        <h1 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
+          Welcome to the Great Bear Rainforest!
         </h1>
-        <h2 className="text-3xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-          Your number one source for learning about the Great Bear Rainforest!
-        </h2>
-
         <p className="text-xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-          Get ready to explore one of the coolest places on Earth! This website is made just for kids like you to learn all about the animals, trees, people, and secrets of the Great Bear Rainforest. 
-          You’ll play fun games, take quizzes, earn badges, and unlock new levels as you learn. Start your adventure and see how much you can discover!
+          Today we will be learning about how:
         </p>
 
-          <button
-            onClick={handleSignOut}
-            className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
-          >
-            Sign Out
+        {loading ? (
+          <p className="text-white text-lg drop-shadow">Loading facts...</p>
+        ) : (
+        <ul className="space-y-8">
+          {facts.map((fact) => (
+            <li
+              key={fact.ID}
+              className="inline-flex items-start gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-md shadow text-left"
+            >
+              <span className="text-green-300 text-2xl drop-shadow">🌿</span>
+              <span className="text-white text-base sm:text-lg font-semibold drop-shadow-[2px_2px_0px_black]">
+                {fact.FACT}
+              </span>
+            </li>
+          ))}
+        </ul>
+        )}
+
+        <button
+          onClick={handleSignOut}
+          className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow mt-5"
+        >
+          Sign Out
         </button>
+                
         <button
           onClick={handleContinue}
-          className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
+          className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow mt-5"
         >
           Continue
         </button>
