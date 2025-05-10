@@ -1,35 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-interface Fact {
-  ID: number
-  FACT: string
-}
+
 
 export default function HomePage() {
-  const [facts, setFacts] = useState<Fact[]>([])
-  const [loading, setLoading] = useState(true)
   const router = useRouter()
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/facts')
-      .then((res) => res.json())
-      .then((data) => {
-        setFacts(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error('Failed to load facts:', err)
-        setLoading(false)
-      })
-  }, [])
 
   const handleSignOut = () => {
     localStorage.removeItem('currentUser')
     router.push('/')
+  }
+
+  const handleContinue = () => {
+    router.push('/module1')
   }
 
   return (
@@ -37,7 +22,7 @@ export default function HomePage() {
 
       <div className="fixed inset-0 z-0">
         <Image
-          src="/homeback.png"
+          src="/GBR home back.png"
           alt="Home Background"
           fill
           priority
@@ -46,37 +31,30 @@ export default function HomePage() {
         />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-6xl px-4">
-        <h1 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
-          Welcome to the Great Bear Rainforest!
+      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
+        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
+          Welcome to the Great Bear Rainforest Learning Hub!
         </h1>
+        <h2 className="text-3xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
+          Your number one source for learning about the Great Bear Rainforest!
+        </h2>
+
         <p className="text-xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-          Today we will be learning about how:
+          Get ready to explore one of the coolest places on Earth! This website is made just for kids like you to learn all about the animals, trees, people, and secrets of the Great Bear Rainforest. 
+          You’ll play fun games, take quizzes, earn badges, and unlock new levels as you learn. Start your adventure and see how much you can discover!
         </p>
 
-        {loading ? (
-          <p className="text-white text-lg drop-shadow">Loading facts...</p>
-        ) : (
-        <ul className="space-y-8">
-          {facts.map((fact) => (
-            <li
-              key={fact.ID}
-              className="inline-flex items-start gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-md shadow text-left"
-            >
-              <span className="text-green-300 text-2xl drop-shadow">🌿</span>
-              <span className="text-white text-base sm:text-lg font-semibold drop-shadow-[2px_2px_0px_black]">
-                {fact.FACT}
-              </span>
-            </li>
-          ))}
-        </ul>
-        )}
-
+          <button
+            onClick={handleSignOut}
+            className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
+          >
+            Sign Out
+        </button>
         <button
-          onClick={handleSignOut}
-          className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow mt-5"
+          onClick={handleContinue}
+          className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
         >
-          Sign Out
+          Continue
         </button>
       </div>
     </main>
