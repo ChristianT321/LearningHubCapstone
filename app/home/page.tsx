@@ -1,31 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-interface Fact {
-  ID: number
-  FACT: string
-}
+
 
 export default function HomePage() {
-  const [facts, setFacts] = useState<Fact[]>([])
-  const [loading, setLoading] = useState(true)
   const router = useRouter()
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/facts')
-      .then((res) => res.json())
-      .then((data) => {
-        setFacts(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error('Failed to load facts:', err)
-        setLoading(false)
-      })
-  }, [])
 
   const handleSignOut = () => {
     localStorage.removeItem('currentUser')
@@ -41,7 +22,7 @@ export default function HomePage() {
 
       <div className="fixed inset-0 z-0">
         <Image
-          src="/homeback.png"
+          src="/GBR home back.png"
           alt="Home Background"
           fill
           priority
@@ -50,7 +31,7 @@ export default function HomePage() {
         />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-6xl px-4">
+      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
           Welcome to the Great Bear Rainforest Learning Hub!
         </h1>

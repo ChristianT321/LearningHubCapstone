@@ -52,8 +52,11 @@ export default function HomePage() {
 
       <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-6xl px-4">
         <h1 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
-          Welcome to the Great Bear Rainforest!
+          MODULE 1:
         </h1>
+        <h2 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mb-2">
+          GROUND ANIMALS
+        </h2>
         <p className="text-xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
           Today we will be learning about how:
         </p>
@@ -77,15 +80,15 @@ export default function HomePage() {
         )}
 
         <button
-          onClick={handleSignOut}
-          className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow mt-5"
+            onClick={handleSignOut}
+            className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
         >
-          Sign Out
+            Sign Out
         </button>
                 
         <button
           onClick={handleContinue}
-          className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow mt-5"
+          className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
         >
           Continue
         </button>
