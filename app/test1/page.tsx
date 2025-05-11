@@ -45,7 +45,7 @@ export default function Test1() {
   }
 
   const handleContinue = () => {
-    router.push('/module1')
+    router.push('/module2')
   }
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length
@@ -66,7 +66,7 @@ export default function Test1() {
       </div>
 
       <div className="max-w-4xl mx-auto mb-12 px-6 py-15 bg-white rounded-xl relative z-10">
-        <h1 className="text-5xl font-bold text-center text-green-700 mb-4">Animal Trivia</h1>
+        <h1 className="text-5xl font-bold text-center text-green-700 mb-4">Land Animal Test</h1>
         <p className="text-center mb-6 text-lg text-gray-700">
           Test your knowledge! Score: <br /> {score} / {questions.length}
         </p>
