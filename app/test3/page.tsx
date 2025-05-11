@@ -45,7 +45,7 @@ export default function Test1() {
   }
 
   const handleContinue = () => {
-    router.push('/module3')
+    router.push('/module4')
   }
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length

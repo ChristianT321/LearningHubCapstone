@@ -15,7 +15,7 @@ export default function HomePage() {
 
       <div className="fixed inset-0 z-0">
         <Image
-          src="/sky background.png"
+          src="/forest background.png"
           alt="Home Background"
           fill
           priority
@@ -25,20 +25,22 @@ export default function HomePage() {
       </div>
 
     <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4"> 
-        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
-          MODULE 3:
+        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-35 mb-2">
+          MODULE 4:
         </h1>
         <h2 className="text-3xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-          Flying animals
+          Vegetation
         </h2>
 
-        <p className="text-2xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-            In this module, you will learn how; <br /> <br />
-            <li className="text-xl">Bald eagles dive into the water to catch fish,</li>
-            <li className="text-xl">Great horned owls hunt at night using silent wings and sharp hearing, </li>
-            <li className="text-xl">Rufous hummingbirds migrate thousands of miles every summer,</li>
-            <li className="text-xl">Raves are smart and steal food from other animals.</li>
-        </p>
+        <div className="text-2xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
+            In this module, you will learn how:
+            <ul className="list-disc list-inside mt-4">
+                <li className="text-xl">The western red ceder can grow taller than a 20 story building,</li>
+                <li className="text-xl">Moss helps to keep the rainforest damp,</li>
+                <li className="text-xl">Rotting fallen trees help create new soil,</li>
+                <li className="text-xl">Old growth forests are hundreds of years old.</li>
+            </ul>
+        </div>
         <button
           onClick={handleContinue}
           className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-2 mb-2"
