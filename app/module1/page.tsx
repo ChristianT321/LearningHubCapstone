@@ -33,7 +33,7 @@ export default function HomePage() {
   }
 
   const handleContinue = () => {
-    router.push('/module1')
+    router.push('/test1')
   }
 
   return (
