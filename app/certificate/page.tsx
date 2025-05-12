@@ -31,7 +31,7 @@ export default function CertificatePage() {
     <main className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
       <div className="fixed inset-0 z-0">
         <Image
-          src="/certificate-background.png"
+          src="/Certification background.png"
           alt="Certificate Background"
           fill
           priority
