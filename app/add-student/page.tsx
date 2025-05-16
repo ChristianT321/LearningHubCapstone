@@ -11,6 +11,7 @@ type Student = {
   classCode: string
 }
 
+//CSV uploader funtionallity created with the help of Deepseek.
 type CSVStudentRow = {
   firstName?: string
   lastName?: string
