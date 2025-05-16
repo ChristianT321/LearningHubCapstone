@@ -15,11 +15,11 @@ const questions = [
     choices: ['Black bear', 'Spirit bear', 'Gray wolf', 'Red fox'],
     answer: 'Gray wolf',
   },
-{
+  {
     question: 'Which small animal turns white in winter to hide in the snow?',
     choices: ['Raccoon', 'Short-tailed weasel', 'Groundhog', 'Chipmunk'],
     answer: 'Short-tailed weasel',
-},
+  },
   {
     question: 'Which large plant-eating animal lives in the Great Bear Rainforest?',
     choices: ['Roosevelt elk', 'Grizzly bear', 'Coyote', 'Red fox'],
@@ -53,7 +53,6 @@ export default function Test1() {
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
-
       <div className="fixed inset-0 z-0">
         <Image
           src="/GBR home back.png"
@@ -65,16 +64,19 @@ export default function Test1() {
         />
       </div>
 
-      <div className="max-w-4xl mx-auto mb-12 px-6 py-15 bg-white rounded-xl relative z-10">
+      <div
+        className="max-w-4xl mx-auto mb-12 px-6 py-15 relative z-10 bg-white rounded-lg shadow-lg"
+
+      >
         <h1 className="text-5xl font-bold text-center text-green-700 mb-4">Land Animal Test</h1>
-        <p className="text-center mb-6 text-lg text-gray-700">
+        <p className="text-center mb-6 text-lg text-black">
           Test your knowledge! Score: <br /> {score} / {questions.length}
         </p>
 
         {questions.map((q, index) => (
           <div
             key={index}
-            className="mb-6 p-4 bg-green-200 rounded shadow-md border border-gray-300"
+            className="mb-6 p-4 bg-green-200/80 rounded shadow-md border border-gray-300"
           >
             <p className="font-semibold mb-3">{index + 1}. {q.question}</p>
             <div className="grid grid-cols-2 gap-3">
@@ -126,7 +128,7 @@ export default function Test1() {
         ))}
 
         <div className="text-center mt-10">
-          <p className="mb-6 text-xl text-gray-700">
+          <p className="mb-6 text-xl text-white">
             Final Score: {score} / {questions.length}
           </p>
 
@@ -152,6 +154,16 @@ export default function Test1() {
             </p>
           )}
         </div>
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none">
+        <Image
+          src="/Forest infront2.png"
+          alt="Foreground Grass"
+          width={1920}
+          height={300}
+          className="w-full h-auto object-bottom"
+        />
       </div>
     </main>
   )
