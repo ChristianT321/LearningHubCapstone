@@ -33,7 +33,7 @@ export default function HomePage() {
   }
 
   const handleContinue = () => {
-    router.push('/test1')
+    router.push('/matching1')
   }
 
   return (
