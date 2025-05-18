@@ -133,7 +133,7 @@ export default function GoFishGame() {
               onClick={handleGoFish}
               className="mt-4 bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-lg shadow transition"
             >
-              Go Fish 🎣
+              Go Fish
             </button>
 
             <p className="mt-6 text-xl text-gray-900 font-medium min-h-[2rem]">

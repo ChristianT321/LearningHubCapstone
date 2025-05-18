@@ -91,14 +91,14 @@ export default function MatchingGame() {
                 onDragStart={() => handleDragStart(paw.name)}
                 className={`w-32 h-32 ${
                   Object.values(matches).includes(paw.name) ? 'opacity-50' : 'cursor-grab'
-                } bg-white border-2 border-green-500 rounded-lg shadow-md flex items-center justify-center`}
+                } bg-white border-2 border-green-500 rounded-lg shadow-md overflow-hidden`}
               >
                 <Image
                   src={paw.image}
                   alt={paw.name}
                   width={128}
                   height={128}
-                  className="object-cover rounded-lg"
+                  className="w-full h-full object-contain p-2"
                 />
               </div>
             ))}
@@ -108,30 +108,28 @@ export default function MatchingGame() {
             <h2 className="text-xl font-semibold mb-2">Animals</h2>
             {animalImages.map((animal) => (
               <div key={animal.name} className="flex items-center gap-4">
-                <div className="w-32 h-32 bg-white border-2 border-green-500 rounded-lg shadow-md flex items-center justify-center">
+                <div className="w-32 h-32 bg-white border-2 border-green-500 rounded-lg shadow-md overflow-hidden">
                   <Image
                     src={animal.image}
                     alt={animal.name}
                     width={128}
                     height={128}
-                    className="object-cover rounded-lg"
+                    className="w-full h-full object-cover"
                   />
                 </div>
 
                 <div
                   onDragOver={handleDragOver}
                   onDrop={() => handleDrop(animal.name)}
-                  className="w-32 h-32 border-4 border-dashed border-green-600 rounded-lg bg-white flex items-center justify-center shadow-inner"
+                  className="w-32 h-32 border-4 border-dashed border-green-600 rounded-lg bg-white flex items-center justify-center shadow-inner overflow-hidden"
                 >
                   {matches[animal.name] ? (
                     <Image
-                      src={
-                        pawPrintImages.find((p) => p.name === matches[animal.name])?.image || ''
-                      }
+                      src={pawPrintImages.find((p) => p.name === matches[animal.name])?.image || ''}
                       alt="Matched paw print"
                       width={100}
                       height={100}
-                      className="object-contain"
+                      className="w-full h-full object-contain p-2"
                     />
                   ) : (
                     <span className="text-gray-400">Drop Here</span>

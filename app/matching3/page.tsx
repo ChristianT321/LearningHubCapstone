@@ -10,15 +10,15 @@ type MatchItem = {
 }
 
 const animalImages: MatchItem[] = [
-  { name: 'Bald eagle', image: '/Bald eagle.jpg' },
-  { name: 'Hummingbird', image: '/Hummingbird.jpg' },
-  { name: 'Duck', image: '/Duck.jpg' },
+  { name: 'Western red cedar', image: '/Western red cedar.jpg' },
+  { name: 'Douglas fir', image: '/Douglas fir.jpg' },
+  { name: 'Western hemlock', image: '/Western hemlock.jpg' },
 ]
 
 const pawPrintImages: MatchItem[] = [
-  { name: 'Hummingbird', image: '/Hummingbird feather.jpg' },
-  { name: 'Duck', image: '/Duck feather.jpg' },
-  { name: 'Bald eagle', image: '/Bald eagle feather.jpg' },
+  { name: 'Douglas fir', image: '/Douglas fir leaf.jpg' },
+  { name: 'Western hemlock', image: '/Western hemlock leaf.jpg' },
+  { name: 'Western red cedar', image: '/Western red cedar leaf.jpg' },
 ]
 
 export default function MatchingGame() {
@@ -59,7 +59,7 @@ export default function MatchingGame() {
       (animal) => matches[animal.name] === animal.name
     )
     if (allMatched) {
-      router.push('/test3')
+      router.push('/test4')
     } else {
       setErrorMessage('Sorry, you must get all correct in order to proceed.')
     }
@@ -69,7 +69,7 @@ export default function MatchingGame() {
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
       <div className="fixed inset-0 z-0">
         <Image
-          src="/Sky background.png"
+          src="/forest background.png"
           alt="Background"
           fill
           priority
@@ -78,12 +78,12 @@ export default function MatchingGame() {
       </div>
 
       <div className="max-w-5xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-20 mt-10 z-10">
-        <h1 className="text-4xl font-bold text-blue-900 mb-4">Animal & Feather Matching</h1>
-        <p className="text-lg text-gray-700 mb-6">Drag the feather to the correct animal!</p>
+        <h1 className="text-4xl font-bold text-blue-950 mb-4">Tree & Leaf Matching</h1>
+        <p className="text-lg text-gray-700 mb-6">Drag the leaf to the correct tree!</p>
 
         <div className="grid grid-cols-2 gap-16">
           <div className="flex flex-col gap-6 items-center">
-            <h2 className="text-xl font-semibold mb-2">Feathers</h2>
+            <h2 className="text-xl font-semibold mb-2">Leaves</h2>
             {pawPrintImages.map((paw) => (
               <div
                 key={paw.name}
@@ -91,7 +91,7 @@ export default function MatchingGame() {
                 onDragStart={() => handleDragStart(paw.name)}
                 className={`w-32 h-32 relative ${
                   Object.values(matches).includes(paw.name) ? 'opacity-50' : 'cursor-grab'
-                } bg-white border-2 border-blue-500 rounded-lg shadow-md overflow-hidden`}
+                } bg-white border-2 border-blue-900 rounded-lg shadow-md overflow-hidden`}
               >
                 <Image
                   src={paw.image}
@@ -104,10 +104,10 @@ export default function MatchingGame() {
           </div>
 
           <div className="flex flex-col gap-10 items-center">
-            <h2 className="text-xl font-semibold mb-2">Animals</h2>
+            <h2 className="text-xl font-semibold mb-2">Trees</h2>
             {animalImages.map((animal) => (
               <div key={animal.name} className="flex items-center gap-4">
-                <div className="w-32 h-32 bg-white border-2 border-blue-500 rounded-lg shadow-md overflow-hidden relative">
+                <div className="w-32 h-32 bg-white border-2 border-blue-900 rounded-lg shadow-md overflow-hidden relative">
                   <Image
                     src={animal.image}
                     alt={animal.name}
@@ -119,14 +119,14 @@ export default function MatchingGame() {
                 <div
                   onDragOver={handleDragOver}
                   onDrop={() => handleDrop(animal.name)}
-                  className="w-32 h-32 border-4 border-dashed border-blue-600 rounded-lg bg-white overflow-hidden relative flex items-center justify-center"
+                  className="w-32 h-32 border-4 border-dashed border-blue-900 rounded-lg bg-white overflow-hidden relative flex items-center justify-center"
                 >
                   {matches[animal.name] ? (
                     <Image
                       src={
                         pawPrintImages.find((p) => p.name === matches[animal.name])?.image || ''
                       }
-                      alt="Matched feather"
+                      alt="Matched leaf"
                       fill
                       className="object-contain p-3"
                     />
@@ -146,7 +146,7 @@ export default function MatchingGame() {
         <div className="mt-10 flex flex-col items-center gap-4">
           <button
             onClick={handleContinue}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow"
+            className="bg-blue-900 hover:bg-blue-950 text-white font-semibold px-6 py-3 rounded-xl shadow"
           >
             Continue
           </button>
