@@ -11,7 +11,7 @@ const questions = [
     answer: 'Bald eagle',
   },
   {
-    question: 'Which owl hunts at night using silent wings and sharp hearing?',
+    question: 'Which bird hunts at night using silent wings and sharp hearing?',
     choices: ['Bald eagle', 'Great horned owl', 'Rufous hummingbird', 'Raven'],
     answer: 'Great horned owl',
   },
