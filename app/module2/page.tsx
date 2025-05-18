@@ -7,7 +7,7 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleContinue = () => {
-    router.push('/test2')
+    router.push('/gofish')
   }
 
   return (
