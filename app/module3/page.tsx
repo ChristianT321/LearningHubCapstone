@@ -7,7 +7,7 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleContinue = () => {
-    router.push('/test3')
+    router.push('/matching2')
   }
 
   return (

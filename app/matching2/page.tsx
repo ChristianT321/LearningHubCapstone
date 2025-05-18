@@ -10,15 +10,15 @@ type MatchItem = {
 }
 
 const animalImages: MatchItem[] = [
-  { name: 'Spirit Bear', image: '/Spirit bear.jpg' },
-  { name: 'Beaver', image: '/Beaver.jpg' },
-  { name: 'Vancouver Wolf', image: '/Vancouver Wolf.jpg' },
+  { name: 'Bald eagle', image: '/Bald eagle.jpg' },
+  { name: 'Hummingbird', image: '/Hummingbird.jpg' },
+  { name: 'Duck', image: '/Duck.jpg' },
 ]
 
 const pawPrintImages: MatchItem[] = [
-  { name: 'Beaver', image: '/Beaver Paw.jpeg' },
-  { name: 'Vancouver Wolf', image: '/Vancouver Wolf Paw.jpg' },
-  { name: 'Spirit Bear', image: '/Spirit bear paw.jpg' },
+  { name: 'Hummingbird', image: '/Hummingbird feather.jpg' },
+  { name: 'Duck', image: '/Duck feather.jpg' },
+  { name: 'Bald eagle', image: '/Bald eagle feather.jpg' },
 ]
 
 export default function MatchingGame() {
@@ -59,7 +59,7 @@ export default function MatchingGame() {
       (animal) => matches[animal.name] === animal.name
     )
     if (allMatched) {
-      router.push('/test1')
+      router.push('/test3')
     } else {
       setErrorMessage('Sorry, you must get all correct in order to proceed.')
     }
@@ -69,7 +69,7 @@ export default function MatchingGame() {
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
       <div className="fixed inset-0 z-0">
         <Image
-          src="/GBR home back.png"
+          src="/Sky background.png"
           alt="Background"
           fill
           priority
@@ -78,12 +78,12 @@ export default function MatchingGame() {
       </div>
 
       <div className="max-w-5xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-20 mt-10 z-10">
-        <h1 className="text-4xl font-bold text-green-900 mb-4">Animal & Paw Print Matching</h1>
-        <p className="text-lg text-gray-700 mb-6">Drag the paw prints to the correct animal!</p>
+        <h1 className="text-4xl font-bold text-blue-900 mb-4">Animal & Feather Matching</h1>
+        <p className="text-lg text-gray-700 mb-6">Drag the feather to the correct animal!</p>
 
         <div className="grid grid-cols-2 gap-16">
           <div className="flex flex-col gap-6 items-center">
-            <h2 className="text-xl font-semibold mb-2">Paw Prints</h2>
+            <h2 className="text-xl font-semibold mb-2">Feathers</h2>
             {pawPrintImages.map((paw) => (
               <div
                 key={paw.name}
@@ -91,7 +91,7 @@ export default function MatchingGame() {
                 onDragStart={() => handleDragStart(paw.name)}
                 className={`w-32 h-32 ${
                   Object.values(matches).includes(paw.name) ? 'opacity-50' : 'cursor-grab'
-                } bg-white border-2 border-green-500 rounded-lg shadow-md flex items-center justify-center`}
+                } bg-white border-2 border-blue-500 rounded-lg shadow-md flex items-center justify-center`}
               >
                 <Image
                   src={paw.image}
@@ -108,7 +108,7 @@ export default function MatchingGame() {
             <h2 className="text-xl font-semibold mb-2">Animals</h2>
             {animalImages.map((animal) => (
               <div key={animal.name} className="flex items-center gap-4">
-                <div className="w-32 h-32 bg-white border-2 border-green-500 rounded-lg shadow-md flex items-center justify-center">
+                <div className="w-32 h-32 bg-white border-2 border-blue-500 rounded-lg shadow-md flex items-center justify-center">
                   <Image
                     src={animal.image}
                     alt={animal.name}
@@ -121,7 +121,7 @@ export default function MatchingGame() {
                 <div
                   onDragOver={handleDragOver}
                   onDrop={() => handleDrop(animal.name)}
-                  className="w-32 h-32 border-4 border-dashed border-green-600 rounded-lg bg-white flex items-center justify-center shadow-inner"
+                  className="w-32 h-32 border-4 border-dashed border-blue-600 rounded-lg bg-white flex items-center justify-center shadow-inner"
                 >
                   {matches[animal.name] ? (
                     <Image
@@ -158,21 +158,11 @@ export default function MatchingGame() {
 
           <button
             onClick={resetGame}
-            className="bg-green-700 hover:bg-green-800 text-white font-semibold px-6 py-3 rounded-xl shadow"
+            className="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-xl shadow"
           >
             Reset Game
           </button>
         </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none">
-        <Image
-          src="/Forest infront2.png"
-          alt="Foreground Grass"
-          width={1920}
-          height={300}
-          className="w-full h-auto object-bottom"
-        />
       </div>
     </main>
   )
