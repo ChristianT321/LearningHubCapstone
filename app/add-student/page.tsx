@@ -11,7 +11,6 @@ type Student = {
   classCode: string
 }
 
-//CSV uploader funtionallity created with the help of Deepseek.
 type CSVStudentRow = {
   firstName?: string
   lastName?: string
@@ -23,6 +22,8 @@ export default function AddStudentPage() {
   const router = useRouter()
   const [students, setStudents] = useState<Student[]>([])
   const [classCode, setClassCode] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [newStudentsCount, setNewStudentsCount] = useState(0)
 
   useEffect(() => {
     const teacher = JSON.parse(localStorage.getItem('currentUser') || 'null')
@@ -75,7 +76,16 @@ export default function AddStudentPage() {
         if (newStudents.length > 0) {
           const updatedStudents = [...students, ...newStudents]
           setStudents(updatedStudents)
+          setNewStudentsCount(newStudents.length)
           localStorage.setItem('students', JSON.stringify(updatedStudents))
+          setShowSuccess(true)
+          setTimeout(() => setShowSuccess(false), 3000)
+          
+          // Reset file input
+          const fileInput = e.target as HTMLInputElement
+          fileInput.value = ''
+        } else {
+          alert('No valid student data found in CSV')
         }
       },
       error: (error) => {
@@ -98,7 +108,22 @@ export default function AddStudentPage() {
         />
       </div>
 
-      {/* Header */}
+      {/* Blue Success Pop-up Modal */}
+      {showSuccess && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-lg shadow-xl z-50 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span className="text-xl font-bold">
+              Upload Successful! Added {newStudentsCount} student(s)
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Header Section */}
       <div className="relative z-10 text-center">
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mb-4">
           Instructor Portal
@@ -108,7 +133,7 @@ export default function AddStudentPage() {
         </p>
       </div>
 
-      {/* Upload Controls */}
+      {/* Upload Controls Section */}
       <div className="relative z-10 flex flex-col sm:flex-row gap-4 mb-8">
         <label className="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded text-xl transition cursor-pointer flex items-center justify-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -136,7 +161,7 @@ export default function AddStudentPage() {
         </button>
       </div>
 
-      {/* Student Grid */}
+      {/* Student Grid Section */}
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-screen-xl w-full pb-20">
         {students.map((s, i) => (
           <div
@@ -185,13 +210,24 @@ export default function AddStudentPage() {
         ))}
       </div>
 
-      {/* Back to Login */}
+      {/* Back to Login Button */}
       <button
         onClick={handleBackToLogin}
         className="fixed bottom-6 left-6 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition z-20"
       >
         Back to Login
       </button>
+
+      {/* Add global styles for the fade-in animation */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+      `}</style>
     </main>
   )
 }
