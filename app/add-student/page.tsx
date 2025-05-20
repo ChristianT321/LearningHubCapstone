@@ -10,7 +10,7 @@ type Student = {
   lastName: string
   classCode: string
 }
-
+//CSV uploader created with the help of DeepSeek. Inserted page code. "Help me create CVS uploader for this add student page." 
 type CSVStudentRow = {
   firstName?: string
   lastName?: string
