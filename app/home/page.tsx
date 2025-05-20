@@ -3,9 +3,31 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Menu, Button } from '@mantine/core'
+import { Anchor, Container, Group } from '@mantine/core';
+
+const links = [
+  { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
+  { link: 'https://pacificwild.org/from-land-to-sea-great-bear-rainforest-story-map/', label: 'Learn' },
+];
 
 export default function HomePage() {
   const router = useRouter()
+
+  const items = links.map((link) => (
+    <Anchor<'a'>
+      c="dimmed"
+      key={link.label}
+      href={link.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      size="sm"
+      style={{
+      marginRight: link.label === 'Videos' ? '40px' : '0px', 
+    }}
+    >
+      {link.label}
+    </Anchor>
+  ));
 
   const handleSignOut = () => {
     localStorage.removeItem('currentUser')
@@ -34,7 +56,7 @@ export default function HomePage() {
       <div className="absolute top-4 right-4 z-20">
       <Menu
           shadow="md"
-          width={200}
+          width={300}
           openDelay={100}
           closeDelay={150}
           withinPortal={false}
@@ -86,6 +108,36 @@ export default function HomePage() {
           Continue
         </button>
       </div>
+      <div
+      style={{
+        marginTop: 30,
+        borderTop: '1px solid var(--mantine-color-gray-2)',
+      }}
+    >
+      <Container
+        style={{
+          position: 'relative', 
+          zIndex: 1000, 
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingTop: 3,
+          paddingBottom: 12,
+          flexDirection: 'row',
+        }}
+      >
+        <Group 
+          style={{
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '12px',
+            
+          }}
+        >
+          {items}
+        </Group>
+      </Container>
+    </div>
     </main>
   )
 }
