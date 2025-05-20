@@ -67,7 +67,11 @@ export default function Test1() {
             key={index}
             className="mb-8 p-6 bg-green-100 rounded-xl shadow border border-green-300"
           >
+
             <p className="font-semibold text-left text-gray-800 mb-4 text-lg">{index + 1}. {q.question}</p>
+
+            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {q.choices.map((choice) => {
                 const isSelected = selectedAnswers[index] === choice
