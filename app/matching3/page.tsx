@@ -1,5 +1,6 @@
-//This code was made with the help of chatGPT, I showed other files in this project and asked to make a relitvant matching game.
-// At first it showed a card revieling game, but with further prompting (instucting how I wanted the game to work, how I wanted to be a drag and drop card game), I was able to get a matching game.
+// ChatGPT helped generate this page. I asked to change the matching game I originally had to a Name That Tree game, and explained how it would work. Essentially more quiz oriented with the possibility of a highschore for future database work, every question you see was requested. 
+// The generated responce wast mostly correct, but had some minor issues that needed fixiing functionality wise, such as added unecesarry buttons and only half questions on tree types. 
+// Right now for filler I only have coniferous trees, when I add deciduous trees I will have it so that once you answer either coniferous or deciduous, the next question will show only asnwers of trees from those categories, rather than having 6 trees to chose from. This will also make it more difficut to randomly spam and guess the answers to pass.
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -29,7 +30,6 @@ export default function NameThatTreeGame() {
   const [score, setScore] = useState(0)
   const [selectedType, setSelectedType] = useState<'Coniferous' | 'Deciduous' | null>(null)
   const [selectedName, setSelectedName] = useState<string | null>(null)
-  const [submitted, setSubmitted] = useState(false)
   const [highScore, setHighScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
 
@@ -49,7 +49,7 @@ export default function NameThatTreeGame() {
       questionScore += 1
     }
 
-    if (currentQuestion.isLeaf && selectedName === currentQuestion.name) {
+    if (selectedName === currentQuestion.name) {
       questionScore += 1
     }
 
@@ -74,7 +74,6 @@ export default function NameThatTreeGame() {
     setScore(0)
     setSelectedType(null)
     setSelectedName(null)
-    setSubmitted(false)
     setShowResult(false)
   }
 
@@ -145,14 +144,12 @@ export default function NameThatTreeGame() {
                 </div>
               </div>
 
-            {!submitted ? (
-              <button
-                onClick={handleAnswerAndAdvance}
-                className="mt-6 bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow"
-              >
-                Submit Answer
-              </button>
-            ) : null}
+            <button
+              onClick={handleAnswerAndAdvance}
+              className="mt-6 bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow"
+            >
+              {currentIndex + 1 < shuffledQuestions.length ? 'Submit & Next' : 'Submit & View Results'}
+            </button>
           </>
         )}
 
