@@ -1,5 +1,7 @@
+// This page was made by referencing slides and examples given in web dev 2, while primarily basing it off of my final project in the same class. Copilot helped fill out some details.
 'use client'
 
+import { Button, Menu } from '@mantine/core'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -23,6 +25,34 @@ export default function HomePage() {
           style={{ objectPosition: 'center' }}
         />
       </div>
+
+            <div className="absolute top-4 right-4 z-20">
+            <Menu
+                shadow="md"
+                width={200}
+                openDelay={100}
+                closeDelay={150}
+                withinPortal={false}
+                styles={{
+                  item: {
+                    color: 'black', 
+                },
+                }}
+              >          
+                <Menu.Target>
+                  <Button variant="filled" className="text-black">Menu</Button>
+                </Menu.Target>
+      
+                <Menu.Dropdown style={{ display: 'flex', flexDirection: 'column', zIndex: 50 }}>
+                  <Menu.Item onClick={() => router.push('/home')}>Home</Menu.Item>
+                  <Menu.Item onClick={() => router.push('/module1')}>Module 1</Menu.Item>
+                  <Menu.Item onClick={() => router.push('/module2')}>Module 2</Menu.Item>
+                  <Menu.Item onClick={() => router.push('/module3')}>Module 3</Menu.Item>
+                  <Menu.Item onClick={() => router.push('/module4')}>Module 4</Menu.Item>
+                  <Menu.Divider />
+                </Menu.Dropdown>
+              </Menu>
+            </div>
 
     <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4"> 
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-15">

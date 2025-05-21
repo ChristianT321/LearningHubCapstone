@@ -2,11 +2,32 @@
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Menu, Button } from '@mantine/core'
+import { Anchor, Container, Group } from '@mantine/core';
 
-
+const links = [
+  { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
+  { link: 'https://pacificwild.org/from-land-to-sea-great-bear-rainforest-story-map/', label: 'Learn' },
+];
 
 export default function HomePage() {
   const router = useRouter()
+
+  const items = links.map((link) => (
+    <Anchor<'a'>
+      c="dimmed"
+      key={link.label}
+      href={link.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      size="sm"
+      style={{
+      marginRight: link.label === 'Videos' ? '40px' : '0px', 
+    }}
+    >
+      {link.label}
+    </Anchor>
+  ));
 
   const handleSignOut = () => {
     localStorage.removeItem('currentUser')
@@ -20,6 +41,7 @@ export default function HomePage() {
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
 
+      {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/GBR home back.png"
@@ -31,6 +53,35 @@ export default function HomePage() {
         />
       </div>
 
+      <div className="absolute top-4 right-4 z-20">
+      <Menu
+          shadow="md"
+          width={300}
+          openDelay={100}
+          closeDelay={150}
+          withinPortal={false}
+          styles={{
+            item: {
+              color: 'black', 
+          },
+          }}
+        >          
+          <Menu.Target>
+            <Button variant="filled" className="text-black">Menu</Button>
+          </Menu.Target>
+
+          <Menu.Dropdown style={{ display: 'flex', flexDirection: 'column', zIndex: 50 }}>
+            <Menu.Item onClick={() => router.push('/home')}>Home</Menu.Item>
+            <Menu.Item onClick={() => router.push('/module1')}>Module 1</Menu.Item>
+            <Menu.Item onClick={() => router.push('/module2')}>Module 2</Menu.Item>
+            <Menu.Item onClick={() => router.push('/module3')}>Module 3</Menu.Item>
+            <Menu.Item onClick={() => router.push('/module4')}>Module 4</Menu.Item>
+            <Menu.Divider />
+          </Menu.Dropdown>
+        </Menu>
+      </div>
+
+      {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
           Welcome to the Great Bear Rainforest Learning Hub!
@@ -44,11 +95,11 @@ export default function HomePage() {
           You’ll play fun games, take quizzes, earn badges, and unlock new levels as you learn. Start your adventure and see how much you can discover!
         </p>
 
-          <button
-            onClick={handleSignOut}
-            className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
-          >
-            Sign Out
+        <button
+          onClick={handleSignOut}
+          className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
+        >
+          Sign Out
         </button>
         <button
           onClick={handleContinue}
@@ -57,6 +108,36 @@ export default function HomePage() {
           Continue
         </button>
       </div>
+      <div
+      style={{
+        marginTop: 30,
+        borderTop: '1px solid var(--mantine-color-gray-2)',
+      }}
+    >
+      <Container
+        style={{
+          position: 'relative', 
+          zIndex: 1000, 
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingTop: 3,
+          paddingBottom: 12,
+          flexDirection: 'row',
+        }}
+      >
+        <Group 
+          style={{
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '12px',
+            
+          }}
+        >
+          {items}
+        </Group>
+      </Container>
+    </div>
     </main>
   )
 }

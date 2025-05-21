@@ -1,3 +1,4 @@
+//This was originally made for my last project in webdev 2. All questions/ design have been reworked for this project.
 'use client'
 
 import { useState } from 'react'
