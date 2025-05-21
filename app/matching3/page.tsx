@@ -1,69 +1,82 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-type MatchItem = {
+type TreeItem = {
   name: string
   image: string
+  type: 'Coniferous' | 'Deciduous'
+  isLeaf: boolean
 }
 
-const animalImages: MatchItem[] = [
-  { name: 'Western red cedar', image: '/Western red cedar.jpg' },
-  { name: 'Douglas fir', image: '/Douglas fir.jpg' },
-  { name: 'Western hemlock', image: '/Western hemlock.jpg' },
+const allItems: TreeItem[] = [
+  { name: 'Western red cedar', image: '/Western red cedar.jpg', type: 'Coniferous', isLeaf: false },
+  { name: 'Douglas fir', image: '/Douglas fir.jpg', type: 'Coniferous', isLeaf: false },
+  { name: 'Western hemlock', image: '/Western hemlock.jpg', type: 'Coniferous', isLeaf: false },
+  { name: 'Douglas fir', image: '/Douglas fir leaf.jpg', type: 'Coniferous', isLeaf: true },
+  { name: 'Western hemlock', image: '/Western hemlock leaf.jpg', type: 'Coniferous', isLeaf: true },
+  { name: 'Western red cedar', image: '/Western red cedar leaf.jpg', type: 'Coniferous', isLeaf: true },
 ]
 
-const pawPrintImages: MatchItem[] = [
-  { name: 'Douglas fir', image: '/Douglas fir leaf.jpg' },
-  { name: 'Western hemlock', image: '/Western hemlock leaf.jpg' },
-  { name: 'Western red cedar', image: '/Western red cedar leaf.jpg' },
-]
-
-export default function MatchingGame() {
+export default function NameThatTreeGame() {
   const router = useRouter()
-  const [matches, setMatches] = useState<{ [key: string]: string | null }>({})
-  const [draggedItem, setDraggedItem] = useState<string | null>(null)
-  const [feedback, setFeedback] = useState<{ [key: string]: string }>({})
-  const [errorMessage, setErrorMessage] = useState('')
+  const [shuffledQuestions, setShuffledQuestions] = useState<TreeItem[]>([])
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [score, setScore] = useState(0)
+  const [selectedType, setSelectedType] = useState<'Coniferous' | 'Deciduous' | null>(null)
+  const [selectedName, setSelectedName] = useState<string | null>(null)
+  const [submitted, setSubmitted] = useState(false)
+  const [highScore, setHighScore] = useState(0)
+  const [showResult, setShowResult] = useState(false)
 
-  const handleDragStart = (name: string) => {
-    setDraggedItem(name)
-  }
+  useEffect(() => {
+    const shuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 6)
+    setShuffledQuestions(shuffled)
+  }, [])
 
-  const handleDrop = (targetName: string) => {
-    if (!draggedItem) return
-    const isCorrect = draggedItem === targetName
-    setMatches((prev) => ({ ...prev, [targetName]: draggedItem }))
-    setFeedback((prev) => ({
-      ...prev,
-      [targetName]: isCorrect ? 'Correct!' : 'Try again',
-    }))
-    setDraggedItem(null)
-  }
+  const currentQuestion = shuffledQuestions[currentIndex]
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-  }
+  const handleAnswerAndAdvance = () => {
+    if (!selectedType) return
 
-  const resetGame = () => {
-    setMatches({})
-    setDraggedItem(null)
-    setFeedback({})
-    setErrorMessage('')
-  }
+    let questionScore = 0
 
-  const handleContinue = () => {
-    const allMatched = animalImages.every(
-      (animal) => matches[animal.name] === animal.name
-    )
-    if (allMatched) {
-      router.push('/test4')
+    if (selectedType === currentQuestion.type) {
+      questionScore += 1
+    }
+
+    if (currentQuestion.isLeaf && selectedName === currentQuestion.name) {
+      questionScore += 1
+    }
+
+    setScore((prev) => prev + questionScore)
+
+    setSelectedType(null)
+    setSelectedName(null)
+
+    if (currentIndex + 1 < shuffledQuestions.length) {
+      setCurrentIndex((prev) => prev + 1)
     } else {
-      setErrorMessage('Sorry, you must get all correct in order to proceed.')
+      setShowResult(true)
+      setHighScore((prev) => Math.max(prev, score + questionScore))
     }
   }
+
+
+  const handleRetake = () => {
+    const reshuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 6)
+    setShuffledQuestions(reshuffled)
+    setCurrentIndex(0)
+    setScore(0)
+    setSelectedType(null)
+    setSelectedName(null)
+    setSubmitted(false)
+    setShowResult(false)
+  }
+
+  const passed = score >= 6
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
@@ -77,89 +90,95 @@ export default function MatchingGame() {
         />
       </div>
 
-      <div className="max-w-5xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-20 mt-10 z-10">
-        <h1 className="text-4xl font-bold text-blue-950 mb-4">Tree & Leaf Matching</h1>
-        <p className="text-lg text-gray-700 mb-6">Drag the leaf to the correct tree!</p>
+      <div className="max-w-3xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 mt-10 z-10">
+        <h1 className="text-3xl font-bold text-blue-950 mb-4">Name That Tree</h1>
 
-        <div className="grid grid-cols-2 gap-16">
-          <div className="flex flex-col gap-6 items-center">
-            <h2 className="text-xl font-semibold mb-2">Leaves</h2>
-            {pawPrintImages.map((paw) => (
-              <div
-                key={paw.name}
-                draggable={!Object.values(matches).includes(paw.name)}
-                onDragStart={() => handleDragStart(paw.name)}
-                className={`w-32 h-32 relative ${
-                  Object.values(matches).includes(paw.name) ? 'opacity-50' : 'cursor-grab'
-                } bg-white border-2 border-blue-900 rounded-lg shadow-md overflow-hidden`}
+        {!showResult && currentQuestion && (
+          <>
+            <p className="text-lg mb-4 font-semibold">Question {currentIndex + 1} of 6</p>
+            <div className="w-64 h-64 mx-auto relative mb-6 border-4 border-blue-900 rounded-lg bg-white overflow-hidden shadow">
+              <Image
+                src={currentQuestion.image}
+                alt={currentQuestion.name}
+                fill
+                className="object-contain p-2"
+              />
+            </div>
+
+            <div className="mb-4">
+              <p className="mb-2 font-semibold">Is this tree type:</p>
+              <div className="flex justify-center gap-4">
+                {['Coniferous', 'Deciduous'].map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedType(type as 'Coniferous' | 'Deciduous')}
+                    className={`px-4 py-2 rounded-lg border ${
+                      selectedType === type
+                        ? 'bg-green-600 text-white'
+                        : 'bg-gray-100 text-black'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+              <div className="mb-4">
+                <p className="mb-2 font-semibold">Which tree does this leaf belong to?</p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  {[...new Set(allItems.map((item) => item.name))].map((name) => (
+                    <button
+                      key={name}
+                      onClick={() => setSelectedName(name)}
+                      className={`px-4 py-2 rounded-lg border ${
+                        selectedName === name
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-black'
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            {!submitted ? (
+              <button
+                onClick={handleAnswerAndAdvance}
+                className="mt-6 bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow"
               >
-                <Image
-                  src={paw.image}
-                  alt={paw.name}
-                  fill
-                  className="object-contain p-2"
-                />
-              </div>
-            ))}
+                Submit Answer
+              </button>
+            ) : null}
+          </>
+        )}
+
+        {showResult && (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mt-4">
+              You scored {score}/12
+            </h2>
+            <p className="text-lg mb-2">
+              {passed ? 'Great job! You passed!' : 'Try again to beat your score.'}
+            </p>
+            {passed && (
+              <button
+                onClick={() => router.push('/test4')}
+                className="bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow mt-4"
+              >
+                Continue
+              </button>
+            )}
+            <button
+              onClick={handleRetake}
+              className="bg-red-700 hover:bg-red-800 text-white px-6 py-3 rounded-xl shadow mt-4"
+            >
+              Retake Quiz
+            </button>
+            <p className="text-sm mt-2 text-gray-600">High Score: {highScore}/12</p>
           </div>
-
-          <div className="flex flex-col gap-10 items-center">
-            <h2 className="text-xl font-semibold mb-2">Trees</h2>
-            {animalImages.map((animal) => (
-              <div key={animal.name} className="flex items-center gap-4">
-                <div className="w-32 h-32 bg-white border-2 border-blue-900 rounded-lg shadow-md overflow-hidden relative">
-                  <Image
-                    src={animal.image}
-                    alt={animal.name}
-                    fill
-                    className="object-contain p-2"
-                  />
-                </div>
-
-                <div
-                  onDragOver={handleDragOver}
-                  onDrop={() => handleDrop(animal.name)}
-                  className="w-32 h-32 border-4 border-dashed border-blue-900 rounded-lg bg-white overflow-hidden relative flex items-center justify-center"
-                >
-                  {matches[animal.name] ? (
-                    <Image
-                      src={
-                        pawPrintImages.find((p) => p.name === matches[animal.name])?.image || ''
-                      }
-                      alt="Matched leaf"
-                      fill
-                      className="object-contain p-3"
-                    />
-                  ) : (
-                    <span className="text-gray-400">Drop Here</span>
-                  )}
-                </div>
-
-                <div className="w-24 text-sm font-semibold text-green-800">
-                  {feedback[animal.name]}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 flex flex-col items-center gap-4">
-          <button
-            onClick={handleContinue}
-            className="bg-blue-900 hover:bg-blue-950 text-white font-semibold px-6 py-3 rounded-xl shadow"
-          >
-            Continue
-          </button>
-
-          {errorMessage && <p className="text-red-600 font-medium">{errorMessage}</p>}
-
-          <button
-            onClick={resetGame}
-            className="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-xl shadow"
-          >
-            Reset Game
-          </button>
-        </div>
+        )}
       </div>
     </main>
   )
