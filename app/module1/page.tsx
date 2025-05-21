@@ -1,3 +1,5 @@
+// This page was made by referencing slides an examples given in web dev 2, while primarily basing it off of my final project in the same class. Copilot helped fill out some details.
+// The database fetching was completed with the help of ChatGPT which took a lot of brainpower and reworking, as many of the solutions that were given did not work as advised. 
 'use client'
 
 import { useEffect, useState } from 'react'

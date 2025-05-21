@@ -1,3 +1,4 @@
+// This page was made by referencing slides an examples given in web dev 2, while primarily basing it off of my final project in the same class. Copilot helped fill out some details.
 'use client'
 
 import { Button, Menu } from '@mantine/core'

@@ -1,3 +1,5 @@
+//this code was made with the help of chatGPT, I showed other files in this project and asked to make a relitvant matching game.
+// At first it showed a card revieling game, but with furhter prompting (instucting how I wanted the game to work, how I wanted to have a drag and drop card game), I was able to get a matching game.
 'use client'
 
 import { useState } from 'react'
