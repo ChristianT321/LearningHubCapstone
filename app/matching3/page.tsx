@@ -1,6 +1,6 @@
 // ChatGPT helped generate this page. I asked to change the matching game I originally had to a Name That Tree game, and explained how it would work. Essentially more quiz oriented with the possibility of a highschore for future database work, every question you see was requested. 
 // The generated responce wast mostly correct, but had some minor issues that needed fixiing functionality wise, such as added unecesarry buttons and only half questions on tree types. 
-// Right now for filler I only have coniferous trees, when I add deciduous trees I will have it so that once you answer either coniferous or deciduous, the next question will show only asnwers of trees from those categories, rather than having 6 trees to chose from. This will also make it more difficut to randomly spam and guess the answers to pass.
+// Right now for filler I only have coniferous trees, when I add deciduous trees I will have it so that once you answer either coniferous or deciduous, the next question will show only asnwers of trees from those categories, rather than having 6 trees to chose from. This will also make it more difficut to randomly spam and guess the answers to pass
 'use client'
 
 import { useState, useEffect } from 'react'
