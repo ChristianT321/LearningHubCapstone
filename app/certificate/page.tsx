@@ -1,3 +1,4 @@
+//This page was made with the help of ChatGPT. I told it I wanted a simple certificate that printed the students name and class number. After that just took some tweaking to get it to appear how I wanted.
 'use client'
 
 import { useEffect, useState } from 'react'

@@ -1,4 +1,4 @@
-//This page wa created with the help of chatGPT, I asked how to turn the matching game into a go fish game.
+//This page was created with the help of chatGPT, I asked how to turn the matching game into a go fish game.
 'use client'
 
 import { useState, useEffect } from 'react'
