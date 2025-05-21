@@ -3,17 +3,92 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Menu, Button } from '@mantine/core'
-import { Anchor, Container, Group } from '@mantine/core';
+import { Anchor, Container, Group, Burger } from '@mantine/core';
+import { useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
+import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
 
-const links = [
+const footerLinks = [
   { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
   { link: 'https://pacificwild.org/from-land-to-sea-great-bear-rainforest-story-map/', label: 'Learn' },
+];
+
+const headerLinks = [
+  { link: '/module1', label: 'Module 1' },
+  { link: '/module2', label: 'Module 2' },
+  { link: '/module3', label: 'Module 3' },
+  { link: '/module4', label: 'Module 4' },
 ];
 
 export default function HomePage() {
   const router = useRouter()
 
-  const items = links.map((link) => (
+  const [opened, { toggle }] = useDisclosure(false);
+  const [active, setActive] = useState(headerLinks[0].link);
+  const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+
+  const isDark = colorScheme === 'dark';
+
+
+  const headerStyle = {
+    height: '56px',
+    marginBottom: '120px',
+    backgroundColor: 'transparent',
+    zIndex: 1000,
+  };
+
+  const innerStyle = {
+    height: '56px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  };
+
+  const linkBaseStyle = {
+    display: 'inline-block',
+    lineHeight: 1,
+    padding: '8px 12px',
+    textDecoration: 'none',
+    color: 'white',
+    fontSize: theme.fontSizes.sm,
+    fontWeight: 500,
+  };
+
+  const linkHoverStyle = {
+  };
+
+  const linkActiveStyle = {
+    backgroundColor: 'transparent',
+  };
+
+  const headerItems = headerLinks.map((link) => (
+    <a
+      key={link.label}
+      href={link.link}
+      style={{
+        ...linkBaseStyle,
+        ...(active === link.link ? linkActiveStyle : {}),
+      }}
+      onMouseEnter={(e) => {
+        Object.assign(e.currentTarget.style, linkHoverStyle);
+      }}
+      onMouseLeave={(e) => {
+        Object.assign(e.currentTarget.style, {
+          color: active === link.link ? theme.white : linkBaseStyle.color,
+        });
+      }}
+      onClick={(event) => {
+        event.preventDefault();
+        setActive(link.link);
+        router.push(link.link);
+      }}
+    >
+      {link.label}
+    </a>
+  ));
+
+  const items = footerLinks.map((link) => (
     <Anchor<'a'>
       c="dimmed"
       key={link.label}
@@ -39,7 +114,16 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
+    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
+
+    <header style={headerStyle}>
+          <Container size="sm" style={innerStyle}>
+            <Group gap="sm" style={{ flexDirection: 'row' }}>
+              {headerItems}
+            </Group>
+            <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+          </Container>
+        </header>
 
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
@@ -51,34 +135,6 @@ export default function HomePage() {
           className="object-cover"
           style={{ objectPosition: 'center' }}
         />
-      </div>
-
-      <div className="absolute top-4 right-4 z-20">
-      <Menu
-          shadow="md"
-          width={300}
-          openDelay={100}
-          closeDelay={150}
-          withinPortal={false}
-          styles={{
-            item: {
-              color: 'black', 
-          },
-          }}
-        >          
-          <Menu.Target>
-            <Button variant="filled" className="text-black">Menu</Button>
-          </Menu.Target>
-
-          <Menu.Dropdown style={{ display: 'flex', flexDirection: 'column', zIndex: 50 }}>
-            <Menu.Item onClick={() => router.push('/home')}>Home</Menu.Item>
-            <Menu.Item onClick={() => router.push('/module1')}>Module 1</Menu.Item>
-            <Menu.Item onClick={() => router.push('/module2')}>Module 2</Menu.Item>
-            <Menu.Item onClick={() => router.push('/module3')}>Module 3</Menu.Item>
-            <Menu.Item onClick={() => router.push('/module4')}>Module 4</Menu.Item>
-            <Menu.Divider />
-          </Menu.Dropdown>
-        </Menu>
       </div>
 
       {/* Main Content */}
@@ -108,12 +164,13 @@ export default function HomePage() {
           Continue
         </button>
       </div>
+      
       <div
       style={{
         marginTop: 30,
         borderTop: '1px solid var(--mantine-color-gray-2)',
-      }}
-    >
+          }}
+        >
       <Container
         style={{
           position: 'relative', 
@@ -124,8 +181,8 @@ export default function HomePage() {
           paddingTop: 3,
           paddingBottom: 12,
           flexDirection: 'row',
-        }}
-      >
+          }}
+        >
         <Group 
           style={{
             flexWrap: 'wrap',
@@ -138,6 +195,8 @@ export default function HomePage() {
         </Group>
       </Container>
     </div>
+
+    
     </main>
   )
 }
