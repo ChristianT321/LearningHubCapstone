@@ -33,7 +33,7 @@ export default function HomePage() {
 
   const headerStyle = {
     height: '56px',
-    marginBottom: '120px',
+    marginBottom: '40px',
     backgroundColor: 'transparent',
     zIndex: 1000,
   };
@@ -43,6 +43,7 @@ export default function HomePage() {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: '0 16px',
   };
 
   const linkBaseStyle = {
@@ -51,7 +52,7 @@ export default function HomePage() {
     padding: '8px 12px',
     textDecoration: 'none',
     color: 'white',
-    fontSize: theme.fontSizes.sm,
+    fontSize: '18px',
     fontWeight: 500,
   };
 
@@ -116,14 +117,19 @@ export default function HomePage() {
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
-    <header style={headerStyle}>
-          <Container size="sm" style={innerStyle}>
-            <Group gap="sm" style={{ flexDirection: 'row' }}>
-              {headerItems}
-            </Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          </Container>
-        </header>
+    <header style={{ height: '56px', backgroundColor: 'transparent', zIndex: 1000, width: '100%' }}>
+      <div style={{ ...innerStyle, justifyContent: 'space-between', width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0 16px', textAlign: 'left' }}>
+        <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'white' }}>
+          Welcome
+        </div>
+
+        <Group gap="md" style={{ flexDirection: 'row' }}>
+          {headerItems}
+        </Group>
+
+        <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+      </div>
+    </header>
 
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
