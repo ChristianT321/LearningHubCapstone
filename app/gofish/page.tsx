@@ -1,4 +1,5 @@
 //This page was created with the help of chatGPT, I asked how to turn the matching game into a go fish game.
+// I had to really consider the logistics and how it would play out, since it wouldnt be like a normal go fish game, so I thought of a way to get it as close as possible to the original while keeping it functional for the project. This was done through extensive prompting and personal editing of the code.
 'use client'
 
 import { useState, useEffect } from 'react'
