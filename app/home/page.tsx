@@ -1,3 +1,5 @@
+//ChatGPT was used to help create the footer and header in a single file. 
+// Within mantine they use a file for the creation and a css file for the customization so i asked chatgpt to help integrate them into one file.
 'use client'
 
 import Image from 'next/image'
