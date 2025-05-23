@@ -1,16 +1,20 @@
 'use client'
+// Next.js directive marking this as a Client Component (required for hooks and browser APIs)
 
+// React/Next.js imports
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { parse, ParseResult } from 'papaparse'
+import { parse, ParseResult } from 'papaparse' // CSV parsing library
 
+// Type definitions
 type Student = {
   firstName: string
   lastName: string
   classCode: string
 }
-//CSV uploader created with the help of DeepSeek. Inserted page code. "Help me create CVS uploader for this add student page." 
+// CSV type with flexible headers (supports both 'firstName' and 'First Name' formats)
+// CSV uplaoder created with the help of DeepSeek. Inserted page code. "Help me create CVS uploader for this add student page."
 type CSVStudentRow = {
   firstName?: string
   lastName?: string
@@ -19,28 +23,37 @@ type CSVStudentRow = {
 }
 
 export default function AddStudentPage() {
+  // Router for navigation
   const router = useRouter()
-  const [students, setStudents] = useState<Student[]>([])
-  const [classCode, setClassCode] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [newStudentsCount, setNewStudentsCount] = useState(0)
+  
+  // State management
+  const [students, setStudents] = useState<Student[]>([]) // Stores student list
+  const [classCode, setClassCode] = useState('') // Current class code
+  const [showSuccess, setShowSuccess] = useState(false) // Controls success popup visibility
+  const [newStudentsCount, setNewStudentsCount] = useState(0) // Tracks number of newly added students
 
+  // Effect hook for initialization
   useEffect(() => {
+    // Check authentication and load data
     const teacher = JSON.parse(localStorage.getItem('currentUser') || 'null')
     if (!teacher?.isTeacher || !teacher?.classCode) {
-      router.push('/')
+      router.push('/') // Redirect if not authenticated teacher
     } else {
       setClassCode(teacher.classCode)
+      // Load and filter students for this class
       const storedStudents: Student[] = JSON.parse(localStorage.getItem('students') || '[]')
       setStudents(storedStudents.filter(s => s.classCode === teacher.classCode))
     }
   }, [router])
 
+  // Student management functions
   const handleAddStudent = () => {
+    // Adds empty student to the list
     setStudents(prev => [...prev, { firstName: '', lastName: '', classCode }])
   }
 
   const handleSaveStudent = (index: number, firstName: string, lastName: string) => {
+    // Updates specific student and saves to localStorage
     const updatedStudents = [...students]
     updatedStudents[index] = { firstName, lastName, classCode }
     setStudents(updatedStudents)
@@ -48,38 +61,44 @@ export default function AddStudentPage() {
   }
 
   const handleDeleteStudent = (index: number) => {
+    // Removes student from list and updates localStorage
     const updatedStudents = students.filter((_, i) => i !== index)
     setStudents(updatedStudents)
     localStorage.setItem('students', JSON.stringify(updatedStudents))
   }
 
   const handleBackToLogin = () => {
+    // Clears auth and returns to login
     localStorage.removeItem('currentUser')
     router.push('/')
   }
 
+  // CSV handling function
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Parse CSV file
     parse<CSVStudentRow>(file, {
-      header: true,
+      header: true, // Use first row as headers
       complete: (results: ParseResult<CSVStudentRow>) => {
+        // Process CSV data into student objects
         const newStudents = results.data
           .map(row => ({
             firstName: row.firstName || row['First Name'] || '',
             lastName: row.lastName || row['Last Name'] || '',
             classCode
           }))
-          .filter(s => s.firstName.trim() || s.lastName.trim())
+          .filter(s => s.firstName.trim() || s.lastName.trim()) // Remove empty rows
 
         if (newStudents.length > 0) {
+          // Update state and storage
           const updatedStudents = [...students, ...newStudents]
           setStudents(updatedStudents)
           setNewStudentsCount(newStudents.length)
           localStorage.setItem('students', JSON.stringify(updatedStudents))
           setShowSuccess(true)
-          setTimeout(() => setShowSuccess(false), 3000)
+          setTimeout(() => setShowSuccess(false), 3000) // Auto-hide success message
           
           // Reset file input
           const fileInput = e.target as HTMLInputElement
@@ -94,9 +113,10 @@ export default function AddStudentPage() {
     })
   }
 
+  // Component render
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center px-8 py-10 overflow-y-auto mt-25">
-      {/* Background Image */}
+      {/* Background Image - Fixed position covering entire viewport */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/teacherportal.png"
@@ -108,7 +128,7 @@ export default function AddStudentPage() {
         />
       </div>
 
-      {/* Blue Success Pop-up Modal */}
+      {/* Success Notification Popup */}
       {showSuccess && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-lg shadow-xl z-50 animate-fade-in">
           <div className="flex items-center gap-2">
@@ -133,8 +153,9 @@ export default function AddStudentPage() {
         </p>
       </div>
 
-      {/* Upload Controls Section */}
+      {/* Control Buttons Section */}
       <div className="relative z-10 flex flex-col sm:flex-row gap-4 mb-8">
+        {/* CSV Upload Button */}
         <label className="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded text-xl transition cursor-pointer flex items-center justify-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -149,6 +170,8 @@ export default function AddStudentPage() {
             className="hidden"
           />
         </label>
+        
+        {/* Add Student Button */}
         <button
           onClick={handleAddStudent}
           className="bg-neutral-700 hover:bg-neutral-900 text-white px-8 py-3 rounded text-xl transition flex items-center justify-center gap-2"
@@ -161,7 +184,7 @@ export default function AddStudentPage() {
         </button>
       </div>
 
-      {/* Student Grid Section */}
+      {/* Student Cards Grid */}
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-screen-xl w-full pb-20">
         {students.map((s, i) => (
           <div
@@ -169,6 +192,7 @@ export default function AddStudentPage() {
             className="bg-green-950 bg-opacity-80 border-4 border-black text-white text-center p-6 rounded shadow-xl"
           >
             <h2 className="text-2xl font-semibold mb-4">Student {i + 1}</h2>
+            {/* First Name Input */}
             <input
               type="text"
               placeholder="First name"
@@ -180,6 +204,7 @@ export default function AddStudentPage() {
               }}
               className="w-full mb-3 p-2 rounded text-black bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
+            {/* Last Name Input */}
             <input
               type="text"
               placeholder="Last name"
@@ -192,6 +217,7 @@ export default function AddStudentPage() {
               className="w-full mb-4 p-2 rounded text-black bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
 
+            {/* Action Buttons */}
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => handleSaveStudent(i, s.firstName, s.lastName)}
@@ -210,7 +236,7 @@ export default function AddStudentPage() {
         ))}
       </div>
 
-      {/* Back to Login Button */}
+      {/* Navigation Button */}
       <button
         onClick={handleBackToLogin}
         className="fixed bottom-6 left-6 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition z-20"
@@ -218,7 +244,7 @@ export default function AddStudentPage() {
         Back to Login
       </button>
 
-      {/* Add global styles for the fade-in animation */}
+      {/* Animation Styles (global) */}
       <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-20px); }
