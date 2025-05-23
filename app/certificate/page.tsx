@@ -46,7 +46,7 @@ export default function CertificatePage() {
           {student.firstName} {student.lastName}
         </p>
         <p className="text-xl text-gray-700 mb-6">
-          Class Code: <span className="font-mono font-bold">{student.classCode}</span>
+          Class Code: <span className="font-bold">{student.classCode}</span>
         </p>
         <p className="text-xl text-black font-medium">
           You have successfully completed your learning journey and earned your certificate! <br />
