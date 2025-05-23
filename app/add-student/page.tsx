@@ -13,8 +13,11 @@ type Student = {
   lastName: string
   classCode: string
 }
+
 // CSV type with flexible headers (supports both 'firstName' and 'First Name' formats)
-// CSV uplaoder created with the help of DeepSeek. Inserted page code. "Help me create CVS uploader for this add student page."
+// CSV uploader created with the help of DeepSeek. Inserted page code. "Help me create CSV uploader for this add student page."
+// Visual indicators for when a student is save in the system created with the help of DeepSeek. Inserted page cade. 
+// "I'd like the code modified, so that when a student is saved, there is some simple visual feedback that indicates the student has indeed been saved." 
 type CSVStudentRow = {
   firstName?: string
   lastName?: string
@@ -31,6 +34,8 @@ export default function AddStudentPage() {
   const [classCode, setClassCode] = useState('') // Current class code
   const [showSuccess, setShowSuccess] = useState(false) // Controls success popup visibility
   const [newStudentsCount, setNewStudentsCount] = useState(0) // Tracks number of newly added students
+  // NEW: Tracks which students were recently saved for visual feedback
+  const [recentlySaved, setRecentlySaved] = useState<number[]>([]) 
 
   // Effect hook for initialization
   useEffect(() => {
@@ -46,6 +51,14 @@ export default function AddStudentPage() {
     }
   }, [router])
 
+  // NEW: Helper function to show temporary save confirmation
+  const showSaveFeedback = (index: number) => {
+    setRecentlySaved(prev => [...prev, index]) // Add student index to recently saved
+    setTimeout(() => {
+      setRecentlySaved(prev => prev.filter(i => i !== index)) // Remove after delay
+    }, 2000) // Feedback lasts 2 seconds
+  }
+
   // Student management functions
   const handleAddStudent = () => {
     // Adds empty student to the list
@@ -58,6 +71,7 @@ export default function AddStudentPage() {
     updatedStudents[index] = { firstName, lastName, classCode }
     setStudents(updatedStudents)
     localStorage.setItem('students', JSON.stringify(updatedStudents))
+    showSaveFeedback(index) // NEW: Show visual feedback after save
   }
 
   const handleDeleteStudent = (index: number) => {
@@ -189,8 +203,17 @@ export default function AddStudentPage() {
         {students.map((s, i) => (
           <div
             key={`student-${i}`}
-            className="bg-green-950 bg-opacity-80 border-4 border-black text-white text-center p-6 rounded shadow-xl"
+            className="bg-green-950 bg-opacity-80 border-4 border-black text-white text-center p-6 rounded shadow-xl relative" // Added 'relative' for positioning save indicator
           >
+            {/* NEW: Save confirmation indicator (green checkmark) */}
+            {recentlySaved.includes(i) && (
+              <div className="absolute -top-3 -right-3 bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center animate-pop">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              </div>
+            )}
+
             <h2 className="text-2xl font-semibold mb-4">Student {i + 1}</h2>
             {/* First Name Input */}
             <input
@@ -221,9 +244,15 @@ export default function AddStudentPage() {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => handleSaveStudent(i, s.firstName, s.lastName)}
-                className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition"
+                className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition flex items-center gap-1"
               >
                 Save
+                {/* NEW: Added save icon to button */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                  <polyline points="17 21 17 13 7 13 7 21"/>
+                  <polyline points="7 3 7 8 15 8"/>
+                </svg>
               </button>
               <button
                 onClick={() => handleDeleteStudent(i)}
@@ -250,8 +279,17 @@ export default function AddStudentPage() {
           from { opacity: 0; transform: translateY(-20px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        /* NEW: Added pop animation for save feedback */
+        @keyframes pop {
+          0% { transform: scale(0.5); opacity: 0; }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); opacity: 1; }
+        }
         .animate-fade-in {
           animation: fadeIn 0.3s ease-out forwards;
+        }
+        .animate-pop {
+          animation: pop 0.3s ease-out forwards;
         }
       `}</style>
     </main>
