@@ -4,11 +4,13 @@
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Menu, Button } from '@mantine/core'
-import { Anchor, Container, Group, Burger } from '@mantine/core';
+import { Anchor, Container, Group } from '@mantine/core';
 import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
+import { FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
+import { FaApple } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
 
 const footerLinks = [
   { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
@@ -16,10 +18,10 @@ const footerLinks = [
 ];
 
 const headerLinks = [
-  { link: '/module1', label: 'Module 1' },
-  { link: '/module2', label: 'Module 2' },
-  { link: '/module3', label: 'Module 3' },
-  { link: '/module4', label: 'Module 4' },
+  { link: '/module1', label: 'Module 1', icon: FaPaw },
+  { link: '/module2', label: 'Module 2', icon: FaWater },
+  { link: '/module3', label: 'Module 3', icon: FaDove},
+  { link: '/module4', label: 'Module 4', icon: FaTree },
 ];
 
 export default function HomePage() {
@@ -65,30 +67,23 @@ export default function HomePage() {
     backgroundColor: 'transparent',
   };
 
-  const headerItems = headerLinks.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      style={{
-        ...linkBaseStyle,
-        ...(active === link.link ? linkActiveStyle : {}),
-      }}
-      onMouseEnter={(e) => {
-        Object.assign(e.currentTarget.style, linkHoverStyle);
-      }}
-      onMouseLeave={(e) => {
-        Object.assign(e.currentTarget.style, {
-          color: active === link.link ? theme.white : linkBaseStyle.color,
-        });
-      }}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
-        router.push(link.link);
-      }}
-    >
-      {link.label}
-    </a>
+  const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
+    <motion.button
+    key={label}
+    onClick={(e) => {
+      e.preventDefault();
+      setActive(link);
+      router.push(link);
+    }}
+    whileHover={{ scale: 1.1 }}
+    whileTap={{ scale: 0.95 }}
+    className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
+      active === link ? 'bg-red-700 shadow-md' : 'bg-red-600'
+    }`}
+  >
+    <Icon className="text-yellow-300" />
+    {label}
+  </motion.button>
   ));
 
   const items = footerLinks.map((link) => (
@@ -119,20 +114,34 @@ export default function HomePage() {
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
-    <header style={{ height: '56px', backgroundColor: 'transparent', zIndex: 1000, width: '100%' }}>
-      <div style={{ ...innerStyle, justifyContent: 'space-between', width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0 16px', textAlign: 'left' }}>
+        <header
+      style={{
+        height: '0px',
+        backgroundColor: 'transparent',
+        zIndex: 1000,
+        width: '100%',
+      }}
+    >
+      <div
+        style={{
+          ...innerStyle,
+          justifyContent: 'space-between',
+          width: '100%',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 16px',
+          textAlign: 'left',
+        }}
+      >
         <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'white' }}>
           Welcome
         </div>
 
-        <Group gap="md" style={{ flexDirection: 'row' }}>
+        <Group gap="sm" style={{ flexDirection: 'row', display: 'flex' }}>
           {headerItems}
         </Group>
-
-        <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
       </div>
     </header>
-
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
@@ -148,6 +157,7 @@ export default function HomePage() {
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
+        <FaPaw className="text-yellow-400" />
           Welcome to the Great Bear Rainforest Learning Hub!
         </h1>
         <h2 className="text-3xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
@@ -167,7 +177,7 @@ export default function HomePage() {
         </button>
         <button
           onClick={handleContinue}
-          className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
+          className="bg-red-700 hover:bg-red-600 hover:scale-105 transition-all duration-300 shadow-lg rounded px-6 py-3 text-white font-fun"
         >
           Continue
         </button>
