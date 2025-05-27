@@ -16,7 +16,7 @@ type Student = {
 
 // CSV type with flexible headers (supports both 'firstName' and 'First Name' formats)
 // CSV uploader created with the help of DeepSeek. Inserted page code. "Help me create CSV uploader for this add student page."
-// Visual indicators for when a student is save in the system created with the help of DeepSeek. Inserted page cade. 
+// Visual indicators for when a student is save in the system created with the help of DeepSeek. Inserted page code. 
 // "I'd like the code modified, so that when a student is saved, there is some simple visual feedback that indicates the student has indeed been saved." 
 type CSVStudentRow = {
   firstName?: string
