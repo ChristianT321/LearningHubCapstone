@@ -1,22 +1,27 @@
-//ChatGPT was used to help create the footer and header in a single file. 
+// ChatGPT was used to help create the footer and header in a single file. 
 // Within mantine they use a file for the creation and a css file for the customization so i asked chatgpt to help integrate them into one file.
+// helped create the animated buttons
+
 'use client'
 
 import Image from 'next/image'
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/navigation'
 import { Anchor, Container, Group } from '@mantine/core';
 import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
 import { FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
-import { FaApple } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 
+//links to educational things within the footer
 const footerLinks = [
   { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
   { link: 'https://pacificwild.org/from-land-to-sea-great-bear-rainforest-story-map/', label: 'Learn' },
 ];
 
+//links to each module within the header
 const headerLinks = [
   { link: '/module1', label: 'Module 1', icon: FaPaw },
   { link: '/module2', label: 'Module 2', icon: FaWater },
@@ -34,6 +39,28 @@ export default function HomePage() {
 
   const isDark = colorScheme === 'dark';
 
+  const slides = [
+      {
+        image: '/Spirit bear.jpg',
+        alt: 'Spirit Bear',
+        desc: 'The rare Spirit Bear lives in the Great Bear Rainforest.',
+      },
+      {
+        image: '/Douglas fir.jpg',
+        alt: 'Douglas fir',
+        desc: 'The Douglas Fir can tower up to 100ft tall!',
+      },
+      {
+        image: '/Hummingbird.jpg',
+        alt: 'Hummingbird',
+        desc: 'The small hummingbird can flap its wings up to 80 times per second.',
+      },
+      {
+        image: '/Tout in water.jpg',
+        alt: 'Lake Trout',
+        desc: 'The lake trout can go against the current and swim up stream .',
+      },
+    ];
 
   const headerStyle = {
     height: '56px',
@@ -154,16 +181,47 @@ export default function HomePage() {
         />
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
+      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4">
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-25 mb-2">
         <FaPaw className="text-yellow-400" />
           Welcome to the Great Bear Rainforest Learning Hub!
         </h1>
         <h2 className="text-3xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
           Your number one source for learning about the Great Bear Rainforest!
-        </h2>
+        </h2></div>
 
+      <div className="w-full max-w-3xl mx-auto mt-10 rounded-lg overflow-hidden shadow-lg bg-white bg-opacity-70 p-4 z-30"> 
+      <Carousel
+        autoPlay
+        infiniteLoop
+        showThumbs={false}
+        showStatus={false}
+        showIndicators={true}
+        interval={5000}
+        className="rounded"
+      >
+        {slides.map((slide, idx) => (
+          <div key={idx} className="relative">
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              className="h-80 w-full object-cover rounded-md"
+              style={{
+                width: '400px',
+                height: '300px',
+                objectFit: 'cover', 
+                borderRadius: '12px'
+              }}
+            />
+            <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 py-2 px-4">
+              {slide.desc}
+            </p>
+          </div>
+        ))}
+      </Carousel>
+    </div>
+
+    <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
         <p className="text-xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2">
           Get ready to explore one of the coolest places on Earth! This website is made just for kids like you to learn all about the animals, trees, people, and secrets of the Great Bear Rainforest. 
           You’ll play fun games, take quizzes, earn badges, and unlock new levels as you learn. Start your adventure and see how much you can discover!
