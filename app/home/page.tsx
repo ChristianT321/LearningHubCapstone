@@ -190,7 +190,7 @@ export default function HomePage() {
           Your number one source for learning about the Great Bear Rainforest!
         </h2></div>
 
-      <div className="w-full max-w-3xl mx-auto mt-10 rounded-lg overflow-hidden shadow-lg bg-white bg-opacity-70 p-4 z-30"> 
+      <div className="w-full max-w-3xl mx-auto mt-10 rounded-lg overflow-hidden shadow-lg bg-red-600 bg-opacity-70 p-4 z-30"> 
       <Carousel
         autoPlay
         infiniteLoop
@@ -213,7 +213,7 @@ export default function HomePage() {
                 borderRadius: '12px'
               }}
             />
-            <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 py-2 px-4">
+            <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-green-700 bg-opacity-60 py-2 px-4">
               {slide.desc}
             </p>
           </div>
