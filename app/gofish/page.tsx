@@ -93,13 +93,13 @@ export default function GoFishGame() {
             <div className="flex gap-4 justify-center mb-5">
               <button
                 onClick={initializeGame}
-                className="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-xl shadow transition"
+                className="bg-blue-700 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow transition"
               >
                 Play Again
               </button>
               <button
                 onClick={() => router.push('/test2')}
-                className="bg-purple-700 hover:bg-purple-900 text-white px-6 py-3 rounded-xl shadow transition"
+                className="bg-purple-700 hover:bg-purple-950 text-white px-6 py-3 rounded-xl shadow transition"
               >
                 Continue
               </button>
@@ -133,7 +133,7 @@ export default function GoFishGame() {
 
             <button
               onClick={handleGoFish}
-              className="mt-4 bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-lg shadow transition"
+              className="mt-4 bg-blue-700 hover:bg-blue-950 text-white px-6 py-3 rounded-lg shadow transition"
             >
               Go Fish
             </button>
