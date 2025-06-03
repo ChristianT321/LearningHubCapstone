@@ -131,7 +131,7 @@ export default function BirdQuiz() {
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={handleReset}
-              className="bg-blue-800 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow-md transition"
+              className="bg-blue-800 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
             >
               Reset
             </button>
@@ -139,7 +139,7 @@ export default function BirdQuiz() {
             {allAnswered && allAnsweredCorrectly && (
               <button
                 onClick={handleContinue}
-                className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-xl shadow-md transition"
+                className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
               >
                 Continue
               </button>
