@@ -66,7 +66,7 @@ export default function BirdQuiz() {
       </div>
 
       <div className="max-w-4xl w-full mx-auto mb-20 px-6 py-12 relative z-10 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center text-blue-700 mb-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center text-sky-700 mb-6">
           Bird Quiz
         </h1>
 
@@ -131,7 +131,7 @@ export default function BirdQuiz() {
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={handleReset}
-              className="bg-blue-800 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
+              className="bg-sky-700 hover:bg-sky-950 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
             >
               Reset
             </button>
@@ -139,7 +139,7 @@ export default function BirdQuiz() {
             {allAnswered && allAnsweredCorrectly && (
               <button
                 onClick={handleContinue}
-                className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
+                className="bg-green-700 hover:bg-green-950 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
               >
                 Continue
               </button>
