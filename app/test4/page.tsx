@@ -1,3 +1,4 @@
+//This was originally made for my last project in webdev 2. All questions/ design have been reworked for this project.
 'use client'
 
 import { useState } from 'react'
@@ -14,12 +15,12 @@ const questions = [
     question: 'Which plant helps to keep the rainforest damp?',
     choices: ['Pine tree', 'Moss', 'Western red cedar', 'Rose bush'],
     answer: 'Moss',
-    },
-{
+  },
+  {
     question: 'Which process helps create new soil?',
-    choices: ['Stomnping dirt', 'Forest fires', 'Rotting fallen trees', 'Digging up soil'],
+    choices: ['Stomping dirt', 'Forest fires', 'Rotting fallen trees', 'Digging up soil'],
     answer: 'Rotting fallen trees',
-},
+  },
   {
     question: 'Which type of forest is hundreds of years old?',
     choices: ['Ancient forest', 'Classic forest', 'Old plant forest', 'Old growth forests'],
@@ -27,7 +28,7 @@ const questions = [
   },
 ]
 
-export default function Test1() {
+export default function VegetationTest() {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({})
   const router = useRouter()
 
@@ -53,11 +54,10 @@ export default function Test1() {
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
-
       <div className="fixed inset-0 z-0">
         <Image
           src="/forest background.png"
-          alt="Home Background"
+          alt="Forest Background"
           fill
           priority
           className="object-cover"
@@ -65,35 +65,37 @@ export default function Test1() {
         />
       </div>
 
-      <div className="max-w-4xl mx-auto mb-12 px-6 py-15 bg-white rounded-xl relative z-10">
-        <h1 className="text-5xl font-bold text-center text-blue-950 mb-4">Vegetation Test</h1>
-        <p className="text-center mb-6 text-lg text-gray-700">
-          Test your knowledge! Score: <br /> {score} / {questions.length}
+      <div className="max-w-4xl w-full mx-auto mb-20 px-6 py-12 relative z-10 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center text-green-800 mb-6">
+          Vegetation Test
+        </h1>
+
+        <p className="text-center mb-8 text-lg text-gray-700 font-medium">
+          Test your knowledge! <br />
+          <span className="text-2xl font-bold">{score} / {questions.length}</span>
         </p>
 
         {questions.map((q, index) => (
-          <div
-            key={index}
-            className="mb-6 p-4 bg-green-200 rounded shadow-md border border-gray-300"
-          >
-            <p className="font-semibold mb-3">{index + 1}. {q.question}</p>
-            <div className="grid grid-cols-2 gap-3">
+          <div key={index} className="mb-8 p-6 bg-green-100 rounded-xl border border-green-200 shadow-sm">
+            <p className="font-semibold text-left mb-4 text-gray-800 text-lg">{index + 1}. {q.question}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {q.choices.map((choice) => {
                 const isSelected = selectedAnswers[index] === choice
                 const isCorrect = choice === q.answer
                 const hasAnswered = index in selectedAnswers
 
-                let buttonStyle = 'px-4 py-2 rounded border'
+                let buttonStyle = 'w-full px-4 py-2 rounded-lg font-medium transition-all duration-300 border'
+
                 if (hasAnswered) {
                   if (isSelected && isCorrect) {
-                    buttonStyle += ' bg-green-500 text-white'
+                    buttonStyle += ' bg-green-500 text-white border-green-600'
                   } else if (isSelected && !isCorrect) {
-                    buttonStyle += ' bg-red-500 text-white'
+                    buttonStyle += ' bg-red-500 text-white border-red-600'
                   } else {
-                    buttonStyle += ' bg-gray-100 text-gray-600'
+                    buttonStyle += ' bg-gray-200 text-gray-600 border-gray-300'
                   }
                 } else {
-                  buttonStyle += ' bg-green-400 hover:bg-green-600'
+                  buttonStyle += ' bg-green-400 hover:bg-green-600 text-white border-green-500'
                 }
 
                 return (
@@ -110,41 +112,39 @@ export default function Test1() {
             </div>
 
             {selectedAnswers[index] && (
-              <p className="mt-4 font-black text-lg text-center">
+              <div className="mt-4 text-center font-bold text-lg">
                 {selectedAnswers[index] === q.answer ? (
-                  <span className="text-green-600" style={{ WebkitTextStroke: '1px black' }}>
-                    Correct!
-                  </span>
+                  <span className="text-green-700">✅ Correct!</span>
                 ) : (
-                  <span className="text-red-600" style={{ WebkitTextStroke: '1px black' }}>
-                    Incorrect, please try again next time.
-                  </span>
+                  <span className="text-red-700">❌ Incorrect. Try again next time!</span>
                 )}
-              </p>
+              </div>
             )}
           </div>
         ))}
 
         <div className="text-center mt-10">
-          <p className="mb-6 text-xl text-gray-700">
+          <p className="mb-6 text-xl text-gray-800 font-semibold">
             Final Score: {score} / {questions.length}
           </p>
 
-          <button
-            onClick={handleReset}
-            className="bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-lg mr-4"
-          >
-            Reset
-          </button>
-
-          {allAnswered && allAnsweredCorrectly && (
+          <div className="flex flex-wrap justify-center gap-4">
             <button
-              onClick={handleContinue}
-              className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-lg"
+              onClick={handleReset}
+              className="bg-blue-800 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow-md transition"
             >
-              Continue
+              Reset
             </button>
-          )}
+
+            {allAnswered && allAnsweredCorrectly && (
+              <button
+                onClick={handleContinue}
+                className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-xl shadow-md transition"
+              >
+                Continue
+              </button>
+            )}
+          </div>
 
           {allAnswered && !allAnsweredCorrectly && (
             <p className="mt-6 text-red-600 font-semibold text-lg">
