@@ -87,7 +87,7 @@ export default function BirdFactsPage() {
 
       <button
         onClick={() => router.push('/matching2')}
-        className="mt-12 bg-sky-200 hover:bg-sky-300 text-blue-950 font-semibold px-6 py-3 rounded-xl shadow z-10 transition-colors duration-300 ease-in-out"
+        className="mt-12 bg-gray-50 hover:bg-gray-300 text-blue-950 font-semibold px-6 py-3 rounded-xl shadow z-10 transition-colors duration-300 ease-in-out"
 
       >
         Start Matching Game
