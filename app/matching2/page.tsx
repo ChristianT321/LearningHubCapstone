@@ -80,7 +80,7 @@ export default function MatchingGame() {
       </div>
 
       <div className="max-w-5xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-20 mt-10 z-10">
-        <h1 className="text-4xl font-bold text-blue-900 mb-4">Animal & Feather Matching</h1>
+        <h1 className="text-4xl font-bold text-sky-700 mb-4">Animal & Feather Matching</h1>
         <p className="text-lg text-gray-700 mb-6">Drag the feather to the correct animal!</p>
 
         <div className="grid grid-cols-2 gap-16">
@@ -93,7 +93,7 @@ export default function MatchingGame() {
                 onDragStart={() => handleDragStart(paw.name)}
                 className={`w-32 h-32 relative ${
                   Object.values(matches).includes(paw.name) ? 'opacity-50' : 'cursor-grab'
-                } bg-white border-2 border-blue-500 rounded-lg shadow-md overflow-hidden`}
+                } bg-white border-2 border-sky-500 rounded-lg shadow-md overflow-hidden`}
               >
                 <Image
                   src={paw.image}
@@ -109,7 +109,7 @@ export default function MatchingGame() {
             <h2 className="text-xl font-semibold mb-2">Animals</h2>
             {animalImages.map((animal) => (
               <div key={animal.name} className="flex items-center gap-4">
-                <div className="w-32 h-32 bg-white border-2 border-blue-500 rounded-lg shadow-md overflow-hidden relative">
+                <div className="w-32 h-32 bg-white border-2 border-sky-500 rounded-lg shadow-md overflow-hidden relative">
                   <Image
                     src={animal.image}
                     alt={animal.name}
@@ -121,7 +121,7 @@ export default function MatchingGame() {
                 <div
                   onDragOver={handleDragOver}
                   onDrop={() => handleDrop(animal.name)}
-                  className="w-32 h-32 border-4 border-dashed border-blue-600 rounded-lg bg-white overflow-hidden relative flex items-center justify-center"
+                  className="w-32 h-32 border-4 border-dashed border-sky-600 rounded-lg bg-white overflow-hidden relative flex items-center justify-center"
                 >
                   {matches[animal.name] ? (
                     <Image
@@ -148,7 +148,7 @@ export default function MatchingGame() {
         <div className="mt-10 flex flex-col items-center gap-4">
           <button
             onClick={handleContinue}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow"
+            className="bg-sky-600 hover:bg-sky-800 text-white font-semibold px-6 py-3 rounded-xl shadow transition-colors duration-300 ease-in-out"
           >
             Continue
           </button>
@@ -157,7 +157,7 @@ export default function MatchingGame() {
 
           <button
             onClick={resetGame}
-            className="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-xl shadow"
+            className="bg-red-700 hover:bg-red-900 text-white font-semibold px-6 py-3 rounded-xl shadow transition-colors duration-300 ease-in-out"
           >
             Reset Game
           </button>
