@@ -9,7 +9,7 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleContinue = () => {
-    router.push('/matching2')
+    router.push('/birdfacts')
   }
 
   return (
