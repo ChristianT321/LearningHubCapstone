@@ -76,7 +76,7 @@ export default function VegetationTest() {
         </p>
 
         {questions.map((q, index) => (
-          <div key={index} className="mb-8 p-6 bg-green-100 rounded-xl border border-green-200 shadow-sm">
+          <div key={index} className="mb-8 p-6 bg-green-300 rounded-xl border border-green-500 shadow-sm">
             <p className="font-semibold text-left mb-4 text-gray-800 text-lg">{index + 1}. {q.question}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {q.choices.map((choice) => {
@@ -88,14 +88,14 @@ export default function VegetationTest() {
 
                 if (hasAnswered) {
                   if (isSelected && isCorrect) {
-                    buttonStyle += ' bg-green-500 text-white border-green-600'
+                    buttonStyle += ' bg-green-900 text-white border-green-950'
                   } else if (isSelected && !isCorrect) {
-                    buttonStyle += ' bg-red-500 text-white border-red-600'
+                    buttonStyle += ' bg-red-700 text-white border-red-950'
                   } else {
                     buttonStyle += ' bg-gray-200 text-gray-600 border-gray-300'
                   }
                 } else {
-                  buttonStyle += ' bg-green-400 hover:bg-green-600 text-white border-green-500'
+                  buttonStyle += ' bg-green-700 hover:bg-green-950 text-white border-green-500'
                 }
 
                 return (
@@ -114,7 +114,7 @@ export default function VegetationTest() {
             {selectedAnswers[index] && (
               <div className="mt-4 text-center font-bold text-lg">
                 {selectedAnswers[index] === q.answer ? (
-                  <span className="text-green-700">✅ Correct!</span>
+                  <span className="text-green-950">✅ Correct!</span>
                 ) : (
                   <span className="text-red-700">❌ Incorrect. Try again next time!</span>
                 )}
@@ -131,7 +131,7 @@ export default function VegetationTest() {
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={handleReset}
-              className="bg-blue-800 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow-md transition"
+              className="bg-blue-700 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
             >
               Reset
             </button>
@@ -139,7 +139,7 @@ export default function VegetationTest() {
             {allAnswered && allAnsweredCorrectly && (
               <button
                 onClick={handleContinue}
-                className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-xl shadow-md transition"
+                className="bg-green-700 hover:bg-green-950 text-white px-6 py-3 rounded-xl shadow-md transition-colors duration-300 ease-in-out"
               >
                 Continue
               </button>

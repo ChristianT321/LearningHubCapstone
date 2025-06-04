@@ -145,7 +145,7 @@ export default function NameThatTreeGame() {
 
             <button
               onClick={handleAnswerAndAdvance}
-              className="mt-6 bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow"
+              className="mt-6 bg-blue-700 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow transition-colors duration-300 ease-in-out"
             >
               {currentIndex + 1 < shuffledQuestions.length ? 'Submit & Next' : 'Submit & View Results'}
             </button>
@@ -163,14 +163,14 @@ export default function NameThatTreeGame() {
             {passed && (
               <button
                 onClick={() => router.push('/test4')}
-                className="bg-blue-900 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow mt-4"
+                className="bg-blue-700 hover:bg-blue-950 text-white px-6 py-3 rounded-xl shadow mt-4 transition-colors duration-300 ease-in-out"
               >
                 Continue
               </button>
             )}
             <button
               onClick={handleRetake}
-              className="bg-red-700 hover:bg-red-800 text-white px-6 py-3 rounded-xl shadow mt-4"
+              className="bg-red-700 hover:bg-red-950 text-white px-6 py-3 rounded-xl shadow mt-4 transition-colors duration-300 ease-in-out"
             >
               Retake Quiz
             </button>

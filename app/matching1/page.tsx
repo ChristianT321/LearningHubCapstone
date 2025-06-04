@@ -165,7 +165,7 @@ export default function MatchingGame() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none">
+      {/* <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none">
         <Image
           src="/Forest infront2.png"
           alt="Foreground Grass"
@@ -173,7 +173,7 @@ export default function MatchingGame() {
           height={300}
           className="w-full h-auto object-bottom"
         />
-      </div>
+      </div> */}
     </main>
   )
 }
