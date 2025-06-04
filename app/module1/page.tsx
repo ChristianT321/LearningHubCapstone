@@ -13,7 +13,7 @@ export default function HomePage() {
   }
 
   const handleContinue = () => {
-    router.push('/matching1')
+    router.push('/groundanimalfacts')
   }
 
   const facts = [
