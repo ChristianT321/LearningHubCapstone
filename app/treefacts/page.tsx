@@ -114,7 +114,11 @@ export default function TreeFactsPage() {
         <div className="text-center mt-12">
           <button
             onClick={() => router.push('/matching3')}
+<<<<<<< Updated upstream
             className="bg-green-700 hover:bg-green-950 text-white px-8 py-4 text-lg rounded-xl shadow-md transition"
+=======
+            className="bg-green-700 hover:bg-green-950 text-white px-8 py-4 text-lg rounded-xl shadow-md transition-colors duration-300 ease-in-out"
+>>>>>>> Stashed changes
           >
             Start the Tree Quiz
           </button>
