@@ -1,136 +1,168 @@
 'use client'
-// Next.js directive marking this as a Client Component (required for hooks and browser APIs)
-
-// React/Next.js imports
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { parse, ParseResult } from 'papaparse' // CSV parsing library
+import { parse } from 'papaparse'
+import * as XLSX from 'xlsx'
 
-// Type definitions
 type Student = {
   firstName: string
   lastName: string
   classCode: string
 }
 
-// CSV type with flexible headers (supports both 'firstName' and 'First Name' formats)
-// CSV uploader created with the help of DeepSeek. Inserted page code. "Help me create CSV uploader for this add student page."
-// Visual indicators for when a student is save in the system created with the help of DeepSeek. Inserted page code. 
-// "I'd like the code modified, so that when a student is saved, there is some simple visual feedback that indicates the student has indeed been saved." 
-type CSVStudentRow = {
+type SpreadsheetStudentRow = {
   firstName?: string
-  lastName?: string
   'First Name'?: string
+  'first name'?: string
+  'FIRST NAME'?: string
+  'First'?: string
+  'first'?: string
+  'Given Name'?: string
+  'given name'?: string
+  'GIVEN NAME'?: string
+  'FName'?: string
+  'fname'?: string
+  lastName?: string
   'Last Name'?: string
+  'last name'?: string
+  'LAST NAME'?: string
+  'Last'?: string
+  'last'?: string
+  'Surname'?: string
+  'surname'?: string
+  'SURNAME'?: string
+  'Family Name'?: string
+  'family name'?: string
+  'LName'?: string
+  'lname'?: string
+  [key: string]: unknown
 }
 
 export default function AddStudentPage() {
-  // Router for navigation
   const router = useRouter()
-  
-  // State management
-  const [students, setStudents] = useState<Student[]>([]) // Stores student list
-  const [classCode, setClassCode] = useState('') // Current class code
-  const [showSuccess, setShowSuccess] = useState(false) // Controls success popup visibility
-  const [newStudentsCount, setNewStudentsCount] = useState(0) // Tracks number of newly added students
-  // NEW: Tracks which students were recently saved for visual feedback
-  const [recentlySaved, setRecentlySaved] = useState<number[]>([]) 
+  const [students, setStudents] = useState<Student[]>([])
+  const [classCode, setClassCode] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [newStudentsCount, setNewStudentsCount] = useState(0)
+  const [recentlySaved, setRecentlySaved] = useState<number[]>([])
 
-  // Effect hook for initialization
   useEffect(() => {
-    // Check authentication and load data
     const teacher = JSON.parse(localStorage.getItem('currentUser') || 'null')
     if (!teacher?.isTeacher || !teacher?.classCode) {
-      router.push('/') // Redirect if not authenticated teacher
+      router.push('/')
     } else {
       setClassCode(teacher.classCode)
-      // Load and filter students for this class
       const storedStudents: Student[] = JSON.parse(localStorage.getItem('students') || '[]')
       setStudents(storedStudents.filter(s => s.classCode === teacher.classCode))
     }
   }, [router])
 
-  // NEW: Helper function to show temporary save confirmation
   const showSaveFeedback = (index: number) => {
-    setRecentlySaved(prev => [...prev, index]) // Add student index to recently saved
+    setRecentlySaved(prev => [...prev, index])
     setTimeout(() => {
-      setRecentlySaved(prev => prev.filter(i => i !== index)) // Remove after delay
-    }, 2000) // Feedback lasts 2 seconds
+      setRecentlySaved(prev => prev.filter(i => i !== index))
+    }, 2000)
   }
 
-  // Student management functions
   const handleAddStudent = () => {
-    // Adds empty student to the list
     setStudents(prev => [...prev, { firstName: '', lastName: '', classCode }])
   }
 
   const handleSaveStudent = (index: number, firstName: string, lastName: string) => {
-    // Updates specific student and saves to localStorage
     const updatedStudents = [...students]
     updatedStudents[index] = { firstName, lastName, classCode }
     setStudents(updatedStudents)
     localStorage.setItem('students', JSON.stringify(updatedStudents))
-    showSaveFeedback(index) // NEW: Show visual feedback after save
+    showSaveFeedback(index)
   }
 
   const handleDeleteStudent = (index: number) => {
-    // Removes student from list and updates localStorage
     const updatedStudents = students.filter((_, i) => i !== index)
     setStudents(updatedStudents)
     localStorage.setItem('students', JSON.stringify(updatedStudents))
   }
 
   const handleBackToLogin = () => {
-    // Clears auth and returns to login
     localStorage.removeItem('currentUser')
     router.push('/')
   }
 
-  // CSV handling function
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const processStudentData = (data: SpreadsheetStudentRow[]) => {
+    const newStudents = data
+      .map(row => {
+        const firstName = 
+          row.firstName || row['First Name'] || row['first name'] || 
+          row['FIRST NAME'] || row['First'] || row['first'] ||
+          row['Given Name'] || row['given name'] || row['GIVEN NAME'] ||
+          row['FName'] || row['fname'] || ''
+        
+        const lastName = 
+          row.lastName || row['Last Name'] || row['last name'] || 
+          row['LAST NAME'] || row['Last'] || row['last'] ||
+          row['Surname'] || row['surname'] || row['SURNAME'] ||
+          row['Family Name'] || row['family name'] ||
+          row['LName'] || row['lname'] || ''
+        
+        return {
+          firstName: firstName.toString().trim(),
+          lastName: lastName.toString().trim(),
+          classCode
+        }
+      })
+      .filter(s => s.firstName || s.lastName)
+
+    if (newStudents.length > 0) {
+      const updatedStudents = [...students, ...newStudents]
+      setStudents(updatedStudents)
+      setNewStudentsCount(newStudents.length)
+      localStorage.setItem('students', JSON.stringify(updatedStudents))
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 3000)
+    } else {
+      alert('No valid student data found in file')
+    }
+  }
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Parse CSV file
-    parse<CSVStudentRow>(file, {
-      header: true, // Use first row as headers
-      complete: (results: ParseResult<CSVStudentRow>) => {
-        // Process CSV data into student objects
-        const newStudents = results.data
-          .map(row => ({
-            firstName: row.firstName || row['First Name'] || '',
-            lastName: row.lastName || row['Last Name'] || '',
-            classCode
-          }))
-          .filter(s => s.firstName.trim() || s.lastName.trim()) // Remove empty rows
-
-        if (newStudents.length > 0) {
-          // Update state and storage
-          const updatedStudents = [...students, ...newStudents]
-          setStudents(updatedStudents)
-          setNewStudentsCount(newStudents.length)
-          localStorage.setItem('students', JSON.stringify(updatedStudents))
-          setShowSuccess(true)
-          setTimeout(() => setShowSuccess(false), 3000) // Auto-hide success message
-          
-          // Reset file input
-          const fileInput = e.target as HTMLInputElement
-          fileInput.value = ''
-        } else {
-          alert('No valid student data found in CSV')
-        }
-      },
-      error: (error) => {
-        alert(`CSV Error: ${error.message}`)
+    try {
+      if (file.name.endsWith('.xlsx')) {
+        const data = await file.arrayBuffer()
+        const workbook = XLSX.read(data)
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+        const jsonData: SpreadsheetStudentRow[] = XLSX.utils.sheet_to_json(firstSheet)
+        processStudentData(jsonData)
+      } 
+      else if (file.name.endsWith('.csv')) {
+        parse<SpreadsheetStudentRow>(file, {
+          header: true,
+          complete: (results) => {
+            if (results.data) {
+              processStudentData(results.data)
+            }
+          },
+          error: (err) => {
+            console.error('CSV parsing error:', err)
+            alert(`Error parsing CSV: ${err.message}`)
+          }
+        })
+      } else {
+        alert('Please upload either a .csv or .xlsx file')
       }
-    })
+    } catch (error) {
+      console.error('File processing error:', error)
+      alert('Error processing file. Please check the format and try again.')
+    }
+
+    const fileInput = e.target as HTMLInputElement
+    fileInput.value = ''
   }
 
-  // Component render
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center px-8 py-10 overflow-y-auto mt-25">
-      {/* Background Image - Fixed position covering entire viewport */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/teacherportal.png"
@@ -142,7 +174,6 @@ export default function AddStudentPage() {
         />
       </div>
 
-      {/* Success Notification Popup */}
       {showSuccess && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-lg shadow-xl z-50 animate-fade-in">
           <div className="flex items-center gap-2">
@@ -157,7 +188,6 @@ export default function AddStudentPage() {
         </div>
       )}
 
-      {/* Header Section */}
       <div className="relative z-10 text-center">
         <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mb-4">
           Instructor Portal
@@ -167,16 +197,14 @@ export default function AddStudentPage() {
         </p>
       </div>
 
-      {/* Control Buttons Section */}
       <div className="relative z-10 flex flex-col sm:flex-row gap-4 mb-8">
-        {/* CSV Upload Button */}
         <label className="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded text-xl transition cursor-pointer flex items-center justify-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="17 8 12 3 7 8"></polyline>
             <line x1="12" y1="3" x2="12" y2="15"></line>
           </svg>
-          Upload CSV
+          Upload CSV/Excel
           <input
             type="file"
             accept=".csv,.xlsx,.xls"
@@ -185,7 +213,6 @@ export default function AddStudentPage() {
           />
         </label>
         
-        {/* Add Student Button */}
         <button
           onClick={handleAddStudent}
           className="bg-neutral-700 hover:bg-neutral-900 text-white px-8 py-3 rounded text-xl transition flex items-center justify-center gap-2"
@@ -198,14 +225,12 @@ export default function AddStudentPage() {
         </button>
       </div>
 
-      {/* Student Cards Grid */}
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-screen-xl w-full pb-20">
         {students.map((s, i) => (
           <div
             key={`student-${i}`}
-            className="bg-green-950 bg-opacity-80 border-4 border-black text-white text-center p-6 rounded shadow-xl relative" // Added 'relative' for positioning save indicator
+            className="bg-green-950 bg-opacity-80 border-4 border-black text-white text-center p-6 rounded shadow-xl relative"
           >
-            {/* NEW: Save confirmation indicator (green checkmark) */}
             {recentlySaved.includes(i) && (
               <div className="absolute -top-3 -right-3 bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center animate-pop">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -215,7 +240,6 @@ export default function AddStudentPage() {
             )}
 
             <h2 className="text-2xl font-semibold mb-4">Student {i + 1}</h2>
-            {/* First Name Input */}
             <input
               type="text"
               placeholder="First name"
@@ -227,7 +251,6 @@ export default function AddStudentPage() {
               }}
               className="w-full mb-3 p-2 rounded text-black bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
-            {/* Last Name Input */}
             <input
               type="text"
               placeholder="Last name"
@@ -240,14 +263,12 @@ export default function AddStudentPage() {
               className="w-full mb-4 p-2 rounded text-black bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
 
-            {/* Action Buttons */}
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => handleSaveStudent(i, s.firstName, s.lastName)}
                 className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition flex items-center gap-1"
               >
                 Save
-                {/* NEW: Added save icon to button */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                   <polyline points="17 21 17 13 7 13 7 21"/>
@@ -265,7 +286,6 @@ export default function AddStudentPage() {
         ))}
       </div>
 
-      {/* Navigation Button */}
       <button
         onClick={handleBackToLogin}
         className="fixed bottom-6 left-6 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition z-20"
@@ -273,13 +293,11 @@ export default function AddStudentPage() {
         Back to Login
       </button>
 
-      {/* Animation Styles (global) */}
       <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-20px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        /* NEW: Added pop animation for save feedback */
         @keyframes pop {
           0% { transform: scale(0.5); opacity: 0; }
           50% { transform: scale(1.2); }
