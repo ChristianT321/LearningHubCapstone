@@ -1,19 +1,21 @@
-// This page was made by referencing slides an examples given in web dev 2, while primarily basing it off of my final project in the same class. Copilot helped fill out some details.
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 interface Teacher {
+  id?: number
   email: string
   classCode: string
   isTeacher: boolean
 }
 
 interface Student {
+  id?: number
   firstName: string
   lastName: string
+  email?: string
   classCode: string
 }
 
@@ -26,12 +28,7 @@ export default function LoginPage() {
   const [lastName, setLastName] = useState('')
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (!localStorage.getItem('teachers')) localStorage.setItem('teachers', JSON.stringify([]))
-    if (!localStorage.getItem('students')) localStorage.setItem('students', JSON.stringify([]))
-  }, [])
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setError('')
 
     if (!classCode) {
@@ -45,42 +42,52 @@ export default function LoginPage() {
         return
       }
 
-      const teachers: Teacher[] = JSON.parse(localStorage.getItem('teachers') || '[]')
-      if (teachers.some(t => t.classCode === classCode)) {
-        setError('Class code already exists')
-        return
-      }
+      try {
+        const response = await fetch('http://localhost:3001/teacher', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, classCode }),
+        })
 
-      const newTeacher: Teacher = { email, classCode, isTeacher: true }
-      localStorage.setItem('teachers', JSON.stringify([...teachers, newTeacher]))
-      localStorage.setItem('currentUser', JSON.stringify(newTeacher))
-      router.push('/add-student')
+        if (response.ok) {
+          const newTeacher: Teacher = await response.json()
+          // Add isTeacher flag for frontend logic
+          localStorage.setItem('currentUser', JSON.stringify({ ...newTeacher, isTeacher: true }))
+          router.push('/add-student')
+        } else {
+          const errData = await response.json()
+          setError(errData.error || 'Failed to create teacher')
+        }
+      } catch (err) {
+        console.error(err)
+        setError('Failed to connect to server')
+      }
     } else {
       if (!firstName || !lastName) {
         setError('Please enter both your first and last name')
         return
       }
 
-      const teachers: Teacher[] = JSON.parse(localStorage.getItem('teachers') || '[]')
-      const students: Student[] = JSON.parse(localStorage.getItem('students') || '[]')
+      try {
+        const response = await fetch('http://localhost:3001/student/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, lastName, classCode }),
+        })
 
-      const matchingClass = teachers.find(t => t.classCode === classCode)
-      const matchingStudent = students.find(
-        s => s.firstName === firstName && s.lastName === lastName && s.classCode === classCode
-      )
+        if (!response.ok) {
+          const errData = await response.json()
+          setError(errData.error || 'Name not recognized or invalid class code')
+          return
+        }
 
-      if (!matchingClass) {
-        setError('Invalid class code')
-        return
+        const student: Student = await response.json()
+        localStorage.setItem('currentUser', JSON.stringify(student))
+        router.push('/home')
+      } catch (err) {
+        console.error(err)
+        setError('Failed to connect to server')
       }
-
-      if (!matchingStudent) {
-        setError('Name not recognized, please try again')
-        return
-      }
-
-      localStorage.setItem('currentUser', JSON.stringify(matchingStudent))
-      router.push('/home')
     }
   }
 
@@ -172,10 +179,7 @@ export default function LoginPage() {
 
         <div className="mt-6 text-white text-lg font-medium">
           {isTeacher ? "Are you a student?" : "Are you a teacher?"}{' '}
-          <button
-            onClick={toggleUserType}
-            className="underline font-bold"
-          >
+          <button onClick={toggleUserType} className="underline font-bold">
             {isTeacher ? "Student Login" : "Teacher Signup"}
           </button>
         </div>
