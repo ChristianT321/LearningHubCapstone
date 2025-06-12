@@ -50,9 +50,14 @@ export default function LoginPage() {
         })
 
         if (response.ok) {
-          const newTeacher: Teacher = await response.json()
-          // Add isTeacher flag for frontend logic
-          localStorage.setItem('currentUser', JSON.stringify({ ...newTeacher, isTeacher: true }))
+          const backendTeacher = await response.json()
+          const frontendTeacher: Teacher = {
+            id: backendTeacher.id,
+            email: backendTeacher.email,
+            classCode: backendTeacher.class_code || backendTeacher.classCode,
+            isTeacher: true
+          }
+          localStorage.setItem('currentUser', JSON.stringify(frontendTeacher))
           router.push('/add-student')
         } else {
           const errData = await response.json()
@@ -81,8 +86,14 @@ export default function LoginPage() {
           return
         }
 
-        const student: Student = await response.json()
-        localStorage.setItem('currentUser', JSON.stringify(student))
+        const backendStudent = await response.json()
+        const frontendStudent: Student = {
+          id: backendStudent.id,
+          firstName: backendStudent.first_name || backendStudent.firstName,
+          lastName: backendStudent.last_name || backendStudent.lastName,
+          classCode: backendStudent.class_code || backendStudent.classCode
+        }
+        localStorage.setItem('currentUser', JSON.stringify(frontendStudent))
         router.push('/home')
       } catch (err) {
         console.error(err)
