@@ -9,11 +9,9 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Middleware
 app.use(cors())
 app.use(express.json())
 
-// PostgreSQL connection
 const pool = new Pool({
   host: process.env.PG_HOST,
   port: Number(process.env.PG_PORT),
@@ -22,12 +20,10 @@ const pool = new Pool({
   password: process.env.PG_PASSWORD,
 })
 
-// ✅ Default route
 app.get('/', (req, res) => {
-  res.send('🎉 Backend is running!')
+  res.send('Backend is running!')
 })
 
-// ✅ GET all students
 app.get('/students', async (req, res) => {
   try {
     const result = await pool.query(
@@ -40,7 +36,6 @@ app.get('/students', async (req, res) => {
   }
 })
 
-// ✅ GET students by class code
 app.get('/students/:classCode', async (req, res) => {
   try {
     const result = await pool.query(
@@ -54,11 +49,26 @@ app.get('/students/:classCode', async (req, res) => {
   }
 })
 
-// ✅ POST a new student
 app.post('/student', async (req, res) => {
   const { firstName, lastName, classCode } = req.body
 
+  if (!firstName || !lastName || !classCode) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
   try {
+    const existing = await pool.query(
+      `SELECT * FROM students 
+       WHERE LOWER(first_name) = LOWER($1) 
+         AND LOWER(last_name) = LOWER($2) 
+         AND LOWER(class_code) = LOWER($3)`,
+      [firstName, lastName, classCode]
+    )
+
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'Student already exists' });
+    }
+
     const result = await pool.query(
       'INSERT INTO students (first_name, last_name, class_code) VALUES ($1, $2, $3) RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"',
       [firstName || '', lastName || '', classCode || '']
@@ -70,10 +80,9 @@ app.post('/student', async (req, res) => {
   }
 })
 
-// ✅ PUT update student
 app.put('/student/:id', async (req, res) => {
   const { firstName, lastName, classCode } = req.body;
-  
+
   try {
     const result = await pool.query(
       `UPDATE students 
@@ -89,7 +98,6 @@ app.put('/student/:id', async (req, res) => {
   }
 });
 
-// ✅ DELETE a student
 app.delete('/student/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM students WHERE id = $1', [req.params.id]);
@@ -100,10 +108,9 @@ app.delete('/student/:id', async (req, res) => {
   }
 });
 
-// ✅ POST students in bulk
 app.post('/students/bulk', async (req, res) => {
   const students = req.body.students;
-  
+
   if (!Array.isArray(students)) {
     return res.status(400).json({ error: 'Expected an array of students' });
   }
@@ -112,7 +119,7 @@ app.post('/students/bulk', async (req, res) => {
   try {
     await client.query('BEGIN');
     const insertedStudents = [];
-    
+
     for (const student of students) {
       const { firstName, lastName, classCode } = student;
       const result = await client.query(
@@ -123,7 +130,7 @@ app.post('/students/bulk', async (req, res) => {
       );
       insertedStudents.push(result.rows[0]);
     }
-    
+
     await client.query('COMMIT');
     res.status(201).json(insertedStudents);
   } catch (err) {
@@ -135,7 +142,6 @@ app.post('/students/bulk', async (req, res) => {
   }
 });
 
-// ✅ POST teacher signup
 app.post('/teacher', async (req, res) => {
   const { email, classCode } = req.body
 
@@ -165,7 +171,6 @@ app.post('/teacher', async (req, res) => {
   }
 })
 
-// ✅ GET all teachers
 app.get('/teachers', async (req, res) => {
   try {
     const result = await pool.query(
@@ -178,7 +183,6 @@ app.get('/teachers', async (req, res) => {
   }
 })
 
-// ✅ POST student login
 app.post('/student/login', async (req, res) => {
   const { firstName, lastName, classCode } = req.body
 
@@ -211,7 +215,6 @@ app.post('/student/login', async (req, res) => {
   }
 })
 
-// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`)
+  console.log(`Server running at http://localhost:${PORT}`)
 })

@@ -36,7 +36,6 @@ export default function AddStudentPage() {
         }
         const teacher = JSON.parse(teacherRaw)
         
-        // Handle both classCode and class_code naming
         const code = teacher.classCode || teacher.class_code
         
         if (!teacher?.isTeacher || !code) {
@@ -45,7 +44,6 @@ export default function AddStudentPage() {
         }
         setClassCode(code)
 
-        // Fetch students from backend
         const response = await fetch(`http://localhost:3001/students/${code}`)
         if (!response.ok) {
           throw new Error('Failed to fetch students')
@@ -84,7 +82,6 @@ export default function AddStudentPage() {
     try {
       let updatedStudent
       if (students[index].id) {
-        // Update existing student
         const response = await fetch(`http://localhost:3001/student/${students[index].id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -93,7 +90,6 @@ export default function AddStudentPage() {
         if (!response.ok) throw new Error('Failed to update student')
         updatedStudent = await response.json()
       } else {
-        // Create new student
         const response = await fetch('http://localhost:3001/student', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -235,7 +231,7 @@ export default function AddStudentPage() {
       console.error('File processing error:', error)
       alert('Error processing file. Please check the file format and try again.')
     } finally {
-      e.target.value = '' // Reset file input
+      e.target.value = ''
     }
   }
 
