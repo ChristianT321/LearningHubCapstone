@@ -13,7 +13,7 @@ export default function HomePage() {
   }
 
   const handleContinue = () => {
-    router.push('/groundanimalfacts')
+    router.push('/groundanimalseason')
   }
 
   const facts = [
