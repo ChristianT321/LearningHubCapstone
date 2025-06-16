@@ -115,15 +115,27 @@ export default function HomePage() {
 
   const items = footerLinks.map((link) => (
     <Anchor<'a'>
-      c="dimmed"
       key={link.label}
       href={link.link}
       target="_blank"
       rel="noopener noreferrer"
-      size="sm"
       style={{
-      marginRight: link.label === 'Videos' ? '40px' : '0px', 
-    }}
+        fontSize: '18px',
+        fontWeight: 600,
+        color: 'white',
+        backgroundColor: '#dc2626', 
+        padding: '8px 16px',
+        borderRadius: '8px',
+        textDecoration: 'none',
+        marginRight: '12px',
+        transition: 'all 0.3s ease',
+      }}
+      onMouseEnter={(e) => {
+        (e.target as HTMLElement).style.backgroundColor = '#b91c1c'; 
+      }}
+      onMouseLeave={(e) => {
+        (e.target as HTMLElement).style.backgroundColor = '#dc2626';
+      }}
     >
       {link.label}
     </Anchor>
@@ -142,12 +154,16 @@ export default function HomePage() {
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
         <header
-      style={{
-        height: '0px',
-        backgroundColor: 'transparent',
-        zIndex: 1000,
-        width: '100%',
-      }}
+        style={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+          backdropFilter: 'blur(6px)', 
+          zIndex: 1000,
+          width: '100%',
+          padding: '12px 0',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+        }}
     >
       <div
         style={{
