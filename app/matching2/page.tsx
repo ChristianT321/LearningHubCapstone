@@ -2,9 +2,10 @@
 // At first it showed a card revieling game, but with further prompting (instructing how I wanted the game to work, how I wanted it to be a drag and drop card game), I was able to get a matching game.
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import JSConfetti from 'js-confetti'
 
 type MatchItem = {
   name: string
@@ -29,6 +30,24 @@ export default function MatchingGame() {
   const [draggedItem, setDraggedItem] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<{ [key: string]: string }>({})
   const [errorMessage, setErrorMessage] = useState('')
+  const [allCorrect, setAllCorrect] = useState(false)
+
+  useEffect(() => {
+    // Check if all matches are correct whenever matches change
+    const correct = animalImages.every(
+      (animal) => matches[animal.name] === animal.name
+    )
+    setAllCorrect(correct)
+    
+    if (correct) {
+      const jsConfetti = new JSConfetti()
+      jsConfetti.addConfetti({
+        emojis: ['🦅', '🦆', '🐦', '🪶', '✨', '🌈'],
+        emojiSize: 30,
+        confettiNumber: 60,
+      })
+    }
+  }, [matches])
 
   const handleDragStart = (name: string) => {
     setDraggedItem(name)
@@ -54,13 +73,11 @@ export default function MatchingGame() {
     setDraggedItem(null)
     setFeedback({})
     setErrorMessage('')
+    setAllCorrect(false)
   }
 
   const handleContinue = () => {
-    const allMatched = animalImages.every(
-      (animal) => matches[animal.name] === animal.name
-    )
-    if (allMatched) {
+    if (allCorrect) {
       router.push('/test3')
     } else {
       setErrorMessage('Sorry, you must get all correct in order to proceed.')
