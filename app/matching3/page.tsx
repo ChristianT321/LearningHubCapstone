@@ -7,13 +7,13 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import JSConfetti from 'js-confetti'
-
+//AUDIT NOTE for Ryan: type is a custom type declaration that tells variable with this type what can be stored in this variable. 
 type TreeItem = {
   name: string
   image: string
   type: 'Coniferous' | 'Deciduous'
 }
-
+//Will give error if type doesn't match declaration.
 const allItems: TreeItem[] = [
   { name: 'Western red cedar', image: '/Western red cedar.jpg', type: 'Coniferous'},
   { name: 'Douglas fir', image: '/Douglas fir.jpg', type: 'Coniferous'},
@@ -22,7 +22,7 @@ const allItems: TreeItem[] = [
   { name: 'Western hemlock', image: '/Western hemlock leaf.jpg', type: 'Coniferous'},
   { name: 'Western red cedar', image: '/Western red cedar leaf.jpg', type: 'Coniferous'},
 ]
-
+//AUDIT NOTE: const is a key word in JS/TS.
 export default function NameThatTreeGame() {
   const router = useRouter()
   const [shuffledQuestions, setShuffledQuestions] = useState<TreeItem[]>([])

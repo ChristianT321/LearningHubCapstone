@@ -23,7 +23,7 @@ const pawPrintImages: MatchItem[] = [
   { name: 'Duck', image: '/Duck feather.jpg' },
   { name: 'Bald eagle', image: '/Bald eagle feather.jpg' },
 ]
-
+//AUDIT NOTE for Ryan: these "consts" are just variables storing values.
 export default function MatchingGame() {
   const router = useRouter()
   const [matches, setMatches] = useState<{ [key: string]: string | null }>({})
@@ -38,6 +38,7 @@ export default function MatchingGame() {
       (animal) => matches[animal.name] === animal.name
     )
     setAllCorrect(correct)
+    //AUDIT NOTE: another event trigger when all answers are correct.
     
     if (correct) {
       const jsConfetti = new JSConfetti()
@@ -48,7 +49,7 @@ export default function MatchingGame() {
       })
     }
   }, [matches])
-
+//AUDIT NOTE for Ryan: The following "conts" are functions. If match variable changes it'll run the logic inside the useEffect.
   const handleDragStart = (name: string) => {
     setDraggedItem(name)
   }
