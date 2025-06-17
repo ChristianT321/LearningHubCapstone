@@ -38,7 +38,8 @@ export default function MatchingGame() {
       (animal) => matches[animal.name] === animal.name
     )
     setAllCorrect(correct)
-    
+    //AUDIT NOTE: If statement that triggers an event when all answers are correct.
+    //Const is making a new instance of a class.
     if (correct) {
       const jsConfetti = new JSConfetti()
       jsConfetti.addConfetti({

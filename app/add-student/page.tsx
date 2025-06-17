@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { parse } from 'papaparse'
 import * as XLSX from 'xlsx'
-
-type Student = {
+//AUDIT NOTE: id can be either a number or undefined. Optional property.
+type Student = { 
   id?: number
   firstName: string
   lastName: string
