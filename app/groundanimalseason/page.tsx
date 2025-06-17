@@ -37,9 +37,9 @@ export default function GroundAnimalSeasonPage() {
   ]
   const slides2 = [
     {
-      image: '/sea wolf winter.jpg',
-      alt: 'Sea Wolf in Winter',
-      desc: 'Even in the harshest winters, sea wolves thrive, hunting and navigating icy waters.'
+      image: '/sea wolf swimming.avif',
+      alt: 'Sea Wolf Swimming',
+      desc: "Vancouver seawolves swim to different islands in search of food, swimming most often during the summer season."
     },
     {
       image: '/sea wolf fall.jpg',
@@ -47,9 +47,14 @@ export default function GroundAnimalSeasonPage() {
       desc: 'In the fall, sea wolves get their largest supply of salmon from huge salmon runs, preparing for the cold months ahead.'
     },
     {
-      image: '/sea wolf swimming.avif',
-      alt: 'Sea Wolf Swimming',
-      desc: "Vancouver seawolves swim to different islands in search of food, showcasing their adaptability and strength."
+      image: '/sea wolf winter.jpg',
+      alt: 'Sea Wolf in Winter',
+      desc: 'Even in the harshest winters, sea wolves thrive, hunting and navigating icy waters.'
+    },
+    {
+      image: '/sea wolf puppy.jpg',
+      alt: 'Sea Wolf Puppy',
+      desc: 'In springtime the pups are born, resting while the pack hunts for food nearby.'
     }
   ]
 
@@ -102,6 +107,10 @@ export default function GroundAnimalSeasonPage() {
             ))}
           </Carousel>
         </div>
+
+        <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black]">
+          Vancouver Costal Sea Wolves
+        </h2>
 
         <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
           <Carousel
