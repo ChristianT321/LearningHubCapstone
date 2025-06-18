@@ -155,8 +155,10 @@ export default function HomePage() {
 
         <header
         style={{
-          position: 'sticky',
+          position: 'fixed',
           top: 0,
+          left: 0,
+          right: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.6)', 
           backdropFilter: 'blur(6px)', 
           zIndex: 1000,
