@@ -1,9 +1,12 @@
-// This page was made by referencing slides and examples given in web dev 2, while primarily basing it off of my final project in the same class. Copilot helped fill out some details.
 'use client'
 
 import { Button, Menu } from '@mantine/core'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import { FaHome, FaBook, FaFish, FaWater, FaOtter, FaPaw, FaDove, FaTree } from 'react-icons/fa'
+import { motion } from 'framer-motion'
 
 export default function HomePage() {
   const router = useRouter()
@@ -12,9 +15,68 @@ export default function HomePage() {
     router.push('/fishfacts')
   }
 
-  return (
-    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
+  const slides = [
+    {
+      image: '/salmon.jpg',
+      alt: 'Salmon swimming upstream',
+      desc: 'Salmon provide vital nutrients to the rainforest ecosystem'
+    },
+    {
+      image: '/humpback-whale.jpg',
+      alt: 'Humpback whale',
+      desc: 'Humpback whales use bubble nets to trap fish'
+    },
+    {
+      image: '/sea-otter.jpg',
+      alt: 'Sea otter',
+      desc: 'Sea otters use rocks as tools to crack open shellfish'
+    },
+    {
+      image: '/octopus.jpg',
+      alt: 'Giant Pacific Octopus',
+      desc: 'Octopuses can change color and texture to camouflage'
+    }
+  ]
 
+  return (
+    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
+
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 bg-black bg-opacity-60 backdrop-blur-md z-1000 py-3 shadow-lg">
+        <div className="flex justify-between items-center max-w-6xl mx-auto px-4">
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push('/home')}
+          >
+            <FaWater className="text-blue-400 text-2xl" />
+            <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
+          </motion.div>
+          
+          <Menu shadow="md" width={200} position="bottom-end" withinPortal>
+            <Menu.Target>
+              <Button 
+                leftSection={<FaBook />}
+                variant="filled" 
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Modules
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown className="z-50">
+              <Menu.Item leftSection={<FaHome />} onClick={() => router.push('/home')}>Home</Menu.Item>
+              <Menu.Divider />
+              <Menu.Item leftSection={<FaPaw />} onClick={() => router.push('/module1')}>Module 1: Ground Animals</Menu.Item>
+              <Menu.Item leftSection={<FaFish />} onClick={() => router.push('/module2')}>Module 2: Aquatic Life</Menu.Item>
+              <Menu.Item leftSection={<FaDove />} onClick={() => router.push('/module3')}>Module 3: Birds</Menu.Item>
+              <Menu.Item leftSection={<FaTree />} onClick={() => router.push('/module4')}>Module 4: Plants</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+      </header>
+
+      {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/FIsh background.png"
@@ -26,55 +88,80 @@ export default function HomePage() {
         />
       </div>
 
-            <div className="absolute top-4 right-4 z-20">
-            <Menu
-                shadow="md"
-                width={200}
-                openDelay={100}
-                closeDelay={150}
-                withinPortal={false}
-                styles={{
-                  item: {
-                    color: 'black', 
-                },
-                }}
-              >          
-                <Menu.Target>
-                  <Button variant="filled" className="text-black">Menu</Button>
-                </Menu.Target>
-      
-                <Menu.Dropdown style={{ display: 'flex', flexDirection: 'column', zIndex: 50 }}>
-                  <Menu.Item onClick={() => router.push('/home')}>Home</Menu.Item>
-                  <Menu.Item onClick={() => router.push('/module1')}>Module 1</Menu.Item>
-                  <Menu.Item onClick={() => router.push('/module2')}>Module 2</Menu.Item>
-                  <Menu.Item onClick={() => router.push('/module3')}>Module 3</Menu.Item>
-                  <Menu.Item onClick={() => router.push('/module4')}>Module 4</Menu.Item>
-                  <Menu.Divider />
-                </Menu.Dropdown>
-              </Menu>
-            </div>
-
-    <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4"> 
-        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-15">
+      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-6xl px-4">
+        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-8 mb-2">
           MODULE 2:
         </h1>
-        <h2 className="text-3xl font-semibold text-white drop-shadow-[2px_2px_0px_black]">
-          Aquatic animals
+        <h2 className="text-4xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mb-8">
+          AQUATIC LIFE
         </h2>
 
-        <p className="text-2xl font-semibold text-white drop-shadow-[2px_2px_0px_black]">
-            In this module, you will learn how; <br />
-            <li className="text-xl">Salmons bodys feed the rainforest when they die,</li>
-            <li className="text-xl">Humpback whales use bubble nets trap trap fish, </li>
-            <li className="text-xl">Sea otters use rocks to crack open shellfish,</li>
-            <li className="text-xl">The Giant Pacific Octopus can change its color and texture to blend in with its surroundings.</li>
+        {/* Carousel */}
+        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-blue-900 bg-opacity-70 p-4 z-30">
+          <Carousel
+            autoPlay
+            infiniteLoop
+            showThumbs={false}
+            showStatus={false}
+            interval={5000}
+            className="rounded"
+          >
+            {slides.map((slide, idx) => (
+              <div key={idx} className="relative">
+                <img
+                  src={slide.image}
+                  alt={slide.alt}
+                  className="h-80 w-full object-cover rounded-md"
+                  style={{
+                    width: '100%',
+                    height: '400px',
+                    objectFit: 'cover', 
+                    borderRadius: '12px'
+                  }}
+                />
+                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-blue-700 bg-opacity-60 py-2 px-4">
+                  {slide.desc}
+                </p>
+              </div>
+            ))}
+          </Carousel>
+        </div>
+
+        <p className="text-xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2 mt-8">
+          In this module you will learn about:
         </p>
-        <button
+
+        <ul className="space-y-6 w-full max-w-2xl">
+          {[
+            "Salmon bodies feed the rainforest when they die",
+            "Humpback whales use bubble nets to trap fish",
+            "Sea otters use rocks to crack open shellfish",
+            "The Giant Pacific Octopus can change its color and texture"
+          ].map((fact, index) => (
+            <motion.li
+              key={index}
+              className="bg-blue-900 bg-opacity-60 p-4 rounded-lg shadow-md"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-blue-300 text-2xl drop-shadow">🐟</span>
+                <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
+                  {fact}
+                </span>
+              </div>
+            </motion.li>
+          ))}
+        </ul>
+
+        <motion.button
           onClick={handleContinue}
-          className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-blue-800 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded shadow mt-8 mb-12"
         >
-          Continue
-        </button>
+          Continue Learning
+        </motion.button>
       </div>
     </main>
   )
