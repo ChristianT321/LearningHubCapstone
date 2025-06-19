@@ -7,9 +7,19 @@ import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { FaHome, FaBook, FaDove, FaPaw, FaWater, FaTree } from 'react-icons/fa'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 
 export default function HomePage() {
   const router = useRouter()
+
+  const headerLinks = [
+      { link: '/module1', label: 'Module 1', icon: FaPaw },
+      { link: '/module2', label: 'Module 2', icon: FaWater },
+      { link: '/module3', label: 'Module 3', icon: FaDove},
+      { link: '/module4', label: 'Module 4', icon: FaTree },
+    ];
+  
+    const [active, setActive] = useState(headerLinks[0].link);
 
   const handleContinue = () => {
     router.push('/birdfacts')
@@ -38,43 +48,69 @@ export default function HomePage() {
     }
   ]
 
+  const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
+      <motion.button
+      key={label}
+      onClick={(e) => {
+        e.preventDefault();
+        setActive(link);
+        router.push(link);
+      }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
+        active === link ? 'bg-amber-900 shadow-md' : 'bg-amber-900'
+      }`}
+    >
+      <Icon className="text-yellow-300" />
+      {label}
+    </motion.button>
+    ));
+
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-black bg-opacity-60 backdrop-blur-md z-1000 py-3 shadow-lg">
-        <div className="flex justify-between items-center max-w-6xl mx-auto px-4">
-          <motion.div 
+        <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '72px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+          zIndex: 1000,
+          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+          padding: '12px, 0', 
+        }}
+      >
+      <div
+          style={{
+            maxWidth: '1200px',
+            height: '100%',
+            margin: '0 auto',
+            padding: '0 16px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+        <motion.div 
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push('/home')}
           >
-            <FaDove className="text-blue-200 text-2xl" />
+            <FaPaw className="text-yellow-400 text-2xl" />
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
-          
-          <Menu shadow="md" width={200} position="bottom-end" withinPortal>
-            <Menu.Target>
-              <Button 
-                leftSection={<FaBook />}
-                variant="filled" 
-                className="bg-blue-500 hover:bg-blue-600 text-white"
-              >
-                Modules
-              </Button>
-            </Menu.Target>
 
-            <Menu.Dropdown className="z-50">
-              <Menu.Item leftSection={<FaHome />} onClick={() => router.push('/home')}>Home</Menu.Item>
-              <Menu.Divider />
-              <Menu.Item leftSection={<FaPaw />} onClick={() => router.push('/module1')}>Module 1: Ground Animals</Menu.Item>
-              <Menu.Item leftSection={<FaWater />} onClick={() => router.push('/module2')}>Module 2: Aquatic Life</Menu.Item>
-              <Menu.Item leftSection={<FaDove />} onClick={() => router.push('/module3')}>Module 3: Birds</Menu.Item>
-              <Menu.Item leftSection={<FaTree />} onClick={() => router.push('/module4')}>Module 4: Plants</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </div>
-      </header>
+        <div className="flex items-center gap-2">
+            {headerItems}
+          </div>
+      </div>
+    </header>
 
       {/* Background Image */}
       <div className="fixed inset-0 z-0">

@@ -1,3 +1,5 @@
+//used chatgpt to help with the header and the photo carousel
+
 'use client'
 
 import { Button, Group, Menu } from '@mantine/core'
@@ -19,7 +21,6 @@ export default function HomePage() {
 
   const [active, setActive] = useState(headerLinks[0].link);
   
-
   const router = useRouter()
 
   const handleSignOut = () => {
@@ -96,31 +97,30 @@ export default function HomePage() {
       <header
         style={{
           position: 'fixed',
-          alignItems: 'center',
           top: 0,
           left: 0,
           right: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)', 
-          backdropFilter: 'blur(6px)', 
+          height: '72px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
           zIndex: 1000,
-          width: '100%',
-          padding: '0px 0',
           boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-        }}
-    >
-      <div
-        style={{
-          ...innerStyle,
-          justifyContent: 'space-between',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 16px',
-          textAlign: 'left',
+          padding: '12px, 0', 
         }}
       >
-      </div>
-        <div className="flex justify-between items-center max-w-6xl mx-auto px-4">
+        <div
+          style={{
+            maxWidth: '1200px',
+            height: '100%',
+            margin: '0 auto',
+            padding: '0 16px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          {/* Logo and title */}
           <motion.div 
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2 cursor-pointer"
@@ -129,10 +129,11 @@ export default function HomePage() {
             <FaPaw className="text-yellow-400 text-2xl" />
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
-          
-          <Group gap="sm" style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', height: '100%',}}>
+
+          {/* Navigation buttons */}
+          <div className="flex items-center gap-2">
             {headerItems}
-          </Group>
+          </div>
         </div>
       </header>
 

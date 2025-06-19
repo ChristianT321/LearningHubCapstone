@@ -159,34 +159,36 @@ export default function HomePage() {
           top: 0,
           left: 0,
           right: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)', 
-          backdropFilter: 'blur(6px)', 
+          height: '72px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
           zIndex: 1000,
-          width: '100%',
-          padding: '12px 0',
           boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-        }}
-    >
-      <div
-        style={{
-          ...innerStyle,
-          justifyContent: 'space-between',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 16px',
-          textAlign: 'left',
+          padding: '12px, 0', 
         }}
       >
+      <div
+          style={{
+            maxWidth: '1200px',
+            height: '100%',
+            margin: '0 auto',
+            padding: '0 16px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
         <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'white' }}>
           Welcome
         </div>
 
-        <Group gap="sm" style={{ flexDirection: 'row', display: 'flex' }}>
-          {headerItems}
-        </Group>
+        <div className="flex items-center gap-2">
+            {headerItems}
+          </div>
       </div>
     </header>
+
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
