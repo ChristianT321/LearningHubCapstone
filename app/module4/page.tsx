@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { FaHome, FaBook, FaTree, FaPaw, FaWater, FaDove } from 'react-icons/fa'
+import { FaTree, FaPaw, FaWater, FaDove } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 

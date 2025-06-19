@@ -2,12 +2,11 @@
 
 'use client'
 
-import { Button, Menu } from '@mantine/core'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { FaHome, FaBook, FaFish, FaWater, FaPaw, FaDove, FaTree } from 'react-icons/fa'
+import { FaFish, FaPaw, FaDove, FaTree } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
@@ -61,7 +60,7 @@ export default function HomePage() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
-        active === link ? 'bg-blue-900 shadow-md' : 'bg-blue-900'
+        active === link ? 'bg-blue-400 shadow-md' : 'bg-blue-500'
       }`}
     >
       <Icon className="text-yellow-300" />
@@ -135,7 +134,7 @@ export default function HomePage() {
         </h2>
 
         {/* Carousel */}
-        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-blue-900 bg-opacity-70 p-4 z-30">
+        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-blue-500 bg-opacity-70 p-4 z-30">
           <Carousel
             autoPlay
             infiniteLoop
@@ -157,7 +156,7 @@ export default function HomePage() {
                     borderRadius: '12px'
                   }}
                 />
-                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-blue-700 bg-opacity-60 py-2 px-4">
+                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-blue-800 bg-opacity-60 py-2 px-4">
                   {slide.desc}
                 </p>
               </div>
@@ -178,7 +177,7 @@ export default function HomePage() {
           ].map((fact, index) => (
             <motion.li
               key={index}
-              className="bg-blue-900 bg-opacity-60 p-4 rounded-lg shadow-md"
+              className="bg-blue-500 bg-opacity-60 p-4 rounded-lg shadow-md"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -196,7 +195,7 @@ export default function HomePage() {
           onClick={handleContinue}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-blue-800 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded shadow mt-8 mb-12"
+          className="bg-blue-500 hover:bg-blue-400 text-white font-bold px-6 py-3 rounded shadow mt-8 mb-12"
         >
           Continue Learning
         </motion.button>

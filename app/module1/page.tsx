@@ -2,12 +2,11 @@
 
 'use client'
 
-import { Button, Group, Menu } from '@mantine/core'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { FaPaw, FaBook, FaSignOutAlt, FaHome, FaWater, FaDove, FaTree } from 'react-icons/fa'
+import { FaPaw, FaWater, FaDove, FaTree } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import { useState } from 'react';
 
@@ -211,14 +210,6 @@ export default function HomePage() {
         </ul>
 
         <div className="flex gap-4 mt-8 mb-12">
-          <motion.button
-            onClick={handleSignOut}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 bg-amber-900 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow"
-          >
-            <FaSignOutAlt /> Sign Out
-          </motion.button>
 
           <motion.button
             onClick={handleContinue}
