@@ -27,24 +27,24 @@ export default function HomePage() {
 
   const slides = [
     {
-      image: '/bald-eagle.jpg',
+      image: '/Bald eagle.jpg',
       alt: 'Bald Eagle diving',
       desc: 'Bald eagles can spot fish from hundreds of feet in the air'
     },
     {
-      image: '/great-horned-owl.jpg',
+      image: '/ghowl.jpg',
       alt: 'Great Horned Owl',
       desc: 'Owls hunt silently with specialized feathers'
     },
     {
-      image: '/rufous-hummingbird.jpg',
+      image: '/Hummingbird.jpg',
       alt: 'Rufous Hummingbird',
       desc: 'Hummingbirds migrate thousands of miles annually'
     },
     {
-      image: '/raven.jpg',
-      alt: 'Raven',
-      desc: 'Ravens are among the smartest birds'
+      image: '/Duck.jpg',
+      alt: 'Duck',
+      desc: 'Ducks have waterproof feathers'
     }
   ]
 
@@ -59,7 +59,7 @@ export default function HomePage() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
-        active === link ? 'bg-amber-900 shadow-md' : 'bg-amber-900'
+        active === link ? 'bg-blue-800 shadow-md' : 'bg-blue-800'
       }`}
     >
       <Icon className="text-yellow-300" />
@@ -102,7 +102,7 @@ export default function HomePage() {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push('/home')}
           >
-            <FaPaw className="text-yellow-400 text-2xl" />
+            <FaDove className="text-yellow-400 text-2xl" />
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
 
@@ -172,7 +172,7 @@ export default function HomePage() {
             "Bald eagles dive into the water to catch fish",
             "Great horned owls hunt at night using silent wings and sharp hearing",
             "Rufous hummingbirds migrate thousands of miles every summer",
-            "Ravens are smart and steal food from other animals"
+            "Each duck has a unique quack"
           ].map((fact, index) => (
             <motion.li
               key={index}
@@ -181,7 +181,7 @@ export default function HomePage() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="flex items-center gap-3">
-                <span className="text-blue-200 text-2xl drop-shadow">🦅</span>
+                <span className="text-blue-200 text-2xl drop-shadow"><FaDove className="text-yellow-400 text-2xl" /></span>
                 <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
                   {fact}
                 </span>

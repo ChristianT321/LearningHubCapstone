@@ -14,7 +14,7 @@ export default function HomePage() {
 
   const headerLinks = [
       { link: '/module1', label: 'Module 1', icon: FaPaw },
-      { link: '/module2', label: 'Module 2', icon: FaWater },
+      { link: '/module2', label: 'Module 2', icon: FaFish },
       { link: '/module3', label: 'Module 3', icon: FaDove},
       { link: '/module4', label: 'Module 4', icon: FaTree },
     ];
