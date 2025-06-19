@@ -15,6 +15,51 @@ import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
 import { FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
 import { motion } from 'framer-motion';
 
+type Hotspot = {
+  id: string
+  label: string
+  top: string
+  left: string
+  fact: string
+  imgSrc?: string
+  position?: { x: number; y: number }
+}
+
+const hotspots: Hotspot[] = [
+  {
+    id: 'bear',
+    label: 'Spirit Bear Habitat',
+    top: '85%',
+    left: '20%',
+    fact: 'Spirit Bears are rare white-furred black bears that live only in the Great Bear Rainforest.',
+    imgSrc: '/Spirit bear.jpg',
+  },
+  {
+    id: 'eagle',
+    label: "Eagle's Nest",
+    top: '38%',
+    left: '60%',
+    fact: 'Bald Eagles nest high in tall trees or cliffs and hunt fish in coastal waters.',
+    imgSrc: '/Bald eagle.jpg',
+  },
+  {
+    id: 'salmon',
+    label: 'Salmon Stream',
+    top: '96%',
+    left: '86%',
+    fact: 'Salmon return to freshwater streams to spawn, feeding many animals along the way.',
+    imgSrc: '/salmon.jpg',
+  },
+  {
+    id: 'cedar',
+    label: 'Red Cedar Grove',
+    top: '70%',
+    left: '70%',
+    fact: 'Western Red Cedar trees can grow for over 1,000 years and are sacred to Indigenous cultures.',
+    imgSrc: '/red cedar.jpg',
+  },
+]
+
 //links to educational things within the footer
 const footerLinks = [
   { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
@@ -32,6 +77,7 @@ const headerLinks = [
 export default function HomePage() {
   const router = useRouter()
 
+  const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null)
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(headerLinks[0].link);
   const theme = useMantineTheme();
@@ -75,23 +121,6 @@ export default function HomePage() {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0 16px',
-  };
-
-  const linkBaseStyle = {
-    display: 'inline-block',
-    lineHeight: 1,
-    padding: '8px 12px',
-    textDecoration: 'none',
-    color: 'white',
-    fontSize: '18px',
-    fontWeight: 500,
-  };
-
-  const linkHoverStyle = {
-  };
-
-  const linkActiveStyle = {
-    backgroundColor: 'transparent',
   };
 
   const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
@@ -210,34 +239,71 @@ export default function HomePage() {
           Your number one source for learning about the Great Bear Rainforest!
         </h2></div>
 
-        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-amber-900 bg-opacity-70 p-4 z-30">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            interval={5000}
-            className="rounded"
-          >
-            {slides.map((slide, idx) => (
-              <div key={idx} className="relative">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className="h-80 w-full object-cover rounded-md"
-                  style={{
-                    width: '100%',
-                    height: '400px',
-                    objectFit: 'cover', 
-                    borderRadius: '12px'
-                  }}
-                />
-                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-green-700 bg-opacity-60 py-2 px-4">
-                  {slide.desc}
-                </p>
-              </div>
-            ))}
-          </Carousel>
+        <div className="relative w-full max-w-6xl mx-auto mt-8 p-4"
+        onClick={() => setActiveHotspot(null)}
+        >
+
+      {/* Map Image */}
+      <div className="relative w-full h-[600px] rounded-lg shadow-lg overflow-hidden border-4 border-green-700" id="map-container">
+        <img
+          src="/rainforest.jpg"
+          alt="Great Bear Rainforest Map"
+          className="w-full h-full object-cover"
+          draggable={false}
+        />
+
+        {/* Hotspots */}
+        {hotspots.map((spot) => (
+          <button
+          key={spot.id}
+          className="absolute bg-green-700 rounded-full w-8 h-8 border-2 border-white shadow-md hover:bg-green-500 transition"
+          style={{ top: spot.top, left: spot.left, transform: 'translate(-50%, -50%)' }}
+          onClick={(e) => {
+            e.stopPropagation();
+
+            const mapRect = (document.getElementById('map-container') as HTMLElement).getBoundingClientRect();
+            const btnRect = e.currentTarget.getBoundingClientRect();
+
+            const relativeX = btnRect.left - mapRect.left;
+            const relativeY = btnRect.top - mapRect.top;
+
+            setActiveHotspot({
+              ...spot,
+              position: { x: relativeX, y: relativeY },
+            });
+          }}
+          title={spot.label}
+        />
+        ))}
+      </div>
+
+      {/* Popup Modal */}
+      {activeHotspot?.position && (
+      <div
+        className="absolute z-50 bg-white rounded-lg shadow-xl w-80 p-4 transition-all"
+        style={{
+          top: `${Math.min(activeHotspot.position.y, 600 - 220)}px`, // prevent bottom overflow (adjust 220 if popup is taller)
+          left: `${Math.min(activeHotspot.position.x, 960 - 340)}px`, // prevent right overflow (map width 960px, popup ~340px)
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => setActiveHotspot(null)}
+          className="absolute top-2 right-3 text-gray-600 hover:text-gray-900 text-xl font-bold"
+        >
+          ×
+        </button>
+        <h2 className="text-xl font-bold mb-2 text-green-800">{activeHotspot.label}</h2>
+        {activeHotspot.imgSrc && (
+          <img
+            src={activeHotspot.imgSrc}
+            alt={activeHotspot.label}
+            className="w-full h-40 object-cover rounded mb-3"
+          />
+        )}
+        <p className="text-gray-700 text-sm">{activeHotspot.fact}</p>
+      </div>
+    )}
     </div>
 
     <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
