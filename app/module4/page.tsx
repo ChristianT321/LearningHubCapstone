@@ -27,22 +27,22 @@ export default function HomePage() {
 
   const slides = [
     {
-      image: '/red-cedar.jpg',
+      image: '/red cedar.jpg',
       alt: 'Western Red Cedar',
       desc: 'Western Red Cedars can live for over 1,000 years'
     },
     {
-      image: '/forest-moss.jpg',
+      image: '/moss.jpg',
       alt: 'Rainforest Moss',
       desc: 'Moss acts as a natural sponge in the rainforest'
     },
     {
-      image: '/nurse-log.jpg',
+      image: '/nurse log.jpg',
       alt: 'Nurse Log',
       desc: 'Fallen trees become nurseries for new growth'
     },
     {
-      image: '/old-growth.jpg',
+      image: '/old growth.jpg',
       alt: 'Old Growth Forest',
       desc: 'Ancient forests support unique ecosystems'
     }
@@ -59,7 +59,7 @@ export default function HomePage() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
-        active === link ? 'bg-amber-900 shadow-md' : 'bg-amber-900'
+        active === link ? 'bg-green-900 shadow-md' : 'bg-green-900'
       }`}
     >
       <Icon className="text-yellow-300" />
@@ -102,7 +102,7 @@ export default function HomePage() {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push('/home')}
           >
-            <FaPaw className="text-yellow-400 text-2xl" />
+            <FaTree className="text-yellow-400 text-2xl" />
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
 
@@ -181,7 +181,7 @@ export default function HomePage() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="flex items-center gap-3">
-                <span className="text-green-300 text-2xl drop-shadow">🌲</span>
+                <span className="text-green-300 text-2xl drop-shadow"><FaTree className="text-yellow-400 text-2xl" /></span>
                 <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
                   {fact}
                 </span>
