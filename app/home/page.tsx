@@ -105,7 +105,7 @@ export default function HomePage() {
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.95 }}
     className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
-      active === link ? 'bg-red-700 shadow-md' : 'bg-red-600'
+      active === link ? 'bg-amber-900 shadow-md' : 'bg-amber-900'
     }`}
   >
     <Icon className="text-yellow-300" />
@@ -115,15 +115,27 @@ export default function HomePage() {
 
   const items = footerLinks.map((link) => (
     <Anchor<'a'>
-      c="dimmed"
       key={link.label}
       href={link.link}
       target="_blank"
       rel="noopener noreferrer"
-      size="sm"
       style={{
-      marginRight: link.label === 'Videos' ? '40px' : '0px', 
-    }}
+        fontSize: '18px',
+        fontWeight: 600,
+        color: 'white',
+        backgroundColor: '#78350F', 
+        padding: '8px 16px',
+        borderRadius: '8px',
+        textDecoration: 'none',
+        marginRight: '12px',
+        transition: 'all 0.3s ease',
+      }}
+      onMouseEnter={(e) => {
+        (e.target as HTMLElement).style.backgroundColor = '#78350F'; 
+      }}
+      onMouseLeave={(e) => {
+        (e.target as HTMLElement).style.backgroundColor = '#78350F';
+      }}
     >
       {link.label}
     </Anchor>
@@ -142,33 +154,41 @@ export default function HomePage() {
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
         <header
-      style={{
-        height: '0px',
-        backgroundColor: 'transparent',
-        zIndex: 1000,
-        width: '100%',
-      }}
-    >
-      <div
         style={{
-          ...innerStyle,
-          justifyContent: 'space-between',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 16px',
-          textAlign: 'left',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '72px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+          zIndex: 1000,
+          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+          padding: '12px, 0', 
         }}
       >
+      <div
+          style={{
+            maxWidth: '1200px',
+            height: '100%',
+            margin: '0 auto',
+            padding: '0 16px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
         <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'white' }}>
           Welcome
         </div>
 
-        <Group gap="sm" style={{ flexDirection: 'row', display: 'flex' }}>
-          {headerItems}
-        </Group>
+        <div className="flex items-center gap-2">
+            {headerItems}
+          </div>
       </div>
     </header>
+
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
@@ -190,35 +210,34 @@ export default function HomePage() {
           Your number one source for learning about the Great Bear Rainforest!
         </h2></div>
 
-      <div className="w-full max-w-3xl mx-auto mt-10 rounded-lg overflow-hidden shadow-lg bg-red-600 bg-opacity-70 p-4 z-30"> 
-      <Carousel
-        autoPlay
-        infiniteLoop
-        showThumbs={false}
-        showStatus={false}
-        showIndicators={true}
-        interval={5000}
-        className="rounded"
-      >
-        {slides.map((slide, idx) => (
-          <div key={idx} className="relative">
-            <img
-              src={slide.image}
-              alt={slide.alt}
-              className="h-80 w-full object-cover rounded-md"
-              style={{
-                width: '400px',
-                height: '300px',
-                objectFit: 'cover', 
-                borderRadius: '12px'
-              }}
-            />
-            <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-green-700 bg-opacity-60 py-2 px-4">
-              {slide.desc}
-            </p>
-          </div>
-        ))}
-      </Carousel>
+        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-amber-900 bg-opacity-70 p-4 z-30">
+          <Carousel
+            autoPlay
+            infiniteLoop
+            showThumbs={false}
+            showStatus={false}
+            interval={5000}
+            className="rounded"
+          >
+            {slides.map((slide, idx) => (
+              <div key={idx} className="relative">
+                <img
+                  src={slide.image}
+                  alt={slide.alt}
+                  className="h-80 w-full object-cover rounded-md"
+                  style={{
+                    width: '100%',
+                    height: '400px',
+                    objectFit: 'cover', 
+                    borderRadius: '12px'
+                  }}
+                />
+                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-green-700 bg-opacity-60 py-2 px-4">
+                  {slide.desc}
+                </p>
+              </div>
+            ))}
+          </Carousel>
     </div>
 
     <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
@@ -229,13 +248,13 @@ export default function HomePage() {
 
         <button
           onClick={handleSignOut}
-          className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
+          className="fixed left-5 bottom-5 bg-amber-900 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow"
         >
           Sign Out
         </button>
         <button
           onClick={handleContinue}
-          className="bg-red-700 hover:bg-red-600 hover:scale-105 transition-all duration-300 shadow-lg rounded px-6 py-3 text-white font-fun"
+          className="bg-amber-900 hover:bg-amber-900 hover:scale-105 transition-all duration-300 shadow-lg rounded px-6 py-3 text-white font-fun"
         >
           Continue
         </button>
