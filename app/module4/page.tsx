@@ -1,6 +1,7 @@
+//used chatgpt to help with the header and the photo carousel
+
 'use client'
 
-import { Button, Menu } from '@mantine/core'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'

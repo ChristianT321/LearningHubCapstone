@@ -1,3 +1,5 @@
+//used chatgpt to help with the header and the photo carousel
+
 'use client'
 
 import { Button, Menu } from '@mantine/core'
