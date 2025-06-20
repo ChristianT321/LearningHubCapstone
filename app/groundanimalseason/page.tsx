@@ -75,6 +75,14 @@ export default function GroundAnimalSeasonPage() {
           Black Bears
         </h2>
 
+        <div className="bg-amber-800 rounded-lg p-6 shadow-md">
+          <p className="text-white text-lg">
+            Black bears are common in the Great Bear Rainforest and play an important role in the ecosystem. They spend a lot of time near rivers and streams, 
+            especially when during high salmon seasons. The bears help spread nutrients through the forest when they carry fish into the trees and leave leftovers behind. 
+            Black bears eat berries, plants, insects, and fish, and they usually avoid people. They are an important symbol of the rainforest and show how healthy the habitat is.
+          </p>
+        </div>
+
         <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
           <Carousel
             autoPlay
@@ -103,9 +111,18 @@ export default function GroundAnimalSeasonPage() {
           </Carousel>
         </div>
 
-        <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black]">
+        <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mt-6 mb-6">
           Vancouver Costal Sea Wolves
         </h2>
+
+        <div className="bg-amber-800 rounded-lg p-6 shadow-md">
+          <p className="text-white text-lg">
+            The Vancouver Coastal Sea Wolf is a special type of wolf that lives along the coast and islands of the Great Bear Rainforest. 
+            These wolves are different from other wolves because they swim a lot and eat mostly seafood like salmon, crabs, and even seals. 
+            They travel along beaches and swim between islands to find food. Coastal sea wolves help keep the ecosystem balanced and are important 
+            to local Indigenous cultures. They are wild, shy animals and rarely seen by people.
+          </p>
+        </div>
 
         <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
           <Carousel
