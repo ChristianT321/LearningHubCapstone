@@ -9,11 +9,6 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'
 export default function GroundAnimalSeasonPage() {
   const router = useRouter()
 
-  const handleSignOut = () => {
-    localStorage.removeItem('currentUser')
-    router.push('/')
-  }
-
   const handleContinue = () => {
     router.push('/groundanimalfacts')
   }
@@ -140,21 +135,13 @@ export default function GroundAnimalSeasonPage() {
               </React.Fragment>
             ))}
           </Carousel>
-
-        <button
-          onClick={handleSignOut}
-          className="fixed left-5 bottom-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded shadow"
-        >
-          Sign Out
-        </button>
-
+      </div>
         <button
           onClick={handleContinue}
           className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
         >
           Continue
         </button>
-      </div>
     </div>
     </main>
   )
