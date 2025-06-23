@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Carousel } from 'react-responsive-carousel';
-import { Stepper, Button, Group } from '@mantine/core';
+
+import '@mantine/core/styles.css';
+import { MantineProvider, Stepper, Button, Group } from '@mantine/core';
+
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 export default function GroundAnimalSeasonPage() {
@@ -35,14 +38,24 @@ export default function GroundAnimalSeasonPage() {
 
   const slidesGreatBear = [
     {
-      image: '/Spirit bear.jpg',
+      image: '/Spirit Bear Spring.avif',
       alt: 'Spirit Bear',
-      desc: 'The Spirit Bear, also called the Kermode bear, is a rare white black bear found only in the Great Bear Rainforest.',
+      desc: 'Bears wake up from hibernation around March or April. They come out of their dens hungry and weak after months without eating. At first, they eat fresh grass, plants, and early berries to get energy.',
     },
     {
-      image: '/Spirit bear 2.jpg',
+      image: '/Spirit Bear Summer.avif',
       alt: 'Spirit Bear Fishing',
-      desc: 'Spirit Bears are excellent fishers and have cultural importance for Indigenous peoples.',
+      desc: 'Summer is when food is everywhere: lots of berries, plants, insects, and clams. Bears spend lots of time eating to build up fat for the next winte',
+    },
+    {
+      image: '/Spirit Bear Fall.jpg',
+      alt: 'Spirit Bear Fishing',
+      desc: 'This is the most important feeding time: the salmon runs! Bears gather at rivers and streams to catch salmon. They eat as much fatty fish as possible to store energy. They become very focused on feeding and may be seen fishing all day.',
+    },
+        {
+      image: '/Spirit Bear Winter.jpg',
+      alt: 'Spirit Bear Fishing',
+      desc: 'Bears go into hibernation, usually from November to March. They sleep in dens made in hollow trees, caves, or dug-out hillsides. While hibernating, they don’t eat, drink, or go to the bathroom — they live off their body fat. The bear stays in the den until the warmer weather returns.',
     },
   ];
 
@@ -70,152 +83,148 @@ export default function GroundAnimalSeasonPage() {
   ];
 
   return (
-    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
-      <div className="fixed inset-0 z-0">
-        <Image
-          src="/homeback.png"
-          alt="Home Background"
-          fill
-          priority
-          className="object-cover"
-          style={{ objectPosition: 'center' }}
-        />
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-5xl px-4 py-8">
-        <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-10 mb-4">
-          Seasonal Changes for Ground Animals
-        </h1>
-
-        {/* ✅ Clean Mantine Stepper with numbered steps and orange color */}
-        <Stepper
-          active={step}
-          onStepClick={setStep}
-          color="orange"
-          className="w-full mb-8"
-        >
-          <Stepper.Step
-            label="Step 1"
-            description="Black Bear"
+    <MantineProvider defaultColorScheme="light">
+      <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
+        <div className="fixed inset-0 z-0">
+          <Image
+            src="/homeback.png"
+            alt="Home Background"
+            fill
+            priority
+            className="object-cover"
+            style={{ objectPosition: 'center' }}
           />
-          <Stepper.Step
-            label="Step 2"
-            description="Spirit Bear"
-          />
-        </Stepper>
-
-        <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black]">
-          {step === 0 ? 'Black Bears' : 'Spirit Bears'}
-        </h2>
-
-        <div className="bg-amber-800 rounded-lg p-6 shadow-md">
-          {step === 0 ? (
-            <p className="text-white text-lg">
-              Black bears are common in the Great Bear Rainforest and play an important role in the ecosystem. They spend a lot of time near rivers and streams,
-              especially when salmon are plentiful. They help spread nutrients by carrying fish remains into the forest. Black bears eat berries, plants, insects, and fish,
-              and they usually avoid people.
-            </p>
-          ) : (
-            <p className="text-white text-lg">
-              The Spirit Bear, also known as the Kermode bear, is a rare and special type of black bear with white fur. Found only in the Great Bear Rainforest,
-              it symbolizes the uniqueness of this ecosystem. Spirit Bears are deeply important to Indigenous cultures and are a key part of local legends and stories.
-            </p>
-          )}
         </div>
 
-        <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showIndicators={true}
-            interval={5000}
-            className="rounded"
-          >
-            {(step === 0 ? slidesBlackBear : slidesGreatBear).map((slide, idx) => (
-              <div key={idx} className="relative">
-                <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
-                  <Image
-                    src={slide.image}
-                    alt={slide.alt}
-                    fill
-                    className="object-contain rounded-lg"
-                  />
-                </div>
-                <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
-                  {slide.desc}
-                </p>
-              </div>
-            ))}
-          </Carousel>
-        </div>
+        <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-5xl px-4 py-8">
+          <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-10 mb-4">
+            Seasonal Changes for Ground Animals
+          </h1>
 
-        <Group justify="center" mt="xl">
-          <Button
-            variant="default"
-            disabled={step === 0}
-            onClick={() => setStep(step - 1)}
-          >
-            Back
-          </Button>
-          <Button
-            disabled={step === 1}
-            onClick={() => setStep(step + 1)}
+          <Stepper
+            active={step}
+            onStepClick={setStep}
             color="orange"
+            className="w-full mb-8"
+            size="md"
           >
-            Next step
-          </Button>
-        </Group>
+            <Stepper.Step label="Step 1" description="Black Bear" />
+            <Stepper.Step label="Step 2" description="Spirit Bear" />
+          </Stepper>
 
-        <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mt-6 mb-6">
-          Vancouver Coastal Sea Wolves
-        </h2>
+                    <Group justify="center" mt="xl">
+            <Button
+              variant="default"
+              disabled={step === 0}
+              onClick={() => setStep(step - 1)}
+            >
+              Back
+            </Button>
+            <Button
+              color="orange"
+              disabled={step === 1}
+              onClick={() => setStep(step + 1)}
+            >
+              Next step
+            </Button>
+          </Group>
 
-        <div className="bg-amber-800 rounded-lg p-6 shadow-md">
-          <p className="text-white text-lg">
-            The Vancouver Coastal Sea Wolf is a unique type of wolf that lives along the coast and islands of the Great Bear Rainforest.
-            They swim a lot and eat mostly seafood like salmon, crabs, and seals. They help balance the ecosystem and are important to local Indigenous cultures.
-          </p>
-        </div>
+          <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black]">
+            {step === 0 ? 'Black Bears' : 'Spirit Bears'}
+          </h2>
 
-        <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showIndicators={true}
-            interval={5000}
-            className="rounded"
-          >
-            {slides2.map((slide2, idx) => (
-              <React.Fragment key={idx}>
-                <div className="relative">
+          <div className="bg-amber-800 rounded-lg p-6 shadow-md">
+            {step === 0 ? (
+              <p className="text-white text-lg">
+                Black bears are common in the Great Bear Rainforest and play an important role in the ecosystem. They spend a lot of time near rivers and streams,
+                especially when salmon are plentiful. They help spread nutrients by carrying fish remains into the forest. Black bears eat berries, plants, insects, and fish,
+                and they usually avoid people.
+              </p>
+            ) : (
+              <p className="text-white text-lg">
+                The Spirit Bear, also known as the Kermode bear, is a rare and special type of black bear with white fur. Found only in the Great Bear Rainforest,
+                it symbolizes the uniqueness of this ecosystem. Spirit Bears are deeply important to Indigenous cultures and are a key part of local legends and stories.
+              </p>
+            )}
+          </div>
+
+          <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
+            <Carousel
+              autoPlay
+              infiniteLoop
+              showThumbs={false}
+              showStatus={false}
+              showIndicators={true}
+              interval={5000}
+              className="rounded"
+            >
+              {(step === 0 ? slidesBlackBear : slidesGreatBear).map((slide, idx) => (
+                <div key={idx} className="relative">
                   <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
                     <Image
-                      src={slide2.image}
-                      alt={slide2.alt}
+                      src={slide.image}
+                      alt={slide.alt}
                       fill
                       className="object-contain rounded-lg"
                     />
                   </div>
                   <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
-                    {slide2.desc}
+                    {slide.desc}
                   </p>
                 </div>
-              </React.Fragment>
-            ))}
-          </Carousel>
-        </div>
+              ))}
+            </Carousel>
+          </div>
 
-        <button
-          onClick={handleContinue}
-          className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
-        >
-          Continue
-        </button>
-      </div>
-    </main>
+          <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mt-6 mb-6">
+            Vancouver Coastal Sea Wolves
+          </h2>
+
+          <div className="bg-amber-800 rounded-lg p-6 shadow-md">
+            <p className="text-white text-lg">
+              The Vancouver Coastal Sea Wolf is a unique type of wolf that lives along the coast and islands of the Great Bear Rainforest.
+              They swim a lot and eat mostly seafood like salmon, crabs, and seals. They help balance the ecosystem and are important to local Indigenous cultures.
+            </p>
+          </div>
+
+          <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 z-30">
+            <Carousel
+              autoPlay
+              infiniteLoop
+              showThumbs={false}
+              showStatus={false}
+              showIndicators={true}
+              interval={5000}
+              className="rounded"
+            >
+              {slides2.map((slide2, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="relative">
+                    <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
+                      <Image
+                        src={slide2.image}
+                        alt={slide2.alt}
+                        fill
+                        className="object-contain rounded-lg"
+                      />
+                    </div>
+                    <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
+                      {slide2.desc}
+                    </p>
+                  </div>
+                </React.Fragment>
+              ))}
+            </Carousel>
+          </div>
+
+          <button
+            onClick={handleContinue}
+            className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-5"
+          >
+            Continue
+          </button>
+        </div>
+      </main>
+    </MantineProvider>
   );
 }
