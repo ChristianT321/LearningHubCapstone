@@ -18,6 +18,7 @@ export default function GroundAnimalSeasonPage() {
     router.push('/groundanimalfacts');
   };
 
+  // ✅ Your three bear slide arrays
   const slidesBlackBear = [
     {
       image: '/01_Schwarzbär.jpg',
@@ -36,7 +37,7 @@ export default function GroundAnimalSeasonPage() {
     },
   ];
 
-  const slidesGreatBear = [
+  const slidesSpiritBear = [
     {
       image: '/Spirit Bear Spring.avif',
       alt: 'Spirit Bear Spring',
@@ -59,7 +60,30 @@ export default function GroundAnimalSeasonPage() {
     },
   ];
 
-  const slides2 = [
+  const slidesGrizzlyBear = [
+    {
+      image: '/Grizzly Bear Spring.jpg',
+      alt: 'Grizzly Bear Spring',
+      desc: 'Grizzlies wake up from hibernation around March or April. They come out skinny and hungry, so they eat fresh green plants, grasses, and roots.',
+    },
+    {
+      image: '/Grizzly Bear Summer.jpg',
+      alt: 'Grizzly Bear Summer',
+      desc: 'In summer, they often stay near rivers, streams, and meadows where there is the most to eat. Mothers keep cubs close while they forage for food.',
+    },
+    {
+      image: '/Grizzly Bear Fall.jpg',
+      alt: 'Grizzly Bear Fall',
+      desc: 'Like the other bears, grizzlies eat a lot of salmon in the fall. Once they have enough fat, they prepare for hibernation by finding or building a den to sleep in for the winter.',
+    },
+    {
+      image: '/Grizzly Bear Winter.png',
+      alt: 'Grizzly Bear Winter',
+      desc: 'Same as the other bears, Grizzlies hibernate from November to March. They sleep in dens and live off body fat until spring returns.',
+    },
+  ];
+
+  const slidesSeaWolf = [
     {
       image: '/sea wolf swimming.avif',
       alt: 'Sea Wolf Swimming',
@@ -106,6 +130,7 @@ export default function GroundAnimalSeasonPage() {
               Bears!
             </h2>
 
+            {/* ✅ UPDATED: Stepper with three steps */}
             <Stepper
               active={step}
               onStepClick={setStep}
@@ -115,6 +140,7 @@ export default function GroundAnimalSeasonPage() {
             >
               <Stepper.Step label="Step 1" description="Black Bear" />
               <Stepper.Step label="Step 2" description="Spirit Bear" />
+              <Stepper.Step label="Step 3" description="Grizzly Bear" />
             </Stepper>
 
             <Group justify="center" className="mb-6">
@@ -127,16 +153,12 @@ export default function GroundAnimalSeasonPage() {
               </Button>
               <Button
                 color="orange"
-                disabled={step === 1}
+                disabled={step === 2}
                 onClick={() => setStep(step + 1)}
               >
                 Next step
               </Button>
             </Group>
-
-            <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mb-4">
-              {step === 0 ? 'Black Bears' : 'Spirit Bears'}
-            </h2>
 
             <div className="bg-amber-800 rounded-lg p-6 shadow-md mb-6">
               {step === 0 ? (
@@ -145,10 +167,15 @@ export default function GroundAnimalSeasonPage() {
                   especially when salmon are plentiful. They help spread nutrients by carrying fish remains into the forest. Black bears eat berries, plants, insects, and fish,
                   and they usually avoid people.
                 </p>
-              ) : (
+              ) : step === 1 ? (
                 <p className="text-white text-lg">
                   The Spirit Bear, also known as the Kermode bear, is a rare and special type of black bear with white fur. Found only in the Great Bear Rainforest,
                   it symbolizes the uniqueness of this ecosystem. Spirit Bears are deeply important to Indigenous cultures and are a key part of local legends and stories.
+                </p>
+              ) : (
+                <p className="text-white text-lg">
+                  Grizzly bears are larger bears found in some parts of the Great Bear Rainforest. They are powerful fishers and eat lots of salmon in the fall.
+                  They also eat berries, plants, and small animals, and they hibernate in dens through the cold winter months.
                 </p>
               )}
             </div>
@@ -163,26 +190,28 @@ export default function GroundAnimalSeasonPage() {
                 interval={5000}
                 className="rounded"
               >
-                {(step === 0 ? slidesBlackBear : slidesGreatBear).map((slide, idx) => (
-                  <div key={idx} className="relative">
-                    <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
-                      <Image
-                        src={slide.image}
-                        alt={slide.alt}
-                        fill
-                        className="object-contain rounded-lg"
-                      />
+                {(step === 0 ? slidesBlackBear : step === 1 ? slidesSpiritBear : slidesGrizzlyBear).map(
+                  (slide, idx) => (
+                    <div key={idx} className="relative">
+                      <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
+                        <Image
+                          src={slide.image}
+                          alt={slide.alt}
+                          fill
+                          className="object-contain rounded-lg"
+                        />
+                      </div>
+                      <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
+                        {slide.desc}
+                      </p>
                     </div>
-                    <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
-                      {slide.desc}
-                    </p>
-                  </div>
-                ))}
+                  )
+                )}
               </Carousel>
             </div>
           </div>
 
-          {/* ✅ SEA WOLVES SECTION WRAPPED */}
+          {/* ✅ SEA WOLVES SECTION */}
           <div className="bg-black/40 rounded-xl p-6 w-full">
             <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mb-6">
               Vancouver Coastal Sea Wolves
@@ -205,22 +234,20 @@ export default function GroundAnimalSeasonPage() {
                 interval={5000}
                 className="rounded"
               >
-                {slides2.map((slide2, idx) => (
-                  <React.Fragment key={idx}>
-                    <div className="relative">
-                      <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
-                        <Image
-                          src={slide2.image}
-                          alt={slide2.alt}
-                          fill
-                          className="object-contain rounded-lg"
-                        />
-                      </div>
-                      <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
-                        {slide2.desc}
-                      </p>
+                {slidesSeaWolf.map((slide, idx) => (
+                  <div key={idx} className="relative">
+                    <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
+                      <Image
+                        src={slide.image}
+                        alt={slide.alt}
+                        fill
+                        className="object-contain rounded-lg"
+                      />
                     </div>
-                  </React.Fragment>
+                    <p className="text-white text-lg font-semibold text-center bg-amber-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
+                      {slide.desc}
+                    </p>
+                  </div>
                 ))}
               </Carousel>
             </div>
