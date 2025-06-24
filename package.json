@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mantine/core": "^8.0.2",
-    "@mantine/hooks": "^8.0.2",
+    "@mantine/core": "^8.1.1",
+    "@mantine/hooks": "^8.1.1",
+    "@mantine/notifications": "^8.1.1",
+    "@tabler/icons-react": "^3.34.0",
     "@types/papaparse": "^5.3.16",
     "framer-motion": "^12.14.0",
     "next": "15.3.0",
