@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Carousel } from 'react-responsive-carousel';
 
 import '@mantine/core/styles.css';
-import { MantineProvider, Stepper, Button, Group } from '@mantine/core';
+import { MantineProvider, Stepper, Button, Group, Container, Grid, Box } from '@mantine/core';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -18,7 +18,6 @@ export default function GroundAnimalSeasonPage() {
     router.push('/groundanimalfacts');
   };
 
-  // ✅ Your three bear slide arrays
   const slidesBlackBear = [
     {
       image: '/01_Schwarzbär.jpg',
@@ -130,7 +129,6 @@ export default function GroundAnimalSeasonPage() {
               Bears!
             </h2>
 
-            {/* ✅ UPDATED: Stepper with three steps */}
             <Stepper
               active={step}
               onStepClick={setStep}
@@ -209,9 +207,97 @@ export default function GroundAnimalSeasonPage() {
                 )}
               </Carousel>
             </div>
+
+          <div className="bg-amber-950 rounded-xl p-10 w-full mt-10">
+            <h3 className="text-3xl font-bold text-white mb-11">How Bears Compare By Season</h3>
+
+            <Container>
+              <Grid gutter="md" className="mb-8">
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                    <Image
+                      src="/Spirit Bear Spring.avif"
+                      alt="Spring Bear"
+                      fill
+                      className="object-cover"
+                    />
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 8 }}>
+                  <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
+                    <p className="text-white text-lg">
+                      In spring, all bears wake up from hibernation hungry. They eat fresh plants, roots, and early berries to regain strength.
+                    </p>
+                  </Box>
+                </Grid.Col>
+              </Grid>
+
+              <Grid gutter="md" className="mb-8">
+                <Grid.Col span={{ base: 12, md: 8 }}>
+                  <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
+                    <p className="text-white text-lg">
+                      Summer provides the most food. Bears feast on berries, insects, clams, and fish. Mothers teach cubs to find food.
+                    </p>
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                    <Image
+                      src="/Spirit Bear Summer.avif"
+                      alt="Summer Bear"
+                      fill
+                      className="object-cover"
+                    />
+                  </Box>
+                </Grid.Col>
+              </Grid>
+
+              <Grid gutter="md" className="mb-8">
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                    <Image
+                      src="/Spirit Bear Fall.jpg"
+                      alt="Fall Bear 1"
+                      fill
+                      className="object-cover"
+                    />
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
+                    <p className="text-white text-lg">
+                      Fall is critical: salmon runs allow bears to gain fat for winter. All bears gather at rivers to catch salmon.
+                    </p>
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                    <Image
+                      src="/Grizzly Bear Fall.jpg"
+                      alt="Fall Bear 2"
+                      fill
+                      className="object-cover"
+                    />
+                  </Box>
+                </Grid.Col>
+              </Grid>
+
+              <Grid gutter="md">
+                {[slidesBlackBear[1], slidesSpiritBear[3], slidesGrizzlyBear[3]].map((slide, idx) => (
+                  <Grid.Col key={idx} span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
+                      <Image src={slide.image} alt={slide.alt} fill className="object-cover" />
+                    </Box>
+                    <p className="text-white text-lg bg-amber-800 bg-opacity-80 rounded p-4">
+                      In winter, bears hibernate in dens, living off stored fat until spring.
+                    </p>
+                  </Grid.Col>
+                ))}
+              </Grid>
+            </Container>
+          </div>
           </div>
 
-          {/* ✅ SEA WOLVES SECTION */}
           <div className="bg-black/40 rounded-xl p-6 w-full">
             <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mb-6">
               Vancouver Coastal Sea Wolves
