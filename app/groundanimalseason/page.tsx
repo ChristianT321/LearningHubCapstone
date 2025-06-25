@@ -9,6 +9,7 @@ import '@mantine/core/styles.css';
 import { MantineProvider, Stepper, Button, Group, Container, Grid, Box } from '@mantine/core';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { image } from 'framer-motion/client';
 
 export default function GroundAnimalSeasonPage() {
   const router = useRouter();
@@ -104,6 +105,54 @@ export default function GroundAnimalSeasonPage() {
       desc: 'In springtime the pups are born, resting while the pack hunts for food nearby.',
     },
   ];
+
+    const slidesCouger = [
+      {
+        image: '/Couger Spring.webp',
+        alt: 'Cougar in Spring',
+        desc: 'In spring, Cougars hunt more actively because deer and other prey start moving to new feeding areas. Mother cougars may have young kittens hidden in a den or rocky area. Cubs stay hidden while the mother hunts and brings back food.',
+      },
+      {
+        image: '/Cougar Summer.avif',
+        alt: 'Cougar in Summer',
+        desc: 'Cougars hunt mostly at night or early morning to avoid the daytime heat. They often stay near forests and rocky slopes where deer come to graze. Cubs learn to follow the mother and watch her hunt.',
+      },
+      {
+        image: '/Cougar Fall.webp',
+        alt: 'Cougar in Fall',
+        desc: 'Cubs become stronger hunters and may start hunting small prey themselves. They spend more time exploring their surroundings, practicing stalking, chasing, and pouncing. These skills improve through play and observation, helping them prepare for independent hunting as they grow older.',
+      },
+      {
+        image: '/Cougar Winter.avif',
+        alt: 'Cougar in Winter',
+        desc: 'Cougars stay active all winter — they do not hibernate. They use thick forest and rocky ledges for shelter from storms, and use these areas as hunting grounds.',
+      },
+  ];
+
+  const slidesWolverine = [
+    {
+      image: '/Wolverine Spring.webp',
+      alt: 'Wolverine in Spring',
+      desc: 'Wolverines come out more often in daylight to look for food after winter. They eat leftovers from animals that died during winter (carrion), They may hunt small mammals like marmots, squirrels, and snowshoe hares.',
+    },
+    {
+      image: '/Wolverine Summer.jpg',
+      alt: 'Wolverine in Summer',
+      desc: 'During summer, wolverines continue to hunt and forage for berries and plants, and hunt small animals. Wolverines sometimes steal kills from other predators like wolves and bears. They roam huge territories, traveling long distances each day. They are often seen in forests and mountains.',
+    },
+    {
+      image: '/Wolverine Fall 2.png',
+      alt: 'Wolverine in Fall',
+      desc: 'Wolverines hunt and scavenge more to build up fat for colder months. They may bury or hide leftover meat (called caching) to eat later in winter.',
+    },
+    {
+      image: '/Wolverine Winter 2.jpg',
+      alt: 'Wolverine in Winter',
+      desc: 'Wolverines stay active all winter — they do not hibernate. Thick fur and big paws help them walk on deep snow to find food. They hunt small prey, dig through snow to find buried carcasses, or steal from other predators. Winter snow helps them hide food and protect it from scavengers.',
+    },
+  ];
+
+
 
   return (
     <MantineProvider defaultColorScheme="light">
@@ -300,14 +349,53 @@ export default function GroundAnimalSeasonPage() {
 
           <div className="bg-black/40 rounded-xl p-6 w-full">
             <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mb-6">
-              Vancouver Coastal Sea Wolves
+              Vancouver Coastal Carnivores
             </h2>
 
+            <Stepper
+              active={step}
+              onStepClick={setStep}
+              color="orange"
+              className="w-full mb-4"
+              size="md"
+            >
+              <Stepper.Step label="Step 1" description="Sea Wolf" />
+              <Stepper.Step label="Step 2" description="Cougar" />
+              <Stepper.Step label="Step 3" description="Wolverine" />
+            </Stepper>
+
+            <Group justify="center" className="mb-6">
+              <Button
+                variant="default"
+                disabled={step === 0}
+                onClick={() => setStep(step - 1)}
+              >
+                Back
+              </Button>
+              <Button
+                color="orange"
+                disabled={step === 2}
+                onClick={() => setStep(step + 1)}
+              >
+                Next step
+              </Button>
+            </Group>
+
             <div className="bg-amber-800 rounded-lg p-6 shadow-md mb-6">
-              <p className="text-white text-lg">
-                The Vancouver Coastal Sea Wolf is a unique type of wolf that lives along the coast and islands of the Great Bear Rainforest.
-                They swim a lot and eat mostly seafood like salmon, crabs, and seals. They help balance the ecosystem and are important to local Indigenous cultures.
-              </p>
+              {step === 0 ? (
+                <p className="text-white text-lg">
+                  The Vancouver Coastal Sea Wolf is a unique type of wolf that lives along the coast and islands of the Great Bear Rainforest.
+                  They swim a lot and eat mostly seafood like salmon, crabs, and seals. They help balance the ecosystem and are important to local Indigenous cultures.
+                </p>
+              ) : step === 1 ? (
+                <p className="text-white text-lg">
+                  Cougars are powerful and solitary predators that roam the forested mountains and valleys. They primarily hunt deer and are important in keeping prey populations balanced.
+                </p>
+              ) : (
+                <p className="text-white text-lg">
+                  Wolverines are tough and resourceful carnivores known for their strength and endurance. They scavenge and hunt, and can survive in harsh winter conditions.
+                </p>
+              )}
             </div>
 
             <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4">
@@ -320,7 +408,7 @@ export default function GroundAnimalSeasonPage() {
                 interval={5000}
                 className="rounded"
               >
-                {slidesSeaWolf.map((slide, idx) => (
+                {(step === 0 ? slidesSeaWolf : step === 1 ? slidesCouger : slidesWolverine).map((slide, idx) => (
                   <div key={idx} className="relative">
                     <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
                       <Image
