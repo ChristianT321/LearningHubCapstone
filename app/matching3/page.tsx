@@ -6,13 +6,14 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-
+import JSConfetti from 'js-confetti'
+//AUDIT NOTE for Ryan: type is a custom type declaration that tells variable with this type what can be stored in this variable. 
 type TreeItem = {
   name: string
   image: string
   type: 'Coniferous' | 'Deciduous'
 }
-
+//Will give error if type doesn't match declaration.
 const allItems: TreeItem[] = [
   { name: 'Western red cedar', image: '/Western red cedar.jpg', type: 'Coniferous'},
   { name: 'Douglas fir', image: '/Douglas fir.jpg', type: 'Coniferous'},
@@ -21,7 +22,7 @@ const allItems: TreeItem[] = [
   { name: 'Western hemlock', image: '/Western hemlock leaf.jpg', type: 'Coniferous'},
   { name: 'Western red cedar', image: '/Western red cedar leaf.jpg', type: 'Coniferous'},
 ]
-
+//AUDIT NOTE: const is a key word in JS/TS.
 export default function NameThatTreeGame() {
   const router = useRouter()
   const [shuffledQuestions, setShuffledQuestions] = useState<TreeItem[]>([])
@@ -31,11 +32,23 @@ export default function NameThatTreeGame() {
   const [selectedName, setSelectedName] = useState<string | null>(null)
   const [highScore, setHighScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
+  const [passed, setPassed] = useState(false)
 
   useEffect(() => {
     const shuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 6)
     setShuffledQuestions(shuffled)
   }, [])
+
+  useEffect(() => {
+    if (showResult && passed) {
+      const jsConfetti = new JSConfetti()
+      jsConfetti.addConfetti({
+        emojis: ['🌲', '🌳', '🍃', '🌿', '✨', '🍂'],
+        emojiSize: 30,
+        confettiNumber: 60,
+      })
+    }
+  }, [showResult, passed])
 
   const currentQuestion = shuffledQuestions[currentIndex]
 
@@ -52,7 +65,8 @@ export default function NameThatTreeGame() {
       questionScore += 1
     }
 
-    setScore((prev) => prev + questionScore)
+    const newScore = score + questionScore
+    setScore(newScore)
 
     setSelectedType(null)
     setSelectedName(null)
@@ -60,11 +74,12 @@ export default function NameThatTreeGame() {
     if (currentIndex + 1 < shuffledQuestions.length) {
       setCurrentIndex((prev) => prev + 1)
     } else {
+      const hasPassed = newScore >= 6
+      setPassed(hasPassed)
       setShowResult(true)
-      setHighScore((prev) => Math.max(prev, score + questionScore))
+      setHighScore((prev) => Math.max(prev, newScore))
     }
   }
-
 
   const handleRetake = () => {
     const reshuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 6)
@@ -74,9 +89,8 @@ export default function NameThatTreeGame() {
     setSelectedType(null)
     setSelectedName(null)
     setShowResult(false)
+    setPassed(false)
   }
-
-  const passed = score >= 6
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">

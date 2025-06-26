@@ -1,10 +1,11 @@
 //This was originally made for my last project in webdev 2. All questions/ design have been reworked for this project.
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { setProgress } from '@/utils/progress';
+import JSConfetti from 'js-confetti'
 
 const questions = [
   {
@@ -38,10 +39,26 @@ export default function Test1() {
     ([index, answer]) => answer === questions[Number(index)].answer
   ).length
 
+
   const handleQuizComplete = () => {
   setProgress('Module 1');
   setShowCongrats(true);  
 };
+
+  const allAnswered = Object.keys(selectedAnswers).length === questions.length
+  const allAnsweredCorrectly = score === questions.length
+
+  useEffect(() => {
+    if (allAnsweredCorrectly && allAnswered) {
+      const jsConfetti = new JSConfetti()
+      jsConfetti.addConfetti({
+        emojis: ['🌈', '✨', '🐾', '🐻', '🦫', '🐺'],
+        emojiSize: 30,
+        confettiNumber: 60,
+      })
+    }
+  }, [allAnsweredCorrectly, allAnswered])
+
 
   const handleAnswer = (index: number, choice: string) => {
     if (selectedAnswers[index]) return
@@ -49,9 +66,6 @@ export default function Test1() {
   }
 
   const handleReset = () => setSelectedAnswers({})
-
-  const allAnswered = Object.keys(selectedAnswers).length === questions.length
-  const allAnsweredCorrectly = score === questions.length
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
@@ -200,4 +214,3 @@ export default function Test1() {
     </main>
   )
 }
-
