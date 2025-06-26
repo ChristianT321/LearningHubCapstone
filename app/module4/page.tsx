@@ -9,7 +9,7 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleContinue = () => {
-    router.push('/treefacts')
+    router.push('/treeseason')
   }
 
   return (
