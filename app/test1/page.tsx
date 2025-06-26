@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { setProgress } from '@/utils/progress';
 import JSConfetti from 'js-confetti'
 
 const questions = [
@@ -31,11 +32,18 @@ const questions = [
 
 export default function Test1() {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({})
+  const [showCongrats, setShowCongrats] = useState(false);
   const router = useRouter()
 
   const score = Object.entries(selectedAnswers).filter(
     ([index, answer]) => answer === questions[Number(index)].answer
   ).length
+
+
+  const handleQuizComplete = () => {
+  setProgress('Module 1');
+  setShowCongrats(true);  
+};
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length
   const allAnsweredCorrectly = score === questions.length
@@ -51,13 +59,13 @@ export default function Test1() {
     }
   }, [allAnsweredCorrectly, allAnswered])
 
+
   const handleAnswer = (index: number, choice: string) => {
     if (selectedAnswers[index]) return
     setSelectedAnswers({ ...selectedAnswers, [index]: choice })
   }
 
   const handleReset = () => setSelectedAnswers({})
-  const handleContinue = () => router.push('/module2')
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
@@ -140,12 +148,12 @@ export default function Test1() {
             </button>
 
             {allAnswered && allAnsweredCorrectly && (
-              <button
-                onClick={handleContinue}
-                className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
-              >
-                Continue
-              </button>
+               <button
+              onClick={handleQuizComplete}
+              className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
+            >
+              ✅ Complete Module 1
+            </button>
             )}
           </div>
 
@@ -156,6 +164,43 @@ export default function Test1() {
           )}
         </div>
       </div>
+
+      {showCongrats && (
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '190px',       
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'white',
+          padding: '16px 24px',
+          borderRadius: '12px',
+          boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+          zIndex: 2000,
+          width: '280px',
+          textAlign: 'center',
+        }}
+      >
+        <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 1!</p>
+        <button
+          onClick={() => {
+            setShowCongrats(false);
+            router.push('/module2');
+          }}
+          style={{
+            backgroundColor: '#22c55e',
+            color: 'white',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            border: 'none',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+          }}
+        >
+          Continue
+        </button>
+      </div>
+    )}
 
       <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none">
         <Image

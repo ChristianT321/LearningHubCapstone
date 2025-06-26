@@ -1,19 +1,64 @@
 // ChatGPT was used to help create the footer and header in a single file. 
 // Within mantine they use a file for the creation and a css file for the customization so i asked chatgpt to help integrate them into one file.
 // helped create the animated buttons
+// also helped create the interactive map with the popups
 
 'use client'
 
 import Image from 'next/image'
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/navigation'
 import { Anchor, Container, Group } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
-import { FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
+import { FaChartLine, FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
 import { motion } from 'framer-motion';
+
+
+type Hotspot = {
+  id: string
+  label: string
+  top: string
+  left: string
+  fact: string
+  imgSrc?: string
+  position?: { x: number; y: number }
+}
+
+const hotspots: Hotspot[] = [
+  {
+    id: 'bear',
+    label: 'Spirit Bear Habitat',
+    top: '85%',
+    left: '20%',
+    fact: 'Spirit Bears are rare white-furred black bears that live only in the Great Bear Rainforest.',
+    imgSrc: '/Spirit bear.jpg',
+  },
+  {
+    id: 'eagle',
+    label: "Eagle's Nest",
+    top: '38%',
+    left: '60%',
+    fact: 'Bald Eagles nest high in tall trees or cliffs and hunt fish in coastal waters.',
+    imgSrc: '/Bald eagle.jpg',
+  },
+  {
+    id: 'salmon',
+    label: 'Salmon Stream',
+    top: '96%',
+    left: '86%',
+    fact: 'Salmon return to freshwater streams to spawn, feeding many animals along the way.',
+    imgSrc: '/salmon.jpg',
+  },
+  {
+    id: 'cedar',
+    label: 'Red Cedar Grove',
+    top: '70%',
+    left: '70%',
+    fact: 'Western Red Cedar trees can grow for over 1,000 years and are sacred to Indigenous cultures.',
+    imgSrc: '/red cedar.jpg',
+  },
+]
 
 //links to educational things within the footer
 const footerLinks = [
@@ -29,70 +74,31 @@ const headerLinks = [
   { link: '/module4', label: 'Module 4', icon: FaTree },
 ];
 
+const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
+
+const getProgress = (): { [key: string]: boolean } => {
+  const saved = localStorage.getItem('progress');
+  return saved ? JSON.parse(saved) : {};
+};
+
+
 export default function HomePage() {
   const router = useRouter()
-
+  const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
+  const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null)
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(headerLinks[0].link);
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
 
-  const isDark = colorScheme === 'dark';
-
-  const slides = [
-      {
-        image: '/Spirit bear.jpg',
-        alt: 'Spirit Bear',
-        desc: 'The rare Spirit Bear lives in the Great Bear Rainforest.',
-      },
-      {
-        image: '/Douglas fir.jpg',
-        alt: 'Douglas fir',
-        desc: 'The Douglas Fir can tower up to 100ft tall!',
-      },
-      {
-        image: '/Hummingbird.jpg',
-        alt: 'Hummingbird',
-        desc: 'The small hummingbird can flap its wings up to 80 times per second.',
-      },
-      {
-        image: '/Tout in water.jpg',
-        alt: 'Lake Trout',
-        desc: 'The lake trout can go against the current and swim up stream .',
-      },
-    ];
-
-  const headerStyle = {
-    height: '56px',
-    marginBottom: '40px',
-    backgroundColor: 'transparent',
-    zIndex: 1000,
+  const toggleProgressDropdown = () => {
+    setProgressDropdownOpen((prev) => !prev);
   };
 
-  const innerStyle = {
-    height: '56px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 16px',
-  };
+  useEffect(() => {
+      setProgressState(getProgress());
+    }, []);
 
-  const linkBaseStyle = {
-    display: 'inline-block',
-    lineHeight: 1,
-    padding: '8px 12px',
-    textDecoration: 'none',
-    color: 'white',
-    fontSize: '18px',
-    fontWeight: 500,
-  };
-
-  const linkHoverStyle = {
-  };
-
-  const linkActiveStyle = {
-    backgroundColor: 'transparent',
-  };
+  const completedModules = moduleList.filter((mod) => progress[mod]);
 
   const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
     <motion.button
@@ -129,6 +135,8 @@ export default function HomePage() {
         textDecoration: 'none',
         marginRight: '12px',
         transition: 'all 0.3s ease',
+        WebkitBackdropFilter: 'blur(6px)',
+
       }}
       onMouseEnter={(e) => {
         (e.target as HTMLElement).style.backgroundColor = '#78350F'; 
@@ -170,10 +178,8 @@ export default function HomePage() {
       >
       <div
           style={{
-            maxWidth: '1200px',
             height: '100%',
             margin: '0 auto',
-            padding: '0 16px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -183,10 +189,53 @@ export default function HomePage() {
           Welcome
         </div>
 
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
             {headerItems}
+            <motion.button
+            onClick={toggleProgressDropdown}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-amber-900"
+          >
+            <FaChartLine className="text-yellow-300"/> Progress Tracker
+          </motion.button>
+
+            {/* Dropdown */}
+            {progressDropdownOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '110%',
+                  right: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                  zIndex: 999,
+                  minWidth: '180px',
+                }}
+              >
+                {moduleList.map((mod) => (
+                  <div
+                    key={mod}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '6px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    <span style={{ marginRight: '8px' }}>
+                      {progress[mod] ? '✅' : '⬜️'}
+                    </span>
+                    <span>{mod}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-      </div>
+      </div>   
     </header>
 
       {/* Background Image */}
@@ -210,34 +259,71 @@ export default function HomePage() {
           Your number one source for learning about the Great Bear Rainforest!
         </h2></div>
 
-        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-amber-900 bg-opacity-70 p-4 z-30">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            interval={5000}
-            className="rounded"
-          >
-            {slides.map((slide, idx) => (
-              <div key={idx} className="relative">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className="h-80 w-full object-cover rounded-md"
-                  style={{
-                    width: '100%',
-                    height: '400px',
-                    objectFit: 'cover', 
-                    borderRadius: '12px'
-                  }}
-                />
-                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-green-700 bg-opacity-60 py-2 px-4">
-                  {slide.desc}
-                </p>
-              </div>
-            ))}
-          </Carousel>
+        <div className="relative w-full max-w-6xl mx-auto mt-8 p-4"
+        onClick={() => setActiveHotspot(null)}
+        >
+
+      {/* Map Image */}
+      <div className="relative w-full h-[600px] rounded-lg shadow-lg overflow-hidden border-4 border-green-700" id="map-container">
+        <img
+          src="/rainforest.jpg"
+          alt="Great Bear Rainforest Map"
+          className="w-full h-full object-cover"
+          draggable={false}
+        />
+
+        {/* Hotspots */}
+        {hotspots.map((spot) => (
+          <button
+          key={spot.id}
+          className="absolute bg-green-700 rounded-full w-8 h-8 border-2 border-white shadow-md hover:bg-green-500 transition"
+          style={{ top: spot.top, left: spot.left, transform: 'translate(-50%, -50%)' }}
+          onClick={(e) => {
+            e.stopPropagation();
+
+            const mapRect = (document.getElementById('map-container') as HTMLElement).getBoundingClientRect();
+            const btnRect = e.currentTarget.getBoundingClientRect();
+
+            const relativeX = btnRect.left - mapRect.left;
+            const relativeY = btnRect.top - mapRect.top;
+
+            setActiveHotspot({
+              ...spot,
+              position: { x: relativeX, y: relativeY },
+            });
+          }}
+          title={spot.label}
+        />
+        ))}
+      </div>
+
+      {/* Popup Modal */}
+      {activeHotspot?.position && (
+      <div
+        className="absolute z-50 bg-white rounded-lg shadow-xl w-80 p-4 transition-all"
+        style={{
+          top: `${Math.min(activeHotspot.position.y, 600 - 220)}px`, 
+          left: `${Math.min(activeHotspot.position.x, 960 - 340)}px`, 
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => setActiveHotspot(null)}
+          className="absolute top-2 right-3 text-gray-600 hover:text-gray-900 text-xl font-bold"
+        >
+          ×
+        </button>
+        <h2 className="text-xl font-bold mb-2 text-green-800">{activeHotspot.label}</h2>
+        {activeHotspot.imgSrc && (
+          <img
+            src={activeHotspot.imgSrc}
+            alt={activeHotspot.label}
+            className="w-full h-40 object-cover rounded mb-3"
+          />
+        )}
+        <p className="text-gray-700 text-sm">{activeHotspot.fact}</p>
+      </div>
+    )}
     </div>
 
     <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-9">
@@ -248,7 +334,7 @@ export default function HomePage() {
 
         <button
           onClick={handleSignOut}
-          className="fixed left-5 bottom-5 bg-amber-900 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow"
+          className="fixed left-5 bottom-5 bg-amber-900 hover:bg-amber-900 text-white font-bold px-4 py-2 rounded shadow"
         >
           Sign Out
         </button>
@@ -262,20 +348,29 @@ export default function HomePage() {
       
       <div
       style={{
-        marginTop: 30,
+        width: '100vw',                
+        marginLeft: 'calc(-50vw + 50%)',
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
         borderTop: '1px solid var(--mantine-color-gray-2)',
-          }}
+        paddingTop: '12px',
+        paddingBottom: '12px',
+        }}
         >
       <Container
         style={{
-          position: 'relative', 
-          zIndex: 1000, 
+          maxWidth: '1200px',
+          margin: '0 auto',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
-          paddingTop: 3,
-          paddingBottom: 12,
-          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: '12px',
           }}
         >
         <Group 
@@ -293,5 +388,6 @@ export default function HomePage() {
 
     
     </main>
+    
   )
 }
