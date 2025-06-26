@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { parse } from 'papaparse'
 import * as XLSX from 'xlsx'
-//AUDIT NOTE: id can be either a number or undefined. Optional property.
+
 type Student = { 
   id?: number
   firstName: string
@@ -25,7 +25,7 @@ export default function AddStudentPage() {
   const [newStudentsCount, setNewStudentsCount] = useState(0)
   const [recentlySaved, setRecentlySaved] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(true)
-
+  
   useEffect(() => {
     const loadStudents = async () => {
       try {
@@ -109,6 +109,43 @@ export default function AddStudentPage() {
     }
   }
 
+  const handleSaveAll = async () => {
+    if (students.length === 0) {
+      alert('No students to save')
+      return
+    }
+
+    try {
+      const studentsToSave = students.map(student => ({
+        firstName: student.firstName.trim(),
+        lastName: student.lastName.trim(),
+        classCode: student.classCode,
+        id: student.id
+      }));
+
+      const response = await fetch('http://localhost:3001/students/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ students: studentsToSave }),
+      });
+      
+      if (!response.ok) throw new Error('Bulk save failed');
+      
+      const savedStudents = await response.json();
+      setStudents(savedStudents);
+      setNewStudentsCount(savedStudents.length);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+
+      savedStudents.forEach((student: Student, index: number) => {
+        showSaveFeedback(index);
+      });
+    } catch (err) {
+      console.error('Error saving all students:', err);
+      alert('Failed to save all students');
+    }
+  };
+
   const handleDeleteStudent = async (index: number) => {
     const student = students[index]
     try {
@@ -119,7 +156,7 @@ export default function AddStudentPage() {
         if (!response.ok) throw new Error('Failed to delete student')
       }
       
-      const updatedStudents = students.filter((_, i) => i !== index)
+      const updatedStudents = students.filter((student: Student, i: number) => i !== index)
       setStudents(updatedStudents)
     } catch (err) {
       console.error('Error deleting student:', err)
@@ -431,12 +468,40 @@ export default function AddStudentPage() {
         ))}
       </div>
 
-      <button
-        onClick={handleBackToLogin}
-        className="fixed bottom-6 left-6 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition z-20"
-      >
-        Back to Login
-      </button>
+      <div className="fixed bottom-6 left-6 flex gap-4 z-20">
+        <button
+          onClick={handleBackToLogin}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition"
+        >
+          Back to Login
+        </button>
+
+        <button
+          onClick={handleSaveAll}
+          className={`bg-green-600 hover:bg-green-800 text-white px-4 py-2 rounded transition flex items-center gap-1 ${
+            students.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          aria-label="Save All Students"
+          disabled={students.length === 0}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+            <polyline points="17 21 17 13 7 13 7 21" />
+            <polyline points="7 3 7 8 15 8" />
+          </svg>
+          Save All
+        </button>
+      </div>
 
       <style jsx global>{`
         @keyframes fadeIn {
