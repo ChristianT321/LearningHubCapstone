@@ -6,9 +6,9 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { FaFish, FaPaw, FaDove, FaTree } from 'react-icons/fa'
+import { FaFish, FaPaw, FaDove, FaTree, FaChartLine } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function HomePage() {
   const router = useRouter()
@@ -20,7 +20,25 @@ export default function HomePage() {
       { link: '/module4', label: 'Module 4', icon: FaTree },
     ];
   
-    const [active, setActive] = useState(headerLinks[0].link);
+  const [active, setActive] = useState(headerLinks[0].link);
+
+  const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
+
+  const getProgress = (): { [key: string]: boolean } => {
+    const saved = localStorage.getItem('progress');
+    return saved ? JSON.parse(saved) : {};
+  };
+
+  const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
+  const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
+  
+  const toggleProgressDropdown = () => {
+    setProgressDropdownOpen((prev) => !prev);
+  };
+  
+  useEffect(() => {
+      setProgressState(getProgress());
+    }, []);
 
   const handleContinue = () => {
     router.push('/fishfacts')
@@ -89,7 +107,6 @@ export default function HomePage() {
       >
       <div
           style={{
-            maxWidth: '1200px',
             height: '100%',
             margin: '0 auto',
             padding: '0 16px',
@@ -107,8 +124,50 @@ export default function HomePage() {
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
 
-        <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
             {headerItems}
+            <motion.button
+            onClick={toggleProgressDropdown}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-blue-500"
+          >
+          <FaChartLine className="text-yellow-300"/> Progress Tracker
+          </motion.button>
+            {/* Dropdown */}
+            {progressDropdownOpen && (
+              <div
+              style={{
+                position: 'absolute',
+                top: '110%',
+                right: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                color: 'white',
+                padding: '10px',
+                borderRadius: '8px',
+                boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                zIndex: 999,
+                minWidth: '180px',
+              }}
+            >
+              {moduleList.map((mod) => (
+                <div
+                  key={mod}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '6px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  }}
+                >
+                  <span style={{ marginRight: '8px' }}>
+                    {progress[mod] ? '✅' : '⬜️'}
+                  </span>
+                  <span>{mod}</span>
+                </div>
+              ))}
+            </div>
+          )}
           </div>
       </div>
     </header>

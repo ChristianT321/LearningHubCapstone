@@ -1,19 +1,19 @@
 // ChatGPT was used to help create the footer and header in a single file. 
 // Within mantine they use a file for the creation and a css file for the customization so i asked chatgpt to help integrate them into one file.
 // helped create the animated buttons
+// also helped create the interactive map with the popups
 
 'use client'
 
 import Image from 'next/image'
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/navigation'
 import { Anchor, Container, Group } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
-import { FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
+import { FaChartLine, FaDove, FaPaw, FaTree, FaWater } from 'react-icons/fa'
 import { motion } from 'framer-motion';
+
 
 type Hotspot = {
   id: string
@@ -74,54 +74,31 @@ const headerLinks = [
   { link: '/module4', label: 'Module 4', icon: FaTree },
 ];
 
+const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
+
+const getProgress = (): { [key: string]: boolean } => {
+  const saved = localStorage.getItem('progress');
+  return saved ? JSON.parse(saved) : {};
+};
+
+
 export default function HomePage() {
   const router = useRouter()
-
+  const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null)
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(headerLinks[0].link);
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
 
-  const isDark = colorScheme === 'dark';
-
-  const slides = [
-      {
-        image: '/Spirit bear.jpg',
-        alt: 'Spirit Bear',
-        desc: 'The rare Spirit Bear lives in the Great Bear Rainforest.',
-      },
-      {
-        image: '/Douglas fir.jpg',
-        alt: 'Douglas fir',
-        desc: 'The Douglas Fir can tower up to 100ft tall!',
-      },
-      {
-        image: '/Hummingbird.jpg',
-        alt: 'Hummingbird',
-        desc: 'The small hummingbird can flap its wings up to 80 times per second.',
-      },
-      {
-        image: '/Tout in water.jpg',
-        alt: 'Lake Trout',
-        desc: 'The lake trout can go against the current and swim up stream .',
-      },
-    ];
-
-  const headerStyle = {
-    height: '56px',
-    marginBottom: '40px',
-    backgroundColor: 'transparent',
-    zIndex: 1000,
+  const toggleProgressDropdown = () => {
+    setProgressDropdownOpen((prev) => !prev);
   };
 
-  const innerStyle = {
-    height: '56px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 16px',
-  };
+  useEffect(() => {
+      setProgressState(getProgress());
+    }, []);
+
+  const completedModules = moduleList.filter((mod) => progress[mod]);
 
   const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
     <motion.button
@@ -158,6 +135,8 @@ export default function HomePage() {
         textDecoration: 'none',
         marginRight: '12px',
         transition: 'all 0.3s ease',
+        WebkitBackdropFilter: 'blur(6px)',
+
       }}
       onMouseEnter={(e) => {
         (e.target as HTMLElement).style.backgroundColor = '#78350F'; 
@@ -199,10 +178,8 @@ export default function HomePage() {
       >
       <div
           style={{
-            maxWidth: '1200px',
             height: '100%',
             margin: '0 auto',
-            padding: '0 16px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -212,10 +189,53 @@ export default function HomePage() {
           Welcome
         </div>
 
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
             {headerItems}
+            <motion.button
+            onClick={toggleProgressDropdown}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-amber-900"
+          >
+            <FaChartLine className="text-yellow-300"/> Progress Tracker
+          </motion.button>
+
+            {/* Dropdown */}
+            {progressDropdownOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '110%',
+                  right: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                  zIndex: 999,
+                  minWidth: '180px',
+                }}
+              >
+                {moduleList.map((mod) => (
+                  <div
+                    key={mod}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '6px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    <span style={{ marginRight: '8px' }}>
+                      {progress[mod] ? '✅' : '⬜️'}
+                    </span>
+                    <span>{mod}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-      </div>
+      </div>   
     </header>
 
       {/* Background Image */}
@@ -282,8 +302,8 @@ export default function HomePage() {
       <div
         className="absolute z-50 bg-white rounded-lg shadow-xl w-80 p-4 transition-all"
         style={{
-          top: `${Math.min(activeHotspot.position.y, 600 - 220)}px`, // prevent bottom overflow (adjust 220 if popup is taller)
-          left: `${Math.min(activeHotspot.position.x, 960 - 340)}px`, // prevent right overflow (map width 960px, popup ~340px)
+          top: `${Math.min(activeHotspot.position.y, 600 - 220)}px`, 
+          left: `${Math.min(activeHotspot.position.x, 960 - 340)}px`, 
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -314,7 +334,7 @@ export default function HomePage() {
 
         <button
           onClick={handleSignOut}
-          className="fixed left-5 bottom-5 bg-amber-900 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow"
+          className="fixed left-5 bottom-5 bg-amber-900 hover:bg-amber-900 text-white font-bold px-4 py-2 rounded shadow"
         >
           Sign Out
         </button>
@@ -328,20 +348,29 @@ export default function HomePage() {
       
       <div
       style={{
-        marginTop: 30,
+        width: '100vw',                
+        marginLeft: 'calc(-50vw + 50%)',
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
         borderTop: '1px solid var(--mantine-color-gray-2)',
-          }}
+        paddingTop: '12px',
+        paddingBottom: '12px',
+        }}
         >
       <Container
         style={{
-          position: 'relative', 
-          zIndex: 1000, 
+          maxWidth: '1200px',
+          margin: '0 auto',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
-          paddingTop: 3,
-          paddingBottom: 12,
-          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: '12px',
           }}
         >
         <Group 
@@ -359,5 +388,6 @@ export default function HomePage() {
 
     
     </main>
+    
   )
 }

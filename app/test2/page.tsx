@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { setProgress } from '@/utils/progress'
 
 const questions = [
   {
@@ -31,6 +32,7 @@ const questions = [
 export default function AquaticAnimalTest() {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({})
   const router = useRouter()
+  const [showCongrats, setShowCongrats] = useState(false)
 
   const score = Object.entries(selectedAnswers).filter(
     ([index, answer]) => answer === questions[Number(index)].answer
@@ -45,9 +47,10 @@ export default function AquaticAnimalTest() {
     setSelectedAnswers({})
   }
 
-  const handleContinue = () => {
-    router.push('/module3')
-  }
+  const handleQuizComplete = () => {
+  setProgress('Module 2');
+  setShowCongrats(true);  
+};
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length
   const allAnsweredCorrectly = score === questions.length
@@ -137,14 +140,52 @@ export default function AquaticAnimalTest() {
             </button>
 
             {allAnswered && allAnsweredCorrectly && (
-              <button
-                onClick={handleContinue}
-                className="bg-green-700 hover:bg-green-900 text-white px-6 py-3 rounded-xl shadow-md transition"
-              >
-                Continue
-              </button>
+               <button
+              onClick={handleQuizComplete}
+              className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
+            >
+               Complete Module 2
+            </button>
             )}
           </div>
+
+          {showCongrats && (
+          <div
+            style={{
+              position: 'fixed',
+              bottom: '190px',       
+              left: '50%',
+              transform: 'translateX(-50%)',
+              backgroundColor: 'white',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+              zIndex: 2000,
+              width: '280px',
+              textAlign: 'center',
+            }}
+          >
+            <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 2!</p>
+            <button
+              onClick={() => {
+                setShowCongrats(false);
+                router.push('/module3');
+              }}
+              style={{
+                backgroundColor: '#22c55e',
+                color: 'white',
+                padding: '10px 16px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+              }}
+            >
+              Continue
+            </button>
+          </div>
+        )}
+
 
           {allAnswered && !allAnsweredCorrectly && (
             <p className="mt-6 text-red-600 font-semibold text-lg">
