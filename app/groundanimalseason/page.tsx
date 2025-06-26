@@ -209,21 +209,30 @@ export default function GroundAnimalSeasonPage() {
 
             <div className="bg-amber-800 rounded-lg p-6 shadow-md mb-6">
               {step === 0 ? (
-                <p className="text-white text-lg">
-                  Black bears are common in the Great Bear Rainforest and play an important role in the ecosystem. They spend a lot of time near rivers and streams,
-                  especially when salmon are plentiful. They help spread nutrients by carrying fish remains into the forest. Black bears eat berries, plants, insects, and fish,
-                  and they usually avoid people.
-                </p>
+                <>
+                  <h3 className="text-3xl font-bold text-white mb-4">Black Bear</h3>
+                  <p className="text-white text-lg">
+                    Black bears are common in the Great Bear Rainforest and play an important role in the ecosystem. They spend a lot of time near rivers and streams,
+                    especially when salmon are plentiful. They help spread nutrients by carrying fish remains into the forest. Black bears eat berries, plants, insects, and fish,
+                    and they usually avoid people.
+                  </p>
+                </>
               ) : step === 1 ? (
-                <p className="text-white text-lg">
-                  The Spirit Bear, also known as the Kermode bear, is a rare and special type of black bear with white fur. Found only in the Great Bear Rainforest,
-                  it symbolizes the uniqueness of this ecosystem. Spirit Bears are deeply important to Indigenous cultures and are a key part of local legends and stories.
-                </p>
+                <>
+                  <h3 className="text-3xl font-bold text-white mb-4">Spirit Bear</h3>
+                  <p className="text-white text-lg">
+                    The Spirit Bear, also known as the Kermode bear, is a rare and special type of black bear with white fur. Found only in the Great Bear Rainforest,
+                    it symbolizes the uniqueness of this ecosystem. Spirit Bears are deeply important to Indigenous cultures and are a key part of local legends and stories.
+                  </p>
+                </>
               ) : (
-                <p className="text-white text-lg">
-                  Grizzly bears are larger bears found in some parts of the Great Bear Rainforest. They are powerful fishers and eat lots of salmon in the fall.
-                  They also eat berries, plants, and small animals, and they hibernate in dens through the cold winter months.
-                </p>
+                <>
+                  <h3 className="text-3xl font-bold text-white mb-4">Grizzly Bear</h3>
+                  <p className="text-white text-lg">
+                    Grizzly bears are larger bears found in some parts of the Great Bear Rainforest. They are powerful fishers and eat lots of salmon in the fall.
+                    They also eat berries, plants, and small animals, and they hibernate in dens through the cold winter months.
+                  </p>
+                </>
               )}
             </div>
 
@@ -275,7 +284,9 @@ export default function GroundAnimalSeasonPage() {
                 <Grid.Col span={{ base: 12, md: 8 }}>
                   <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
                     <p className="text-white text-lg">
-                      In spring, all bears wake up from hibernation hungry. They eat fresh plants, roots, and early berries to regain strength.
+                      As the snow melts and the forest begins to wake up, bears emerge from their dens after a long winter of hibernation. 
+                      They are weak, hungry, and dehydrated, so they stay near the den at first to regain their strength. 
+                      Early spring food includes fresh green plants like grasses, sedges, and roots, as well as insects and any animal carcasses left over from winter. 
                     </p>
                   </Box>
                 </Grid.Col>
@@ -285,7 +296,9 @@ export default function GroundAnimalSeasonPage() {
                 <Grid.Col span={{ base: 12, md: 8 }}>
                   <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
                     <p className="text-white text-lg">
-                      Summer provides the most food. Bears feast on berries, insects, clams, and fish. Mothers teach cubs to find food.
+                      Summer is all about eating. Food is more abundant, so bears spend most of their day feeding to build up fat for the next winter. 
+                      Their diet expands to include berries like salmonberries and blueberries, insects such as ants and beetles, and small mammals. 
+                      Early salmon runs may begin in some rivers, and bears will start fishing or scouting their favorite fishing spots. 
                     </p>
                   </Box>
                 </Grid.Col>
@@ -315,7 +328,7 @@ export default function GroundAnimalSeasonPage() {
                 <Grid.Col span={{ base: 12, md: 4 }}>
                   <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
                     <p className="text-white text-lg">
-                      Fall is critical: salmon runs allow bears to gain fat for winter. All bears gather at rivers to catch salmon.
+                      Fall is critical: The salmon runs provide the rest of the food they need for the winter. Once fattened up, bears prepare for hibernation by finding or building a den.
                     </p>
                   </Box>
                 </Grid.Col>
@@ -536,7 +549,6 @@ export default function GroundAnimalSeasonPage() {
                     </Box>
                     <p className="text-white text-sm bg-amber-800 bg-opacity-80 rounded p-4 leading-relaxed">
                       In winter, wolverines stay active, traveling long distances through deep snow to scavenge and hunt small prey.
-                      Their large paws help them move easily across frozen terrain.
                     </p>
                   </Grid.Col>
 
