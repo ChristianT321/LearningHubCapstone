@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 import { Carousel } from 'react-responsive-carousel';
 
 import '@mantine/core/styles.css';
-import { MantineProvider, Stepper, Button, Group, Container, Grid, Box } from '@mantine/core';
+import { MantineProvider, Stepper, Button, Group, SimpleGrid, Container, Grid, Box } from '@mantine/core';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { image } from 'framer-motion/client';
+
 
 export default function GroundAnimalSeasonPage() {
   const router = useRouter();
@@ -349,7 +349,7 @@ export default function GroundAnimalSeasonPage() {
 
           <div className="bg-black/40 rounded-xl p-6 w-full">
             <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mb-6">
-              Vancouver Coastal Carnivores
+              Other Carnivors
             </h2>
 
             <Stepper
@@ -383,20 +383,38 @@ export default function GroundAnimalSeasonPage() {
 
             <div className="bg-amber-800 rounded-lg p-6 shadow-md mb-6">
               {step === 0 ? (
+              <>
+                <h3 className="text-white text-2xl font-bold mb-2">
+                  Vancouver Coastal Sea Wolves
+                </h3>
                 <p className="text-white text-lg">
                   The Vancouver Coastal Sea Wolf is a unique type of wolf that lives along the coast and islands of the Great Bear Rainforest.
                   They swim a lot and eat mostly seafood like salmon, crabs, and seals. They help balance the ecosystem and are important to local Indigenous cultures.
                 </p>
-              ) : step === 1 ? (
+              </>
+            ) : step === 1 ? (
+              <>
+                <h3 className="text-white text-2xl font-bold mb-2">
+                  Cougar
+                </h3>
                 <p className="text-white text-lg">
-                  Cougars are powerful and solitary predators that roam the forested mountains and valleys. They primarily hunt deer and are important in keeping prey populations balanced.
+                  Cougars live in forested areas of the rainforest and are solitary hunters. They mainly eat deer but will also hunt smaller mammals.
+                  Cougars are stealthy and use thick underbrush to stalk prey. They raise kittens in dens and teach them to hunt over time.
                 </p>
-              ) : (
-                <p className="text-white text-lg">
-                  Wolverines are tough and resourceful carnivores known for their strength and endurance. They scavenge and hunt, and can survive in harsh winter conditions.
-                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-white text-2xl font-bold mb-2">
+                  Wolverine
+                </h3>
+                  <p className="text-white text-lg">
+                    Wolverines are tough scavengers that travel far across the snowy landscape. They can break into frozen carcasses and often follow larger predators to find leftovers.
+                    Though small, wolverines are strong and independent. They are well adapted to the cold and can travel long distances in search of food.
+                  </p>
+                </>
               )}
             </div>
+
 
             <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4">
               <Carousel
@@ -425,8 +443,124 @@ export default function GroundAnimalSeasonPage() {
                 ))}
               </Carousel>
             </div>
-          </div>
+          
+            <div className="bg-amber-950 rounded-xl p-10 w-full mt-10">
+              <h3 className="text-3xl font-bold text-white mb-11">
+                How Wolves, Cougars, and Wolverines Compare by Season
+              </h3>
 
+              <Container my="md">
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="lg">
+                  <Box className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-lg">
+                    <Image src="/sea wolf puppy.jpg" alt="Spring Wolf" fill className="object-cover" />
+                  </Box>
+                  <Grid gutter="md">
+                    <Grid.Col span={12}>
+                      <Box className="bg-amber-800 bg-opacity-90 rounded-lg p-4 shadow-md text-white text-sm leading-relaxed min-h-[120px] flex items-center">
+                        In spring, sea wolf pups are born and rest while the pack hunts. Cougar cubs stay hidden in dens,
+                        safely tucked away while their mothers venture out to hunt. Meanwhile, wolverines take advantage of
+                        the thawing landscape by scavenging carcasses left behind by other predators.
+                      </Box>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Box className="relative w-full h-[140px] rounded-lg overflow-hidden shadow-lg">
+                        <Image src="/Couger Spring.webp" alt="Spring Cougar" fill className="object-cover" />
+                      </Box>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Box className="relative w-full h-[140px] rounded-lg overflow-hidden shadow-lg">
+                        <Image src="/Wolverine Spring.webp" alt="Spring Wolverine" fill className="object-cover" />
+                      </Box>
+                    </Grid.Col>
+                  </Grid>
+                </SimpleGrid>
+
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="lg">
+                  <Grid gutter="md">
+                    <Grid.Col span={12}>
+                      <Box className="bg-amber-800 bg-opacity-90 rounded-lg p-4 shadow-md text-white text-sm leading-relaxed min-h-[120px] flex items-center">
+                        In summer, cougars are most active during dawn and dusk, teaching their young how to stalk prey.
+                        Sea wolves take to the water, swimming between islands to fish and forage.
+                        Wolverines range far, scavenging widely and occasionally stealing food from other predators.
+                      </Box>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Box className="relative w-full h-[140px] rounded-lg overflow-hidden shadow-lg">
+                        <Image src="/sea wolf swimming.avif" alt="Summer Wolf" fill className="object-cover" />
+                      </Box>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Box className="relative w-full h-[140px] rounded-lg overflow-hidden shadow-lg">
+                        <Image src="/Wolverine Summer.jpg" alt="Summer Wolverine" fill className="object-cover" />
+                      </Box>
+                    </Grid.Col>
+                  </Grid>
+
+                  <Box className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-lg">
+                    <Image src="/Cougar Summer.avif" alt="Summer Cougar" fill className="object-cover" />
+                  </Box>
+                </SimpleGrid>
+
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="lg">
+                  <Box className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-lg">
+                    <Image
+                    src="/sea wolf fall.jpg"
+                    alt="Fall Wolf"
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: 'top center' }}
+                    />
+                  </Box>
+
+                  <Box className="flex flex-col justify-between h-[300px]">
+                    <Box className="bg-amber-800 bg-opacity-90 rounded-lg p-4 shadow-md text-white text-sm leading-relaxed flex items-center h-[125px]">
+                    In fall, wolves gather near rivers to feast on salmon, building fat reserves for winter.
+                    Cougar mothers train their cubs to hunt, an essential skill before snow arrives.
+                    Wolverines begin caching meat in hidden spots.
+                    </Box>
+                    <div className="flex gap-4 h-[160px]">
+                      <Box className="relative w-1/2 h-full rounded-lg overflow-hidden shadow-lg">
+                        <Image src="/Cougar Fall.webp" alt="Fall Cougar" fill className="object-cover" />
+                      </Box>
+                      <Box className="relative w-1/2 h-full rounded-lg overflow-hidden shadow-lg">
+                        <Image src="/Wolverine Fall 2.png" alt="Fall Wolverine" fill className="object-cover" />
+                      </Box>
+                    </div>
+                  </Box>
+                </SimpleGrid>
+
+                <Grid gutter="md" mb="lg">
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
+                      <Image src="/Wolverine Winter 2.jpg" alt="Winter Wolverine" fill className="object-cover" />
+                    </Box>
+                    <p className="text-white text-sm bg-amber-800 bg-opacity-80 rounded p-4 leading-relaxed">
+                      In winter, wolverines stay active, traveling long distances through deep snow to scavenge and hunt small prey.
+                      Their large paws help them move easily across frozen terrain.
+                    </p>
+                  </Grid.Col>
+
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
+                      <Image src="/Cougar Winter.avif" alt="Winter Cougar" fill className="object-cover" />
+                    </Box>
+                      <p className="text-white text-sm bg-amber-800 bg-opacity-80 rounded p-4 leading-relaxed">
+                        Cougars continue hunting in winter, relying on stealth and strength to ambush prey in snowy forests and steep terrain.
+                      </p>
+                  </Grid.Col>
+
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
+                      <Image src="/Sea Wolf Winter.jpg" alt="Winter Sea Wolf" fill className="object-cover" />
+                    </Box>
+                      <p className="text-white text-sm bg-amber-800 bg-opacity-80 rounded p-4 leading-relaxed">
+                        Even in winter, sea wolves remain mobile, swimming between islands and scavenging along the coastlines where food can still be found.
+                      </p>
+                  </Grid.Col>
+                </Grid>
+              </Container>
+            </div>
+          </div>
           <button
             onClick={handleContinue}
             className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow mt-8"
