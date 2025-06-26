@@ -43,7 +43,7 @@ export default function HomePage() {
     }, []);
 
   const handleContinue = () => {
-    router.push('/treefacts')
+    router.push('/treeseason')
   }
 
   const slides = [
