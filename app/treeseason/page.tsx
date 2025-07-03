@@ -221,6 +221,58 @@ const seasonColors = [
                 </div>
             </div>
         </div>
+
+      {/* Western Hemlock Seasons Section */}
+      <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
+        <h2 className="text-4xl font-bold text-white drop-shadow-[3px_3px_0px_black] text-center mt-4">
+          Western Hemlock Through the Seasons
+        </h2>
+        <p className="text-white text-lg text-center max-w-2xl">
+          Western Hemlock is the most common coniferous tree in the Great Bear Rainforest. It provides shade, stabilizes soil, and plays a key role in maintaining the rainforest&#39;s moisture and biodiversity.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 w-full">
+          {[
+            {
+              season: 'Summer',
+              image: '/western hemlock summer.jpg',
+              caption: 'In summer, Western Hemlock cones fully develop, hanging from branches as they mature.',
+            },
+            {
+              season: 'Fall',
+              image: '/western hemlock fall.jpg',
+              caption: 'In fall, the cones dry out and begin to release seeds into the forest.',
+            },
+            {
+              season: 'Winter',
+              image: '/western hemlock winter.jpg',
+              caption: 'In winter, Western Hemlock trees continue to hold onto mature cones while staying evergreen.',
+            },
+            {
+              season: 'Spring',
+              image: '/western hemlock spring.jpg',
+              caption: 'In spring, new needle growth begins and tiny cones start forming on the branches.',
+            },
+          ].map(({ season, image, caption }) => (
+            <div
+              key={season}
+              className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md transition"
+            >
+              <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
+                <Image
+                  src={image}
+                  alt={`Western Hemlock in ${season}`}
+                  fill
+                  className="object-cover group-hover:grayscale-0 grayscale transition duration-300 ease-in-out"
+                />
+              </div>
+              <p className="mt-3 text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
+                {caption}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
         <div className="mt-8 mb-5 z-10">
             <button
                 onClick={() => router.push('/treefacts')}
