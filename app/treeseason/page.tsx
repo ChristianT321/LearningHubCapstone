@@ -7,6 +7,88 @@ import { useRouter } from 'next/navigation';
 import '@mantine/core/styles.css';
 import { useEffect } from 'react';
 
+function WesternHemlockCard({
+  image,
+  short,
+  long,
+  season,
+}: {
+  image: string;
+  short: string;
+  long: string;
+  season: string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div
+      onClick={() => setExpanded((prev) => !prev)}
+      className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md cursor-pointer transition-all"
+    >
+      <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
+        <Image
+          src={image}
+          alt={`Western Hemlock in ${season}`}
+          fill
+          className={`object-cover transition duration-300 ease-in-out ${
+            expanded ? '' : 'grayscale group-hover:grayscale-0'
+          }`}
+        />
+      </div>
+      <p className="mt-3 text-white text-center">{short}</p>
+
+      <div
+        className={`text-white text-sm text-left mt-2 transition-all duration-500 ease-in-out overflow-hidden ${
+          expanded ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {long}
+      </div>
+    </div>
+  );
+}
+
+function RedAlderCard({
+  image,
+  short,
+  long,
+  season,
+}: {
+  image: string;
+  short: string;
+  long: string;
+  season: string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div
+      onClick={() => setExpanded((prev) => !prev)}
+      className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md cursor-pointer transition-all"
+    >
+      <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
+        <Image
+          src={image}
+          alt={`Red Alder in ${season}`}
+          fill
+          className={`object-cover transition duration-300 ease-in-out ${
+            expanded ? '' : 'grayscale group-hover:grayscale-0'
+          }`}
+        />
+      </div>
+      <p className="mt-3 text-white text-center">{short}</p>
+      <div
+        className={`text-white text-sm text-left mt-2 transition-all duration-500 ease-in-out overflow-hidden ${
+          expanded ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {long}
+      </div>
+    </div>
+  );
+}
+
+
 export default function TreeSeasonPage() {
   const [frameIndex, setFrameIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState('border-green-700');
@@ -150,79 +232,58 @@ const seasonColors = [
         <p className="mb-6 text-sm text-white/70">
           Slide through the seasons, tap a color, or press play to animate the tree.
         </p>
-    </div>
+      </div>
       
-<div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
-    <h2 className="text-4xl font-bold text-white drop-shadow-[3px_3px_0px_black] text-center mt-4">
-        Red Alder Through the Seasons
-    </h2>
+      <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
+        <h2 className="text-4xl font-bold text-white drop-shadow-[3px_3px_0px_black] text-center mt-4">
+          Red Alder Through the Seasons
+        </h2>
 
-    <p className="text-white text-lg text-center max-w-2xl">
-        The Red Alder is the most common deciduous tree in the Great Bear Rainforest. It plays a key role in supporting the forest by improving the soil through nitrogen fixation, 
-        providing shade, and helping prevent erosion. Its leaves break down quickly, returning nutrients to the forest floor and supporting the plants and animals that live there. 
-        Though it may not be as famous as the towering evergreens, the Red Alder is essential to the health of the rainforest ecosystem.
-    </p>
+        <p className="text-white text-lg text-center max-w-2xl">
+          The Red Alder is the most common deciduous tree in the Great Bear Rainforest. It plays a key role in supporting the forest by improving the soil through nitrogen fixation, 
+          providing shade, and helping prevent erosion. Its leaves break down quickly, returning nutrients to the forest floor and supporting the plants and animals that live there. 
+          Though it may not be as famous as the towering evergreens, the Red Alder is essential to the health of the rainforest ecosystem.
+        </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 w-full">
-            <div className="flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md">
-                <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
-                    <Image
-                    src="/Red Alder Summer.jpg"
-                    alt="Red Alder in Summer"
-                    fill
-                    className="object-cover"
-                    />
-                </div>
-                <p className="mt-3 text-white text-center">
-                    In summer, Red Alder trees are fully leafed out, helping shade the forest floor and enrich the soil with nitrogen.
-                </p>
-            </div>
-
-            <div className="flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md">
-                <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
-                    <Image
-                    src="/Red Alder Fall.jpg"
-                    alt="Red Alder in Fall"
-                    fill
-                    className="object-cover"
-                    />
-                </div>
-                <p className="mt-3 text-white text-center">
-                    In fall, Red Alder leaves turn yellow and fall, contributing to the nutrient cycle of the forest floor.
-                </p>
-            </div>
-
-            <div className="flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md">
-                <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
-                    <Image
-                    src="/Red Alder Winter.jpeg"
-                    alt="Red Alder in Winter"
-                    fill
-                    className="object-cover"
-                    />
-                </div>
-                <p className="mt-3 text-white text-center">
-                    In winter, Red Alder trees are bare, but their roots remain active, preventing erosion and anchoring the soil.
-                </p>
-            </div>
-
-            <div className="flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md">
-                <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
-                    <Image
-                    src="/Red Alder Spring.jpg"
-                    alt="Red Alder in Spring"
-                    fill
-                    className="object-cover"
-                    />
-                </div>
-                    <p className="mt-3 text-white text-center">
-                        In spring, new buds and leaves appear, and Red Alders begin fixing nitrogen to help other plants grow.
-                    </p>
-                </div>
-            </div>
+          {[
+            {
+              season: 'Summer',
+              image: '/Red Alder Summer.jpg',
+              short: 'In summer, Red Alder trees are fully leafed out, helping shade the forest floor and enrich the soil with nitrogen.',
+              long: 'Summer is the peak growing season for Red Alders. Their dense green leaves help prevent soil erosion, retain moisture, and feed the soil with organic matter and nitrogen.',
+            },
+            {
+              season: 'Fall',
+              image: '/Red Alder Fall.jpg',
+              short: 'In fall, Red Alder leaves turn yellow and fall, contributing to the nutrient cycle.',
+              long: 'As autumn arrives, the yellowing leaves of Red Alders drop and decompose quickly, helping recycle nutrients and prepare the forest for winter.',
+            },
+            {
+              season: 'Winter',
+              image: '/Red Alder Winter.jpeg',
+              short: 'In winter, Red Alder trees are bare, but their roots stay active underground.',
+              long: 'Even though the Red Alder appears dormant in winter, its roots continue stabilizing the soil and maintaining underground microbial life.',
+            },
+            {
+              season: 'Spring',
+              image: '/Red Alder Spring.jpg',
+              short: 'In spring, buds and fresh green leaves emerge as the tree starts fixing nitrogen.',
+              long: 'Spring brings new buds and a fresh flush of leaves. The tree begins pulling nitrogen from the air, enriching the soil and boosting the growth of surrounding vegetation.',
+            },
+          ].map(({ season, image, short, long }) => (
+            <RedAlderCard
+              key={season}
+              image={image}
+              short={short}
+              long={long}
+              season={season}
+            />
+          ))}
         </div>
+      </div>
 
-      {/* Western Hemlock Seasons Section */}
+
       <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
         <h2 className="text-4xl font-bold text-white drop-shadow-[3px_3px_0px_black] text-center mt-4">
           Western Hemlock Through the Seasons
@@ -236,51 +297,47 @@ const seasonColors = [
             {
               season: 'Summer',
               image: '/western hemlock summer.jpg',
-              caption: 'In summer, Western Hemlock cones fully develop, hanging from branches as they mature.',
+              short: 'In summer, Western Hemlock cones fully develop, hanging from branches as they mature.',
+              long: 'During summer, Western Hemlock trees are in full growth mode. Their needles support photosynthesis at maximum capacity, while the cones mature and hang visibly. These cones are vital for reproduction and will eventually dry and disperse seeds.',
             },
             {
               season: 'Fall',
               image: '/western hemlock fall.jpg',
-              caption: 'In fall, the cones dry out and begin to release seeds into the forest.',
+              short: 'In fall, the cones dry out and begin to release seeds into the forest.',
+              long: 'In the fall season, cones on Western Hemlock trees dry out and begin releasing seeds that fall to the moist forest floor. This natural dispersal plays a major role in the tree’s life cycle and the forest’s regeneration.',
             },
             {
               season: 'Winter',
               image: '/western hemlock winter.jpg',
-              caption: 'In winter, Western Hemlock trees continue to hold onto mature cones while staying evergreen.',
+              short: 'In winter, Western Hemlock trees continue to hold onto mature cones while staying evergreen.',
+              long: 'Western Hemlocks stay green throughout the winter, providing shelter and cover for wildlife. Even in snow, they retain their cones, which can still feed small forest animals or drop seeds slowly over time.',
             },
             {
               season: 'Spring',
               image: '/western hemlock spring.jpg',
-              caption: 'In spring, new needle growth begins and tiny cones start forming on the branches.',
+              short: 'In spring, new needle growth begins and tiny cones start forming on the branches.',
+              long: 'Spring is a time of renewal. Fresh light-green needle tips grow on the Western Hemlock, and new cones begin forming. This early growth supports the tree’s health and prepares it for the reproductive cycle ahead.',
             },
-          ].map(({ season, image, caption }) => (
-            <div
+            ].map(({ season, image, short, long }) => (
+              <WesternHemlockCard
               key={season}
-              className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md transition"
-            >
-              <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
-                <Image
-                  src={image}
-                  alt={`Western Hemlock in ${season}`}
-                  fill
-                  className="object-cover group-hover:grayscale-0 grayscale transition duration-300 ease-in-out"
-                />
-              </div>
-              <p className="mt-3 text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                {caption}
-              </p>
-            </div>
+              image={image}
+              short={short}
+              long={long}
+              season={season}
+            />
           ))}
         </div>
       </div>
-        <div className="mt-8 mb-5 z-10">
-            <button
-                onClick={() => router.push('/treefacts')}
-                className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white text-lg font-semibold rounded-lg shadow transition"
-                >
-                Continue
-            </button>
-        </div>
+
+      <div className="mt-8 mb-5 z-10">
+        <button
+          onClick={() => router.push('/treefacts')}
+          className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white text-lg font-semibold rounded-lg shadow transition"
+          >
+          Continue
+        </button>
+      </div>
     </main>
   );
 }
