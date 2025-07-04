@@ -88,8 +88,8 @@ function RedAlderCard({
   );
 }
 
-
 export default function TreeSeasonPage() {
+  const [currentGif, setCurrentGif] = useState(1);
   const [frameIndex, setFrameIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState('border-green-700');
   const [sliderColor, setSliderColor] = useState('green'); 
@@ -97,14 +97,25 @@ export default function TreeSeasonPage() {
   const router = useRouter();
 
   const paddedIndex = frameIndex.toString().padStart(3, '0');
-  const filename = `/tree-seasons/frame_${paddedIndex}_delay-0.04s.gif`;
+  const filename =
+  currentGif === 1
+    ? `/tree-seasons/frame_${paddedIndex}_delay-0.04s.gif`
+    : `/tree-seasons2/frame_${frameIndex.toString().padStart(3, '0')}_delay-0.03s.gif`;
 
-const seasonColors = [
-  { name: 'Summer', frame: 0, color: 'bg-green-700', border: 'border-green-700', slider: 'green' },
-  { name: 'Fall', frame: 33, color: 'bg-orange-500', border: 'border-orange-500', slider: 'orange' },
-  { name: 'Winter', frame: 66, color: 'bg-white border border-gray-400', border: 'border-white', slider: 'gray' },
-  { name: 'Spring', frame: 99, color: 'bg-green-400', border: 'border-green-400', slider: 'lime' },
-];
+
+const seasonColors = currentGif === 1
+  ? [
+      { name: 'Summer', frame: 0, color: 'bg-green-700', border: 'border-green-700', slider: 'green' },
+      { name: 'Fall', frame: 33, color: 'bg-orange-500', border: 'border-orange-500', slider: 'orange' },
+      { name: 'Winter', frame: 66, color: 'bg-white border border-gray-400', border: 'border-white', slider: 'gray' },
+      { name: 'Spring', frame: 99, color: 'bg-green-400', border: 'border-green-400', slider: 'lime' },
+    ]
+  : [
+      { name: 'Summer', frame: 0, color: 'bg-green-700', border: 'border-green-700', slider: 'green' },
+      { name: 'Fall', frame: 90, color: 'bg-orange-500', border: 'border-orange-500', slider: 'orange' },
+      { name: 'Winter', frame: 180, color: 'bg-white border border-gray-400', border: 'border-white', slider: 'gray' },
+      { name: 'Spring', frame: 269, color: 'bg-green-400', border: 'border-green-400', slider: 'lime' },
+    ];
 
   const getClosestSeason = (value: number) =>
     seasonColors.reduce((prev, curr) =>
@@ -116,13 +127,13 @@ const seasonColors = [
 
     const interval = setInterval(() => {
       setFrameIndex((prev) => {
-        const next = (prev + 1) % 100;
+        const next = (prev + 1) % (currentGif === 1 ? 100 : 270);
         const closest = getClosestSeason(next);
         setSelectedColor(closest.border);
         setSliderColor(closest.slider);
         return next;
       });
-    }, 40);
+    }, 35);
 
     return () => clearInterval(interval);
   }, [playing]);
@@ -168,19 +179,42 @@ const seasonColors = [
           Deciduous Seasons
         </h1>
 
-        <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="relative w-full h-[400px] sm:h-[500px]">
-            <Image
-              src={filename}
-              alt={`Season Frame ${frameIndex}`}
-              fill
-              className="object-contain"
-              priority
-              unoptimized
-            />
+        {currentGif === 1 ? (
+          <div className="w-full bg-black/60 rounded-lg shadow-lg overflow-hidden">
+            <div className="relative w-full h-[400px] sm:h-[500px]">
+              <Image
+                src={filename}
+                alt={`Season Frame ${frameIndex}`}
+                fill
+                className="object-contain"
+                priority
+                unoptimized
+              />
+            </div>
           </div>
-        </div>
-
+        ) : (
+          <div className="flex flex-col md:flex-row items-center gap-4 bg-black rounded-lg shadow-lg overflow-hidden p-4">
+            <div className="relative w-[250px] h-[250px]">
+              <Image
+                src={filename}
+                alt={`Season Frame ${frameIndex}`}
+                fill
+                className="object-contain"
+                priority
+                unoptimized
+              />
+            </div>
+            <div className="text-left text-white text-sm max-w-md">
+              <h3 className="text-xl font-semibold mb-2">Deciduous Seasonal Changes</h3>
+              <ul className="list-disc list-inside space-y-1">
+                <li><strong>Spring:</strong> New growth begins.</li>
+                <li><strong>Summer:</strong> Full foliage and activity.</li>
+                <li><strong>Fall:</strong> Leaves change or seeds fall.</li>
+                <li><strong>Winter:</strong> Dormant above ground.</li>
+              </ul>
+            </div>
+          </div>
+        )}
         <div className="w-full max-w-xl mt-4">
           <Slider
             value={frameIndex}
@@ -191,16 +225,25 @@ const seasonColors = [
               setSliderColor(closest.slider);
             }}
             min={0}
-            max={99}
+            max={currentGif === 1 ? 99 : 269}
             step={1}
             color={sliderColor}
             size="lg"
-            marks={[
-              { value: 0, label: 'Summer' },
-              { value: 33, label: 'Fall' },
-              { value: 66, label: 'Winter' },
-              { value: 99, label: 'Spring' },
-            ]}
+            marks={
+            currentGif === 1
+      ? [
+        { value: 0, label: 'Summer' },
+        { value: 33, label: 'Fall' },
+        { value: 66, label: 'Winter' },
+        { value: 99, label: 'Spring' },
+      ]
+    : [
+        { value: 0, label: 'Summer' },
+        { value: 90, label: 'Fall' },
+        { value: 180, label: 'Winter' },
+        { value: 269, label: 'Spring' },
+      ]
+}
           />
         </div>
 
@@ -232,6 +275,15 @@ const seasonColors = [
         <p className="mb-6 text-sm text-white/70">
           Slide through the seasons, tap a color, or press play to animate the tree.
         </p>
+        <button
+            onClick={() => {
+            setCurrentGif((prev) => (prev === 1 ? 2 : 1));
+            setFrameIndex(0);
+          }}
+          className="mb-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black font-semibold rounded transition"
+        >
+          {currentGif === 1 ? '→ Switch to Tree 2' : '← Back to Tree 1'}
+        </button>
       </div>
       
       <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
