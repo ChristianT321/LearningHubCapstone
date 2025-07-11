@@ -49,39 +49,9 @@ app.get('/students/:classCode', async (req, res) => {
   }
 })
 
-app.post('/student', async (req, res) => {
-  const { firstName, lastName, classCode } = req.body
-
-  if (!firstName || !lastName || !classCode) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
-  try {
-    const existing = await pool.query(
-      `SELECT * FROM students 
-       WHERE LOWER(first_name) = LOWER($1) 
-         AND LOWER(last_name) = LOWER($2) 
-         AND LOWER(class_code) = LOWER($3)`,
-      [firstName, lastName, classCode]
-    )
-
-    if (existing.rows.length > 0) {
-      return res.status(409).json({ error: 'Student already exists' });
-    }
-
-    const result = await pool.query(
-      'INSERT INTO students (first_name, last_name, class_code) VALUES ($1, $2, $3) RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"',
-      [firstName || '', lastName || '', classCode || '']
-    )
-    res.status(201).json(result.rows[0])
-  } catch (err) {
-    console.error('Error inserting student:', err)
-    res.status(500).json({ error: err.message })
-  }
-})
-
 app.put('/student/:id', async (req, res) => {
-  const { firstName, lastName, classCode } = req.body;
+  const { firstName, lastName, classCode } = req.body
+  const studentId = req.params.id
 
   try {
     const result = await pool.query(
@@ -89,58 +59,74 @@ app.put('/student/:id', async (req, res) => {
        SET first_name = $1, last_name = $2, class_code = $3 
        WHERE id = $4 
        RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"`,
-      [firstName || '', lastName || '', classCode || '', req.params.id]
-    );
-    res.json(result.rows[0]);
+      [firstName || '', lastName || '', classCode || '', studentId]
+    )
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Student not found' })
+    }
+
+    res.status(200).json(result.rows[0])
   } catch (err) {
-    console.error('Error updating student:', err);
-    res.status(500).json({ error: err.message });
+    console.error('Error updating student:', err)
+    res.status(500).json({ error: err.message })
   }
-});
+})
 
 app.delete('/student/:id', async (req, res) => {
   try {
-    await pool.query('DELETE FROM students WHERE id = $1', [req.params.id]);
-    res.status(204).send();
+    await pool.query('DELETE FROM students WHERE id = $1', [req.params.id])
+    res.status(204).send()
   } catch (err) {
-    console.error('Error deleting student:', err);
-    res.status(500).json({ error: err.message });
+    console.error('Error deleting student:', err)
+    res.status(500).json({ error: err.message })
   }
-});
+})
 
 app.post('/students/bulk', async (req, res) => {
-  const students = req.body.students;
+  const students = req.body.students
 
   if (!Array.isArray(students)) {
-    return res.status(400).json({ error: 'Expected an array of students' });
+    return res.status(400).json({ error: 'Expected an array of students' })
   }
 
-  const client = await pool.connect();
+  const client = await pool.connect()
   try {
-    await client.query('BEGIN');
-    const insertedStudents = [];
+    await client.query('BEGIN')
+    const insertedStudents = []
 
     for (const student of students) {
-      const { firstName, lastName, classCode } = student;
+      const { firstName, lastName, classCode } = student
+
+      const exists = await client.query(
+        `SELECT id FROM students WHERE LOWER(first_name) = LOWER($1) AND LOWER(last_name) = LOWER($2) AND LOWER(class_code) = LOWER($3)`,
+        [firstName, lastName, classCode]
+      )
+
+      if (exists.rows.length > 0) {
+        await client.query('ROLLBACK')
+        return res.status(409).json({ error: 'Duplicate student exists' })
+      }
+
       const result = await client.query(
         `INSERT INTO students (first_name, last_name, class_code)
          VALUES ($1, $2, $3)
          RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"`,
         [firstName || '', lastName || '', classCode || '']
-      );
-      insertedStudents.push(result.rows[0]);
+      )
+      insertedStudents.push(result.rows[0])
     }
 
-    await client.query('COMMIT');
-    res.status(201).json(insertedStudents);
+    await client.query('COMMIT')
+    res.status(201).json(insertedStudents)
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error bulk inserting students:', err);
-    res.status(500).json({ error: err.message });
+    await client.query('ROLLBACK')
+    console.error('Error bulk inserting students:', err)
+    res.status(500).json({ error: err.message })
   } finally {
-    client.release();
+    client.release()
   }
-});
+})
 
 app.post('/teacher', async (req, res) => {
   const { email, classCode } = req.body
@@ -218,4 +204,3 @@ app.post('/student/login', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
 })
-
