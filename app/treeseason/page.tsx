@@ -23,7 +23,7 @@ function WesternHemlockCard({
   return (
     <div
       onClick={() => setExpanded((prev) => !prev)}
-      className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md cursor-pointer transition-all"
+      className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md cursor-pointer"
     >
       <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
         <Image
@@ -64,7 +64,7 @@ function RedAlderCard({
   return (
     <div
       onClick={() => setExpanded((prev) => !prev)}
-      className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md cursor-pointer transition-all"
+      className="group flex flex-col items-center bg-white/10 p-4 rounded-lg shadow-md cursor-pointer"
     >
       <div className="w-full h-[220px] relative rounded overflow-hidden shadow">
         <Image
