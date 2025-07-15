@@ -89,6 +89,7 @@ function RedAlderCard({
 }
 
 export default function TreeSeasonPage() {
+  const [season, setSeason] = useState('summer');
   const [currentGif, setCurrentGif] = useState(1);
   const [frameIndex, setFrameIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState('border-green-700');
@@ -334,6 +335,45 @@ const seasonColors = currentGif === 1
           ))}
         </div>
       </div>
+
+      <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
+        <h2 className="text-4xl font-bold text-white drop-shadow-[3px_3px_0px_black] text-center mt-4">
+          Western Red Cedar Through the Seasons
+        </h2>
+
+        <p className="text-white text-lg text-center max-w-2xl">
+          The Western Red Cedar is a symbol of the Pacific Northwest, valued for its rot-resistant wood and importance to Indigenous cultures. It remains evergreen year-round, 
+          but the environment around it — like rain, snow, or sunshine — affects how we experience it.
+        </p>
+
+        <div className="relative w-full max-w-[1000px] aspect-[4/3] rounded-lg overflow-hidden border-4 border-white">
+          <Image
+            src="/western red cedar 3d2.jpg"
+            alt="Western Red Cedar"
+            fill
+            className="object-cover"
+            priority
+          />
+
+          {season === 'winter' && <div className="absolute inset-0 snow-animation pointer-events-none" />}
+          {season === 'fall' && <div className="absolute inset-0 fall-animation pointer-events-none" />}
+          {season === 'spring' && <div className="absolute inset-0 rain-animation pointer-events-none" />}
+          {season === 'summer' && <div className="absolute inset-0 sunshine-glow pointer-events-none" />}
+        </div>
+
+        <div className="flex gap-4 mt-6">
+          {['spring', 'summer', 'fall', 'winter'].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSeason(s)}
+              className="px-4 py-2 bg-white/20 hover:bg-white/40 rounded transition"
+            >
+              {s.charAt(0).toUpperCase() + s.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
 
 
       <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-3xl px-4 mt-12 border-8 rounded-xl ${selectedColor} bg-black/60`}>
