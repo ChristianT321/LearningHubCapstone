@@ -36,7 +36,7 @@ export default function FishFactsPage() {
     ],
     [
       {
-        image: '/whitefish1.png',
+        image: '/whitefish1.jpg',
         alt: 'Whitefish in lake',
         desc: 'Whitefish glide near lake bottoms to feed.',
       },
@@ -46,7 +46,7 @@ export default function FishFactsPage() {
         desc: 'They have torpedo-shaped bodies for fast swimming.',
       },
       {
-        image: '/whitefish3.png',
+        image: '/whitefish3.jpg',
         alt: 'Fishing Whitefish',
         desc: 'They are important to both people and predators.',
       },
