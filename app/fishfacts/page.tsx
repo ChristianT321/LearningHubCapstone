@@ -53,12 +53,12 @@ export default function FishFactsPage() {
     ],
     [
       {
-        image: '/trout1.png',
+        image: '/trout1.webp',
         alt: 'Lake Trout hunting',
         desc: 'Lake trout are ambush predators.',
       },
       {
-        image: '/trout2.png',
+        image: '/trout2.jpg',
         alt: 'Large Lake Trout',
         desc: 'They can live over 40 years and grow very large.',
       },
