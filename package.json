@@ -14,7 +14,7 @@
     "@mantine/notifications": "^8.1.1",
     "@tabler/icons-react": "^3.34.0",
     "@types/papaparse": "^5.3.16",
-    "framer-motion": "^12.14.0",
+    "framer-motion": "^12.23.6",
     "js-confetti": "^0.12.0",
     "next": "15.3.0",
     "oracledb": "^6.8.0",

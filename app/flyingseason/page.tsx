@@ -1,17 +1,52 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+
+type Position = { top: number; left: number };
+type TrailItem = Position & { id: number };
 
 export default function FlyingSeasonPage() {
   const [season, setSeason] = useState('spring');
+  const [trail, setTrail] = useState<TrailItem[]>([]);
 
-  const birdPositions: Record<string, { top: string; left: string }> = {
-    spring: { top: '60%', left: '24%' },
-    summer: { top: '38%', left: '27%' },
-    fall:   { top: '58%', left: '25%' },
-    winter: { top: '86%', left: '37%' },
+  const birdPositions: Record<string, Position> = {
+    spring: { top: 360, left: 130 },
+    summer: { top: 230, left: 145 },
+    fall:   { top: 348, left: 133 },
+    winter: { top: 516, left: 196 },
   };
+
+  const prevSeasonRef = useRef(season);
+
+  useEffect(() => {
+    const prevSeason = prevSeasonRef.current;
+    const from = birdPositions[prevSeason];
+    const to = birdPositions[season];
+
+    if (prevSeason !== season) {
+      const steps = 10;
+      for (let i = 0; i <= steps; i++) {
+        const delay = i * 40;
+        const t = i / steps;
+        const trailDot: TrailItem = {
+          top: from.top + (to.top - from.top) * t,
+          left: from.left + (to.left - from.left) * t,
+          id: Date.now() + i,
+        };
+
+        setTimeout(() => {
+          setTrail((prev) => [...prev, trailDot]);
+          setTimeout(() => {
+            setTrail((prev) => prev.filter((dot) => dot.id !== trailDot.id));
+          }, 1000);
+        }, delay);
+      }
+    }
+
+    prevSeasonRef.current = season;
+  }, [season]);
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center py-10 px-4">
@@ -29,19 +64,48 @@ export default function FlyingSeasonPage() {
           }}
         />
 
-        {season && (
+        <AnimatePresence>
+          {trail.map((pos) => (
+            <motion.div
+              key={pos.id}
+              className="absolute pointer-events-none"
+              initial={{ opacity: 0.8, scale: 1 }}
+              animate={{ opacity: 0, scale: 1.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: 'easeOut' }}
+              style={{
+                top: `${pos.top}px`,
+                left: `${pos.left}px`,
+                zIndex: 1,
+              }}
+            >
+              <div className="w-4 h-4 rounded-full bg-black/80 shadow-sm blur-sm" />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        <motion.div
+          className="absolute"
+          animate={{
+            top: birdPositions[season].top,
+            left: birdPositions[season].left,
+          }}
+          transition={{
+            duration: 1.2,
+            ease: 'easeInOut',
+          }}
+          style={{
+            zIndex: 10,
+            position: 'absolute',
+          }}
+        >
           <Image
             src="/roufus hummingbird.png"
             alt="Rufous Hummingbird"
             width={50}
             height={50}
-            className="absolute"
-            style={{
-              top: birdPositions[season].top,
-              left: birdPositions[season].left,
-            }}
           />
-        )}
+        </motion.div>
       </div>
 
       <div className="flex gap-4 mt-6">
