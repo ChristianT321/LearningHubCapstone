@@ -1,5 +1,4 @@
 //used chatgpt to help with the header and the photo carousel
-
 'use client'
 
 import Image from 'next/image'
@@ -14,19 +13,23 @@ export default function HomePage() {
   const router = useRouter()
 
   const headerLinks = [
-      { link: '/module1', label: 'Module 1', icon: FaPaw },
-      { link: '/module2', label: 'Module 2', icon: FaWater },
-      { link: '/module3', label: 'Module 3', icon: FaDove},
-      { link: '/module4', label: 'Module 4', icon: FaTree },
-    ];
+    { link: '/module1', label: 'Module 1', icon: FaPaw },
+    { link: '/module2', label: 'Module 2', icon: FaWater },
+    { link: '/module3', label: 'Module 3', icon: FaDove},
+    { link: '/module4', label: 'Module 4', icon: FaTree },
+  ];
   
   const [active, setActive] = useState(headerLinks[0].link);
+  const [expandedFact, setExpandedFact] = useState<number | null>(null);
 
   const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
   const getProgress = (): { [key: string]: boolean } => {
-    const saved = localStorage.getItem('progress');
-    return saved ? JSON.parse(saved) : {};
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('progress');
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
   };
 
   const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
@@ -37,8 +40,8 @@ export default function HomePage() {
   };
   
   useEffect(() => {
-      setProgressState(getProgress());
-    }, []);
+    setProgressState(getProgress());
+  }, []);
 
   const handleContinue = () => {
     router.push('/birdfacts')
@@ -67,8 +70,43 @@ export default function HomePage() {
     }
   ]
 
+  const facts = [
+    {
+      title: "Bald eagles dive into the water to catch fish",
+      details: [
+        "They can reach speeds of 100 mph when diving",
+        "Eagles mate for life and return to the same nest each year",
+        "Their nests can weigh up to 1,000 pounds"
+      ]
+    },
+    {
+      title: "Great horned owls hunt at night using silent wings and sharp hearing",
+      details: [
+        "Their hearing is 10 times more sensitive than humans",
+        "Special feather edges allow completely silent flight",
+        "They can rotate their heads 270 degrees"
+      ]
+    },
+    {
+      title: "Rufous hummingbirds migrate thousands of miles every summer",
+      details: [
+        "They travel from Mexico to Alaska each year",
+        "Their wings beat up to 70 times per second",
+        "They consume more than their weight in nectar daily"
+      ]
+    },
+    {
+      title: "Each duck has a unique quack",
+      details: [
+        "Ducks can recognize each other by their quacks",
+        "They have waterproof feathers due to special oil glands",
+        "Some duck species can dive up to 60 feet underwater"
+      ]
+    }
+  ]
+
   const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
-      <motion.button
+    <motion.button
       key={label}
       onClick={(e) => {
         e.preventDefault();
@@ -84,13 +122,13 @@ export default function HomePage() {
       <Icon className="text-yellow-300" />
       {label}
     </motion.button>
-    ));
+  ));
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
       {/* Header */}
-        <header
+      <header
         style={{
           position: 'fixed',
           top: 0,
@@ -105,7 +143,7 @@ export default function HomePage() {
           padding: '12px, 0', 
         }}
       >
-      <div
+        <div
           style={{
             height: '100%',
             margin: '0 auto',
@@ -115,7 +153,7 @@ export default function HomePage() {
             alignItems: 'center',
           }}
         >
-        <motion.div 
+          <motion.div 
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push('/home')}
@@ -127,50 +165,50 @@ export default function HomePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
             {headerItems}
             <motion.button
-            onClick={toggleProgressDropdown}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-blue-800"
-          >
-          <FaChartLine className="text-yellow-300"/> Progress Tracker
-          </motion.button>
+              onClick={toggleProgressDropdown}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-blue-800"
+            >
+              <FaChartLine className="text-yellow-300"/> Progress Tracker
+            </motion.button>
             {/* Dropdown */}
             {progressDropdownOpen && (
               <div
-              style={{
-                position: 'absolute',
-                top: '110%',
-                right: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                color: 'white',
-                padding: '10px',
-                borderRadius: '8px',
-                boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
-                zIndex: 999,
-                minWidth: '180px',
-              }}
-            >
-              {moduleList.map((mod) => (
-                <div
-                  key={mod}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '6px 0',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <span style={{ marginRight: '8px' }}>
-                    {progress[mod] ? '✅' : '⬜️'}
-                  </span>
-                  <span>{mod}</span>
-                </div>
-              ))}
-            </div>
-          )}
+                style={{
+                  position: 'absolute',
+                  top: '110%',
+                  right: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                  zIndex: 999,
+                  minWidth: '180px',
+                }}
+              >
+                {moduleList.map((mod) => (
+                  <div
+                    key={mod}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '6px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    <span style={{ marginRight: '8px' }}>
+                      {progress[mod] ? '✅' : '⬜️'}
+                    </span>
+                    <span>{mod}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-      </div>
-    </header>
+        </div>
+      </header>
 
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
@@ -228,24 +266,44 @@ export default function HomePage() {
         </p>
 
         <ul className="space-y-6 w-full max-w-2xl">
-          {[
-            "Bald eagles dive into the water to catch fish",
-            "Great horned owls hunt at night using silent wings and sharp hearing",
-            "Rufous hummingbirds migrate thousands of miles every summer",
-            "Each duck has a unique quack"
-          ].map((fact, index) => (
+          {facts.map((fact, index) => (
             <motion.li
               key={index}
-              className="bg-blue-800 bg-opacity-60 p-4 rounded-lg shadow-md"
+              className="bg-blue-800 bg-opacity-60 rounded-lg shadow-md overflow-hidden"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-blue-200 text-2xl drop-shadow"><FaDove className="text-yellow-400 text-2xl" /></span>
-                <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
-                  {fact}
-                </span>
+              <div 
+                className="p-4 cursor-pointer"
+                onClick={() => setExpandedFact(expandedFact === index ? null : index)}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-yellow-400 text-2xl drop-shadow">
+                    <FaDove className="text-2xl"/>
+                  </span>
+                  <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
+                    {fact.title}
+                  </span>
+                </div>
               </div>
+              
+              {expandedFact === index && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-blue-700 bg-opacity-70"
+                >
+                  <ul className="p-4 pt-0 space-y-2">
+                    {fact.details.map((detail, i) => (
+                      <li key={i} className="text-white text-left pl-8">
+                        • {detail}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
             </motion.li>
           ))}
         </ul>
