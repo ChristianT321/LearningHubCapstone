@@ -1,5 +1,3 @@
-//used chatgpt to help with the header and the photo carousel
-
 'use client'
 
 import Image from 'next/image'
@@ -14,19 +12,23 @@ export default function HomePage() {
   const router = useRouter()
 
   const headerLinks = [
-      { link: '/module1', label: 'Module 1', icon: FaPaw },
-      { link: '/module2', label: 'Module 2', icon: FaFish },
-      { link: '/module3', label: 'Module 3', icon: FaDove},
-      { link: '/module4', label: 'Module 4', icon: FaTree },
-    ];
+    { link: '/module1', label: 'Module 1', icon: FaPaw },
+    { link: '/module2', label: 'Module 2', icon: FaFish },
+    { link: '/module3', label: 'Module 3', icon: FaDove },
+    { link: '/module4', label: 'Module 4', icon: FaTree },
+  ];
   
   const [active, setActive] = useState(headerLinks[0].link);
+  const [expandedFact, setExpandedFact] = useState<number | null>(null);
 
   const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
   const getProgress = (): { [key: string]: boolean } => {
-    const saved = localStorage.getItem('progress');
-    return saved ? JSON.parse(saved) : {};
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('progress');
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
   };
 
   const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
@@ -37,8 +39,8 @@ export default function HomePage() {
   };
   
   useEffect(() => {
-      setProgressState(getProgress());
-    }, []);
+    setProgressState(getProgress());
+  }, []);
 
   const handleContinue = () => {
     router.push('/fishfacts')
@@ -67,8 +69,43 @@ export default function HomePage() {
     }
   ]
 
+  const facts = [
+    {
+      title: "Salmon bodies feed the rainforest when they die",
+      details: [
+        "Salmon migrate hundreds of miles to return to their birthplace",
+        "After spawning, their decomposing bodies provide nutrients",
+        "This nutrient transfer supports the entire forest ecosystem"
+      ]
+    },
+    {
+      title: "Humpback whales use bubble nets to trap fish",
+      details: [
+        "Whales blow bubbles in a circular pattern to create nets",
+        "They work together in coordinated groups",
+        "This is one of the most sophisticated feeding techniques in nature"
+      ]
+    },
+    {
+      title: "Sea otters use rocks to crack open shellfish",
+      details: [
+        "Otters are one of few mammals that use tools",
+        "They keep their favorite rocks in pouches under their arms",
+        "An otter may eat up to 25% of its body weight daily"
+      ]
+    },
+    {
+      title: "The Giant Pacific Octopus can change its color and texture",
+      details: [
+        "They can mimic colors and patterns of their surroundings",
+        "Special pigment cells called chromatophores enable this",
+        "They're considered the most intelligent invertebrates"
+      ]
+    }
+  ]
+
   const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
-      <motion.button
+    <motion.button
       key={label}
       onClick={(e) => {
         e.preventDefault();
@@ -84,13 +121,13 @@ export default function HomePage() {
       <Icon className="text-yellow-300" />
       {label}
     </motion.button>
-    ));
+  ));
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
 
       {/* Header */}
-              <header
+      <header
         style={{
           position: 'fixed',
           top: 0,
@@ -105,7 +142,7 @@ export default function HomePage() {
           padding: '12px, 0', 
         }}
       >
-      <div
+        <div
           style={{
             height: '100%',
             margin: '0 auto',
@@ -115,7 +152,7 @@ export default function HomePage() {
             alignItems: 'center',
           }}
         >
-        <motion.div 
+          <motion.div 
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push('/home')}
@@ -127,50 +164,50 @@ export default function HomePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
             {headerItems}
             <motion.button
-            onClick={toggleProgressDropdown}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-blue-500"
-          >
-          <FaChartLine className="text-yellow-300"/> Progress Tracker
-          </motion.button>
+              onClick={toggleProgressDropdown}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-blue-500"
+            >
+              <FaChartLine className="text-yellow-300"/> Progress Tracker
+            </motion.button>
             {/* Dropdown */}
             {progressDropdownOpen && (
               <div
-              style={{
-                position: 'absolute',
-                top: '110%',
-                right: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                color: 'white',
-                padding: '10px',
-                borderRadius: '8px',
-                boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
-                zIndex: 999,
-                minWidth: '180px',
-              }}
-            >
-              {moduleList.map((mod) => (
-                <div
-                  key={mod}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '6px 0',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <span style={{ marginRight: '8px' }}>
-                    {progress[mod] ? '✅' : '⬜️'}
-                  </span>
-                  <span>{mod}</span>
-                </div>
-              ))}
-            </div>
-          )}
+                style={{
+                  position: 'absolute',
+                  top: '110%',
+                  right: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                  zIndex: 999,
+                  minWidth: '180px',
+                }}
+              >
+                {moduleList.map((mod) => (
+                  <div
+                    key={mod}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '6px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    <span style={{ marginRight: '8px' }}>
+                      {progress[mod] ? '✅' : '⬜️'}
+                    </span>
+                    <span>{mod}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-      </div>
-    </header>
+        </div>
+      </header>
 
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
@@ -228,24 +265,44 @@ export default function HomePage() {
         </p>
 
         <ul className="space-y-6 w-full max-w-2xl">
-          {[
-            "Salmon bodies feed the rainforest when they die",
-            "Humpback whales use bubble nets to trap fish",
-            "Sea otters use rocks to crack open shellfish",
-            "The Giant Pacific Octopus can change its color and texture"
-          ].map((fact, index) => (
+          {facts.map((fact, index) => (
             <motion.li
               key={index}
-              className="bg-blue-500 bg-opacity-60 p-4 rounded-lg shadow-md"
+              className="bg-blue-500 bg-opacity-60 rounded-lg shadow-md overflow-hidden"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-blue-300 text-2xl drop-shadow"><FaFish className="text-yellow-400 text-2xl"/></span>
-                <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
-                  {fact}
-                </span>
+              <div 
+                className="p-4 cursor-pointer"
+                onClick={() => setExpandedFact(expandedFact === index ? null : index)}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-yellow-400 text-2xl drop-shadow">
+                    <FaFish className="text-2xl"/>
+                  </span>
+                  <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
+                    {fact.title}
+                  </span>
+                </div>
               </div>
+              
+              {expandedFact === index && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-blue-600 bg-opacity-70"
+                >
+                  <ul className="p-4 pt-0 space-y-2">
+                    {fact.details.map((detail, i) => (
+                      <li key={i} className="text-white text-left pl-8">
+                        • {detail}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
             </motion.li>
           ))}
         </ul>
