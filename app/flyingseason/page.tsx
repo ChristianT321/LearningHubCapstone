@@ -57,7 +57,6 @@ export default function FlyingSeasonPage() {
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center py-10 px-4">
-      {/* Header */}
       <header
         style={{
           position: 'fixed',
@@ -70,7 +69,7 @@ export default function FlyingSeasonPage() {
           WebkitBackdropFilter: 'blur(6px)',
           zIndex: 1000,
           boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-          padding: '12px 0',
+          padding: '10px 0',
         }}
       >
         <div
@@ -94,7 +93,6 @@ export default function FlyingSeasonPage() {
         </div>
       </header>
 
-      {/* Full-screen sky background */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/sky background.png"
@@ -110,36 +108,33 @@ export default function FlyingSeasonPage() {
         Flying Season – Rufous Hummingbird Migration
       </h1>
 
-      {/* Bird Migration Section */}
-      <div className="relative w-[530px] h-[600px] overflow-hidden rounded border border-white z-10">
-        {/* Layer 1: Wave GIF background */}
+      <div className="relative w-[530px] h-[600px] overflow-hidden rounded-xl border border-white z-10 shadow-lg">
         <div className="absolute inset-0 z-0">
           <Image
             src="/waves.gif"
             alt="Waves"
             fill
-            className="object-cover"
+            className="object-cover brightness-75"
           />
         </div>
 
-        {/* Layer 2: Cropped Transparent Map */}
         <div
           className="absolute inset-0 bg-no-repeat z-10"
           style={{
             backgroundImage: "url('/North america.png')",
             backgroundSize: 'auto 100%',
             backgroundPosition: '105% center',
+            filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.5))',
           }}
         />
 
-        {/* Layer 3: Trail */}
         <AnimatePresence>
           {trail.map((pos) => (
             <motion.div
               key={pos.id}
               className="absolute pointer-events-none"
-              initial={{ opacity: 0.6, scale: 1 }}
-              animate={{ opacity: 0, scale: 1.5 }}
+              initial={{ opacity: 1, scale: 1 }}
+              animate={{ opacity: 0, scale: 1.4 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.2, ease: 'easeOut' }}
               style={{
@@ -148,12 +143,11 @@ export default function FlyingSeasonPage() {
                 zIndex: 20,
               }}
             >
-              <div className="w-4 h-4 rounded-full bg-black/70 shadow-md blur-sm" />
+              <div className="w-2.5 h-2.5 rounded-full bg-black/100 shadow-md blur-sm" />
             </motion.div>
           ))}
         </AnimatePresence>
 
-        {/* Layer 4: Bird */}
         <motion.div
           className="absolute"
           animate={{
@@ -174,36 +168,35 @@ export default function FlyingSeasonPage() {
             alt="Rufous Hummingbird"
             width={50}
             height={50}
+            className="drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)]"
           />
         </motion.div>
       </div>
 
-      {/* Season Buttons */}
       <div className="flex gap-4 mt-6 z-10">
         {['spring', 'summer', 'fall', 'winter'].map((s) => (
-          <button
+          <motion.button
             key={s}
             onClick={() => setSeason(s)}
-            className={`px-4 py-2 rounded transition ${
+            whileHover={{ scale: 1.07 }}
+            className={`px-4 py-2 rounded transition font-medium ${
               season === s ? 'bg-green-600' : 'bg-white/20 hover:bg-white/40'
             }`}
           >
             {s.charAt(0).toUpperCase() + s.slice(1)}
-          </button>
+          </motion.button>
         ))}
       </div>
 
-      {/* Info Text */}
       <p className="mt-4 text-center text-sm text-white/70 max-w-md z-10">
         Choose a season to see where the Rufous Hummingbird migrates.
       </p>
 
-      {/* Button to bird facts */}
       <motion.button
         onClick={() => router.push('/birdfacts')}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded shadow mt-8 z-10"
+        className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded-lg shadow mt-8 z-10"
       >
         Learn Bird Facts
       </motion.button>
