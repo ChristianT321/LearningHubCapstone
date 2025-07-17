@@ -44,7 +44,7 @@ export default function HomePage() {
   }, []);
 
   const handleContinue = () => {
-    router.push('/birdfacts')
+    router.push('/flyingseason')
   }
 
   const slides = [
