@@ -94,7 +94,7 @@ export default function FlyingSeasonPage() {
         </div>
       </header>
 
-      {/* Background */}
+      {/* Full-screen sky background */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/sky background.png"
@@ -110,9 +110,21 @@ export default function FlyingSeasonPage() {
         Flying Season – Rufous Hummingbird Migration
       </h1>
 
+      {/* Bird Migration Section */}
       <div className="relative w-[530px] h-[600px] overflow-hidden rounded border border-white z-10">
+        {/* Layer 1: Wave GIF background */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/waves.gif"
+            alt="Waves"
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        {/* Layer 2: Cropped Transparent Map */}
         <div
-          className="absolute inset-0 bg-no-repeat"
+          className="absolute inset-0 bg-no-repeat z-10"
           style={{
             backgroundImage: "url('/North america.png')",
             backgroundSize: 'auto 100%',
@@ -120,6 +132,7 @@ export default function FlyingSeasonPage() {
           }}
         />
 
+        {/* Layer 3: Trail */}
         <AnimatePresence>
           {trail.map((pos) => (
             <motion.div
@@ -132,7 +145,7 @@ export default function FlyingSeasonPage() {
               style={{
                 top: `${pos.top}px`,
                 left: `${pos.left}px`,
-                zIndex: 1,
+                zIndex: 20,
               }}
             >
               <div className="w-4 h-4 rounded-full bg-black/70 shadow-md blur-sm" />
@@ -140,6 +153,7 @@ export default function FlyingSeasonPage() {
           ))}
         </AnimatePresence>
 
+        {/* Layer 4: Bird */}
         <motion.div
           className="absolute"
           animate={{
@@ -151,7 +165,7 @@ export default function FlyingSeasonPage() {
             ease: 'easeInOut',
           }}
           style={{
-            zIndex: 10,
+            zIndex: 30,
             position: 'absolute',
           }}
         >
@@ -164,6 +178,7 @@ export default function FlyingSeasonPage() {
         </motion.div>
       </div>
 
+      {/* Season Buttons */}
       <div className="flex gap-4 mt-6 z-10">
         {['spring', 'summer', 'fall', 'winter'].map((s) => (
           <button
@@ -178,10 +193,12 @@ export default function FlyingSeasonPage() {
         ))}
       </div>
 
+      {/* Info Text */}
       <p className="mt-4 text-center text-sm text-white/70 max-w-md z-10">
         Choose a season to see where the Rufous Hummingbird migrates.
       </p>
 
+      {/* Button to bird facts */}
       <motion.button
         onClick={() => router.push('/birdfacts')}
         whileHover={{ scale: 1.05 }}
