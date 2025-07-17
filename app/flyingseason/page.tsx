@@ -2,7 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaDove } from 'react-icons/fa';
 
 type Position = { top: number; left: number };
 type TrailItem = Position & { id: number };
@@ -10,11 +12,12 @@ type TrailItem = Position & { id: number };
 export default function FlyingSeasonPage() {
   const [season, setSeason] = useState('spring');
   const [trail, setTrail] = useState<TrailItem[]>([]);
+  const router = useRouter();
 
   const birdPositions: Record<string, Position> = {
-    spring: { top: 360, left: 130 },
+    spring: { top: 370, left: 130 },
     summer: { top: 230, left: 145 },
-    fall: { top: 348, left: 133 },
+    fall: { top: 325, left: 133 },
     winter: { top: 516, left: 196 },
   };
 
@@ -44,7 +47,7 @@ export default function FlyingSeasonPage() {
 
           setTimeout(() => {
             setTrail((prev) => prev.filter((dot) => dot.id !== trailDot.id));
-          }, 1000);
+          }, 2000);
         }, i * interval);
       }
 
@@ -54,11 +57,60 @@ export default function FlyingSeasonPage() {
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center py-10 px-4">
-      <h1 className="text-2xl md:text-4xl font-bold mb-6 text-center">
+      {/* Header */}
+      <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '72px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+          zIndex: 1000,
+          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+          padding: '12px 0',
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            margin: '0 auto',
+            padding: '0 16px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push('/home')}
+          >
+            <FaDove className="text-yellow-400 text-2xl" />
+            <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
+          </motion.div>
+        </div>
+      </header>
+
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src="/sky background.png"
+          alt="Sky Background"
+          fill
+          priority
+          className="object-cover"
+          style={{ objectPosition: 'center' }}
+        />
+      </div>
+
+      <h1 className="text-2xl md:text-4xl font-bold mb-6 text-center z-10 mt-20">
         Flying Season – Rufous Hummingbird Migration
       </h1>
 
-      <div className="relative w-[530px] h-[600px] overflow-hidden rounded border border-white">
+      <div className="relative w-[530px] h-[600px] overflow-hidden rounded border border-white z-10">
         <div
           className="absolute inset-0 bg-no-repeat"
           style={{
@@ -95,7 +147,7 @@ export default function FlyingSeasonPage() {
             left: birdPositions[season].left,
           }}
           transition={{
-            duration: 1.2,
+            duration: 1.1,
             ease: 'easeInOut',
           }}
           style={{
@@ -112,7 +164,7 @@ export default function FlyingSeasonPage() {
         </motion.div>
       </div>
 
-      <div className="flex gap-4 mt-6">
+      <div className="flex gap-4 mt-6 z-10">
         {['spring', 'summer', 'fall', 'winter'].map((s) => (
           <button
             key={s}
@@ -126,9 +178,18 @@ export default function FlyingSeasonPage() {
         ))}
       </div>
 
-      <p className="mt-4 text-center text-sm text-white/70 max-w-md">
+      <p className="mt-4 text-center text-sm text-white/70 max-w-md z-10">
         Choose a season to see where the Rufous Hummingbird migrates.
       </p>
+
+      <motion.button
+        onClick={() => router.push('/birdfacts')}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded shadow mt-8 z-10"
+      >
+        Learn Bird Facts
+      </motion.button>
     </main>
   );
 }
