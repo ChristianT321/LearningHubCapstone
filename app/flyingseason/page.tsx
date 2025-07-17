@@ -14,7 +14,7 @@ export default function FlyingSeasonPage() {
   const birdPositions: Record<string, Position> = {
     spring: { top: 360, left: 130 },
     summer: { top: 230, left: 145 },
-    fall:   { top: 348, left: 133 },
+    fall: { top: 348, left: 133 },
     winter: { top: 516, left: 196 },
   };
 
@@ -26,26 +26,30 @@ export default function FlyingSeasonPage() {
     const to = birdPositions[season];
 
     if (prevSeason !== season) {
-      const steps = 10;
+      const steps = 14;
+      const duration = 1200;
+      const interval = duration / steps;
+
       for (let i = 0; i <= steps; i++) {
-        const delay = i * 40;
         const t = i / steps;
-        const trailDot: TrailItem = {
-          top: from.top + (to.top - from.top) * t,
-          left: from.left + (to.left - from.left) * t,
-          id: Date.now() + i,
-        };
 
         setTimeout(() => {
+          const trailDot: TrailItem = {
+            top: from.top + (to.top - from.top) * t,
+            left: from.left + (to.left - from.left) * t,
+            id: Date.now() + i,
+          };
+
           setTrail((prev) => [...prev, trailDot]);
+
           setTimeout(() => {
             setTrail((prev) => prev.filter((dot) => dot.id !== trailDot.id));
           }, 1000);
-        }, delay);
+        }, i * interval);
       }
-    }
 
-    prevSeasonRef.current = season;
+      prevSeasonRef.current = season;
+    }
   }, [season]);
 
   return (
@@ -69,8 +73,8 @@ export default function FlyingSeasonPage() {
             <motion.div
               key={pos.id}
               className="absolute pointer-events-none"
-              initial={{ opacity: 0.8, scale: 1 }}
-              animate={{ opacity: 0, scale: 1.6 }}
+              initial={{ opacity: 0.6, scale: 1 }}
+              animate={{ opacity: 0, scale: 1.5 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.2, ease: 'easeOut' }}
               style={{
@@ -79,7 +83,7 @@ export default function FlyingSeasonPage() {
                 zIndex: 1,
               }}
             >
-              <div className="w-4 h-4 rounded-full bg-black/80 shadow-sm blur-sm" />
+              <div className="w-4 h-4 rounded-full bg-black/70 shadow-md blur-sm" />
             </motion.div>
           ))}
         </AnimatePresence>
