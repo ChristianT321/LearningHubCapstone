@@ -56,7 +56,8 @@ export default function GroundAnimalSeasonPage() {
       margin-right: 2px !important;
     }
     .seamless-carousel .carousel .control-dots {
-      bottom: 10px !important;
+      bottom: -30px !important;
+      position: absolute !important;
     }
     .seamless-carousel .carousel .control-dots .dot {
       background: white !important;
