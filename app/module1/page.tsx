@@ -1,5 +1,3 @@
-//used chatgpt to help with the header and the photo carousel 
-
 'use client'
 
 import Image from 'next/image'
@@ -21,12 +19,16 @@ export default function HomePage() {
   const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
   const getProgress = (): { [key: string]: boolean } => {
-    const saved = localStorage.getItem('progress');
-    return saved ? JSON.parse(saved) : {};
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('progress');
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
   };
 
   const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
   const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
+  const [expandedFact, setExpandedFact] = useState<number | null>(null);
   
   const toggleProgressDropdown = () => {
     setProgressDropdownOpen((prev) => !prev);
@@ -45,9 +47,30 @@ export default function HomePage() {
   }
 
   const facts = [
-    "Beavers are excellent builders and create dams that shape ecosystems.",
-    "Vancouver Wolves are key predators maintaining forest health.",
-    "Spirit Bears are a rare subspecies of black bears with white fur.",
+    {
+      title: "Beavers are excellent builders and create dams that shape ecosystems.",
+      details: [
+        "A single beaver can cut down hundreds of trees each year.",
+        "Beaver dams create wetlands that support diverse wildlife.",
+        "Their teeth never stop growing and are orange due to iron content."
+      ]
+    },
+    {
+      title: "Vancouver Wolves are key predators maintaining forest health.",
+      details: [
+        "Wolf packs typically consist of 5-10 members.",
+        "They can travel up to 50km in a single day when hunting.",
+        "Wolves communicate through howls, body language, and scent marking."
+      ]
+    },
+    {
+      title: "Spirit Bears are a rare subspecies of black bears with white fur.",
+      details: [
+        "Only about 1 in 10 black bears in the region are Spirit Bears.",
+        "Their white fur provides camouflage when fishing for salmon.",
+        "Spirit Bears hold cultural significance for Indigenous peoples."
+      ]
+    }
   ]
 
   const slides = [
@@ -233,22 +256,44 @@ export default function HomePage() {
           {facts.map((fact, index) => (
             <motion.li
               key={index}
-              className="bg-amber-900 bg-opacity-60 p-4 rounded-lg shadow-md"
+              className="bg-amber-900 bg-opacity-60 rounded-lg shadow-md overflow-hidden"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-green-300 text-2xl drop-shadow">🌿</span>
-                <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
-                  {fact}
-                </span>
+              <div 
+                className="p-4 cursor-pointer"
+                onClick={() => setExpandedFact(expandedFact === index ? null : index)}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-green-300 text-2xl drop-shadow">🌿</span>
+                  <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
+                    {fact.title}
+                  </span>
+                </div>
               </div>
+              
+              {expandedFact === index && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-amber-800 bg-opacity-70"
+                >
+                  <ul className="p-4 pt-0 space-y-2">
+                    {fact.details.map((detail, i) => (
+                      <li key={i} className="text-white text-left pl-8">
+                        • {detail}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
             </motion.li>
           ))}
         </ul>
 
         <div className="flex gap-4 mt-8 mb-12">
-
           <motion.button
             onClick={handleContinue}
             whileHover={{ scale: 1.05 }}
