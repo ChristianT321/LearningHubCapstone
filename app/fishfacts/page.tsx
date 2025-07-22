@@ -4,130 +4,81 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Carousel } from 'react-responsive-carousel';
-
 import '@mantine/core/styles.css';
 import { MantineProvider, Stepper, Button, Group } from '@mantine/core';
-
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+
+const fishData = [
+  {
+    name: 'Salmon',
+    emoji: '🐟',
+    intro: 'The legendary upstream traveler of the Great Bear Rainforest.',
+    carousel: ['/salmon1.png', '/salmon2.png', '/salmon4.png'],
+    facts: [
+      { title: 'Extreme Migration', icon: '🌊', desc: 'Salmon swim from the ocean to rivers to lay their eggs.' },
+      { title: 'Ecosystem Heroes', icon: '🌲', desc: 'Their bodies feed bears, eagles, and even trees after spawning.' },
+      { title: 'Super Smellers', icon: '👃', desc: 'They return to their birth river using scent alone!' },
+      { title: 'Jump Masters', icon: '💥', desc: 'They can leap up waterfalls on their way upstream.' },
+      { title: 'Life Cycle Legends', icon: '🔁', desc: 'Born in freshwater, they travel to sea and back.' },
+      { title: 'Indigenous Importance', icon: '🧍‍♂️', desc: 'Salmon are vital in Indigenous culture, food, and ceremony.' },
+    ],
+    gallery: [
+      { src: '/salmon-closeup.webp', caption: 'A salmon’s jaw during spawning.' },
+      { src: '/salmon-fry.jpg', caption: 'Salmon fry begin life in river gravel.' },
+      { src: '/salmon-bear.jpg', caption: 'Bears rely on salmon during autumn.' },
+    ],
+    callout: '🧠 Did you know? Salmon carry nutrients from the ocean deep into forest ecosystems!',
+  },
+  {
+    name: 'Whitefish',
+    emoji: '🐟',
+    intro: 'A sleek swimmer that glides near lake bottoms.',
+    carousel: ['/whitefish1.jpg', '/whitefish2.jpg', '/whitefish3.jpg'],
+    facts: [
+      { title: 'Bottom Dwellers', icon: '🏞️', desc: 'Whitefish prefer cold, deep lake waters near the bottom.' },
+      { title: 'Efficient Feeders', icon: '🍽️', desc: 'They feed on insects, plankton, and small invertebrates.' },
+      { title: 'Important Prey', icon: '🦅', desc: 'They are a key food source for larger fish, birds, and humans.' },
+      { title: 'Fast Swimmers', icon: '💨', desc: 'Their torpedo-like shape makes them efficient swimmers.' },
+      { title: 'Winter Activity', icon: '❄️', desc: 'Whitefish remain active under ice and continue feeding.' },
+      { title: 'Commercial Value', icon: '💰', desc: 'Whitefish are popular for their mild taste and are commercially fished.' },
+    ],
+    gallery: [
+      { src: '/whitefish-bottom.webp', caption: 'Whitefish near the lake bottom.' },
+      { src: '/whitefish-sleek.jpg', caption: 'Their bodies are streamlined and sleek.' },
+      { src: '/whitefish-food.jpg', caption: 'Caught as food by predators.' },
+    ],
+    callout: '🧠 Did you know? Whitefish can thrive in icy lakes where few other fish can survive!',
+  },
+  {
+    name: 'Lake Trout',
+    emoji: '🐟',
+    intro: 'A deep-water predator that rules cold northern lakes.',
+    carousel: ['/trout1.webp', '/trout2.jpg', '/trout3.png'],
+    facts: [
+      { title: 'Ambush Predator', icon: '👀', desc: 'Lake trout wait patiently to strike passing prey.' },
+      { title: 'Cold Water Lovers', icon: '❄️', desc: 'They live in deep, cold lakes where temperatures stay low.' },
+      { title: 'Slow Growth', icon: '⏳', desc: 'Lake trout grow slowly but can reach massive sizes over decades.' },
+      { title: 'Record Lifespan', icon: '🎂', desc: 'Some lake trout have lived for over 40 years.' },
+      { title: 'Strong Swimmers', icon: '💪', desc: 'Their muscular bodies allow sudden bursts of speed.' },
+      { title: 'Top Predator', icon: '🎣', desc: 'Lake trout are apex predators in many freshwater lakes.' },
+    ],
+    gallery: [
+      { src: '/trout-old.jpg', caption: 'A lake trout hunting near the bottom.' },
+      { src: '/trout-bottom.jpg', caption: 'Large trout can live for decades.' },
+      { src: '/trout-clean.png', caption: 'They love cold, clean lakes.' },
+    ],
+    callout: '🧠 Did you know? The largest recorded lake trout weighed over 70 pounds!',
+  },
+];
 
 export default function FishFactsPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
-
-  const fishNames = ['Salmon', 'Whitefish', 'Lake Trout'];
-
-  const fishSlides = [
-    [
-      {
-        image: '/salmon1.png',
-        alt: 'Salmon swimming upstream',
-        desc: 'Salmon swim hundreds of miles to return to where they were born.',
-      },
-      {
-        image: '/salmon2.png',
-        alt: 'Jumping Salmon',
-        desc: 'They leap over waterfalls during migration.',
-      },
-      {
-        image: '/salmon4.png',
-        alt: 'Spawning Salmon',
-        desc: 'After spawning, most salmon die, providing nutrients to the forest.',
-      },
-    ],
-    [
-      {
-        image: '/whitefish1.jpg',
-        alt: 'Whitefish in lake',
-        desc: 'Whitefish glide near lake bottoms to feed.',
-      },
-      {
-        image: '/whitefish2.jpg',
-        alt: 'Close-up of Whitefish',
-        desc: 'They have torpedo-shaped bodies for fast swimming.',
-      },
-      {
-        image: '/whitefish3.jpg',
-        alt: 'Fishing Whitefish',
-        desc: 'They are important to both people and predators.',
-      },
-    ],
-    [
-      {
-        image: '/trout1.webp',
-        alt: 'Lake Trout hunting',
-        desc: 'Lake trout are ambush predators.',
-      },
-      {
-        image: '/trout2.jpg',
-        alt: 'Large Lake Trout',
-        desc: 'They can live over 40 years and grow very large.',
-      },
-      {
-        image: '/trout3.png',
-        alt: 'Trout underwater',
-        desc: 'They live in cold, deep lakes across Canada.',
-      },
-    ],
-  ];
-
-  const carouselStyles = `
-    .seamless-carousel .carousel .slider {
-      transition: transform 800ms ease-in-out !important;
-    }
-    .seamless-carousel .carousel .slide {
-      min-width: 100%;
-      margin: 0;
-      transition: opacity 800ms ease-in-out;
-    }
-    .carousel-slide {
-      width: 100%;
-      height: 100%;
-    }
-    .seamless-carousel .control-arrow {
-      opacity: 1 !important;
-      background: rgba(0, 0, 0, 0.3) !important;
-      border-radius: 50% !important;
-      width: 40px !important;
-      height: 40px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      transition: all 200ms ease !important;
-    }
-    .seamless-carousel .control-arrow:hover {
-      background: rgba(0, 0, 0, 0.6) !important;
-      transform: scale(1.1) !important;
-    }
-    .seamless-carousel .control-next.control-arrow:before {
-      border-left: 8px solid white !important;
-      margin-left: 2px !important;
-    }
-    .seamless-carousel .control-prev.control-arrow:before {
-      border-right: 8px solid white !important;
-      margin-right: 2px !important;
-    }
-    .seamless-carousel .carousel .control-dots {
-      bottom: 10px !important;
-    }
-    .seamless-carousel .carousel .control-dots .dot {
-      background: white !important;
-      opacity: 0.5 !important;
-      box-shadow: none !important;
-      width: 10px !important;
-      height: 10px !important;
-      margin: 0 5px !important;
-    }
-    .seamless-carousel .carousel .control-dots .dot.selected {
-      opacity: 1 !important;
-      transform: scale(1.2) !important;
-    }
-  `;
+  const currentFish = fishData[step];
 
   return (
     <MantineProvider>
-      <style jsx global>{carouselStyles}</style>
-
-      <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
+      <main className="relative min-h-screen w-full flex flex-col items-center text-center overflow-y-auto p-4">
         <div className="fixed inset-0 z-0">
           <Image
             src="/FIsh background.png"
@@ -143,70 +94,69 @@ export default function FishFactsPage() {
             Learn About the Fish
           </h1>
 
-          <div className="bg-black/40 rounded-xl p-6 w-full">
-            <h2 className="text-4xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-6">
-              Dive Into Their World
+          <Stepper active={step} onStepClick={setStep} color="blue" className="w-full mb-4" size="md">
+            {fishData.map((fish, index) => (
+              <Stepper.Step key={index} label={`Step ${index + 1}`} description={fish.name} />
+            ))}
+          </Stepper>
+
+          <Group justify="center" className="mb-6">
+            <Button variant="default" disabled={step === 0} onClick={() => setStep(step - 1)}>
+              Back
+            </Button>
+            <Button color="blue" disabled={step === fishData.length - 1} onClick={() => setStep(step + 1)}>
+              Next
+            </Button>
+          </Group>
+
+          <div className="bg-blue-950 text-white rounded-2xl p-8 w-full shadow-xl border-l-8 border-yellow-400">
+            <h2 className="text-4xl font-extrabold text-yellow-300 mb-2">
+              {currentFish.emoji} {currentFish.name}
             </h2>
+            <p className="text-lg text-blue-200 italic mb-6">{currentFish.intro}</p>
 
-            <Stepper active={step} onStepClick={setStep} color="blue" className="w-full mb-4" size="md">
-              {fishNames.map((name, index) => (
-                <Stepper.Step key={index} label={`Step ${index + 1}`} description={name} />
-              ))}
-            </Stepper>
-
-            <Group justify="center" className="mb-6">
-              <Button variant="default" disabled={step === 0} onClick={() => setStep(step - 1)}>
-                Back
-              </Button>
-              <Button color="blue" disabled={step === fishNames.length - 1} onClick={() => setStep(step + 1)}>
-                Next
-              </Button>
-            </Group>
-
-            <div className="bg-blue-900 rounded-lg p-6 shadow-md mb-6">
-              <h3 className="text-3xl font-bold text-white mb-4">{fishNames[step]}</h3>
-              <p className="text-white text-lg">Swipe to learn fun facts about the {fishNames[step].toLowerCase()}!</p>
-            </div>
-
-            <div className="w-full rounded-lg overflow-hidden shadow-lg bg-blue-800 bg-opacity-80 p-4 relative">
-              <Carousel
-                autoPlay
-                infiniteLoop
-                showThumbs={false}
-                showStatus={false}
-                showIndicators={false}
-                interval={6000}
-                transitionTime={800}
-                stopOnHover
-                swipeable
-                emulateTouch
-                className="seamless-carousel"
-              >
-                {fishSlides[step].map((slide, idx) => (
-                  <div key={idx} className="carousel-slide">
-                    <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
-                      <Image
-                        src={slide.image}
-                        alt={slide.alt}
-                        fill
-                        className="object-contain rounded-lg"
-                        priority={idx === 0}
-                      />
-                    </div>
-                    <p className="text-white text-lg font-semibold text-center bg-blue-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
-                      {slide.desc}
-                    </p>
+            <div className="rounded-xl overflow-hidden shadow-lg mb-8">
+              <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={5000}>
+                {currentFish.carousel.map((src, i) => (
+                  <div key={i} className="flex items-center justify-center bg-blue-950 rounded-lg h-[500px] p-6">
+                    <Image src={src} alt={`${currentFish.name} ${i}`} width={1000} height={500} className="object-cover w-full h-full" />
                   </div>
                 ))}
               </Carousel>
             </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {currentFish.facts.map((fact, i) => (
+                <div key={i} className="bg-blue-800 rounded-xl p-4 border-l-4 border-yellow-400 shadow hover:shadow-xl transition">
+                  <h4 className="text-xl font-semibold mb-2 text-yellow-200">
+                    {fact.icon} {fact.title}
+                  </h4>
+                  <p className="text-blue-100">{fact.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+              {currentFish.gallery.map((img, i) => (
+                <div key={i} className="rounded-xl overflow-hidden shadow-md">
+                  <Image src={img.src} alt={img.caption} width={400} height={250} className="object-cover w-full h-[200px]" />
+                  <p className="text-sm text-white text-center mt-2 bg-blue-800/80 px-3 py-2 rounded-md font-medium shadow">
+                    {img.caption}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-yellow-200 text-yellow-900 text-lg font-semibold text-center p-4 rounded-xl shadow border border-yellow-400">
+              {currentFish.callout}
+            </div>
           </div>
 
           <button
-            onClick={() => router.push('/gofish')}
+            onClick={() => router.push('/comparefish')}
             className="bg-blue-700 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded shadow mt-8"
           >
-            Play Go Fish
+            Compare Fish
           </button>
         </div>
       </main>

@@ -159,7 +159,8 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
+    <div className="min-h-screen flex flex-col">
+    <main className="flex-grow relative w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{ paddingTop: '80px' }}>
 
         <header
         style={{
@@ -185,9 +186,9 @@ export default function HomePage() {
             alignItems: 'center',
           }}
         >
-        <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'white' }}>
-          Welcome
-        </div>
+          <FaPaw className="text-yellow-400 text-2xl" />
+            <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
+        
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
             {headerItems}
@@ -345,23 +346,21 @@ export default function HomePage() {
           Continue
         </button>
       </div>
-      
-      <div
+
+    
+    </main>
+
+    <footer
       style={{
-        width: '100vw',                
-        marginLeft: 'calc(-50vw + 50%)',
-        position: 'relative',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        width: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
         borderTop: '1px solid var(--mantine-color-gray-2)',
         paddingTop: '12px',
         paddingBottom: '12px',
-        }}
-        >
+      }}
+    >
       <Container
         style={{
           maxWidth: '1200px',
@@ -371,23 +370,20 @@ export default function HomePage() {
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '12px',
-          }}
-        >
-        <Group 
+        }}
+      >
+        <Group
           style={{
             flexWrap: 'wrap',
             justifyContent: 'center',
             gap: '12px',
-            
           }}
         >
           {items}
         </Group>
       </Container>
-    </div>
-
-    
-    </main>
+    </footer>
+  </div>
     
   )
 }
