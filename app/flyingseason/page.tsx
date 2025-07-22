@@ -21,6 +21,14 @@ export default function FlyingSeasonPage() {
     winter: { top: 516, left: 196 },
   };
 
+const trailGradientBySeason: Record<string, string> = {
+  spring: 'bg-[radial-gradient(circle,_rgba(50,150,80,0.9)_0%,_rgba(30,100,50,0.6)_100%)]',
+  summer: 'bg-[radial-gradient(circle,_rgba(0,80,0,0.95)_0%,_rgba(0,40,0,0.6)_100%)]',
+  fall: 'bg-[radial-gradient(circle,_rgba(180,80,0,0.9)_0%,_rgba(100,40,0,0.6)_100%)]',
+  winter: 'bg-[radial-gradient(circle,_rgba(80,180,255,0.9)_0%,_rgba(30,80,120,0.6)_100%)]',
+};
+
+
   const prevSeasonRef = useRef(season);
 
   useEffect(() => {
@@ -143,7 +151,9 @@ export default function FlyingSeasonPage() {
                 zIndex: 20,
               }}
             >
-              <div className="w-2.5 h-2.5 rounded-full bg-black/100 shadow-md blur-sm" />
+              <div
+                className={`w-3 h-3 rounded-full blur-sm shadow-md ${trailGradientBySeason[season]}`}
+              />
             </motion.div>
           ))}
         </AnimatePresence>
