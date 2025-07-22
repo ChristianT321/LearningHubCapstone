@@ -9,32 +9,54 @@ import { FaDove } from 'react-icons/fa';
 type Position = { top: number; left: number };
 type TrailItem = Position & { id: number };
 
+type Bird = 'hummingbird' | 'eagle' | 'duck';
+
 export default function FlyingSeasonPage() {
   const [season, setSeason] = useState('spring');
+  const [selectedBird, setSelectedBird] = useState<Bird>('hummingbird');
   const [trail, setTrail] = useState<TrailItem[]>([]);
   const router = useRouter();
 
-  const birdPositions: Record<string, Position> = {
-    spring: { top: 370, left: 130 },
-    summer: { top: 230, left: 145 },
-    fall: { top: 325, left: 133 },
-    winter: { top: 516, left: 196 },
+  const birdPositions: Record<Bird, Record<string, Position>> = {
+    hummingbird: {
+      spring: { top: 370, left: 130 },
+      summer: { top: 230, left: 145 },
+      fall: { top: 325, left: 133 },
+      winter: { top: 516, left: 196 },
+    },
+    eagle: {
+      spring: { top: 220, left: 130 },
+      summer: { top: 150, left: 150 },
+      fall: { top: 270, left: 140 },
+      winter: { top: 340, left: 120 },
+    },
+    duck: {
+      spring: { top: 200, left: 170 },
+      summer: { top: 140, left: 120 },
+      fall: { top:210, left: 135 },
+      winter: { top: 260, left: 140 },
+    },
   };
 
-const trailGradientBySeason: Record<string, string> = {
-  spring: 'bg-[radial-gradient(circle,_rgba(50,150,80,0.9)_0%,_rgba(30,100,50,0.6)_100%)]',
-  summer: 'bg-[radial-gradient(circle,_rgba(0,80,0,0.95)_0%,_rgba(0,40,0,0.6)_100%)]',
-  fall: 'bg-[radial-gradient(circle,_rgba(180,80,0,0.9)_0%,_rgba(100,40,0,0.6)_100%)]',
-  winter: 'bg-[radial-gradient(circle,_rgba(80,180,255,0.9)_0%,_rgba(30,80,120,0.6)_100%)]',
-};
+  const birdImages: Record<Bird, string> = {
+    hummingbird: '/Hummingbird Cartoon.png',
+    eagle: '/Bald Eagle Cartoon.png',
+    duck: '/Harlequin Duck.png',
+  };
 
+  const trailGradientBySeason: Record<string, string> = {
+    spring: 'bg-[radial-gradient(circle,_rgba(50,150,80,0.9)_0%,_rgba(30,100,50,0.6)_100%)]',
+    summer: 'bg-[radial-gradient(circle,_rgba(0,80,0,0.95)_0%,_rgba(0,40,0,0.6)_100%)]',
+    fall: 'bg-[radial-gradient(circle,_rgba(180,80,0,0.9)_0%,_rgba(100,40,0,0.6)_100%)]',
+    winter: 'bg-[radial-gradient(circle,_rgba(80,180,255,0.9)_0%,_rgba(30,80,120,0.6)_100%)]',
+  };
 
   const prevSeasonRef = useRef(season);
 
   useEffect(() => {
     const prevSeason = prevSeasonRef.current;
-    const from = birdPositions[prevSeason];
-    const to = birdPositions[season];
+    const from = birdPositions[selectedBird][prevSeason];
+    const to = birdPositions[selectedBird][season];
 
     if (prevSeason !== season) {
       const steps = 14;
@@ -61,40 +83,13 @@ const trailGradientBySeason: Record<string, string> = {
 
       prevSeasonRef.current = season;
     }
-  }, [season]);
+  }, [season, selectedBird]);
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center py-10 px-4">
-      <header
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '72px',
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
-          zIndex: 1000,
-          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-          padding: '10px 0',
-        }}
-      >
-        <div
-          style={{
-            height: '100%',
-            margin: '0 auto',
-            padding: '0 16px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => router.push('/home')}
-          >
+      <header style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '72px', backgroundColor: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', zIndex: 1000, boxShadow: '0 2px 6px rgba(0,0,0,0.2)', padding: '10px 0' }}>
+        <div style={{ height: '100%', margin: '0 auto', padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/home')}>
             <FaDove className="text-yellow-400 text-2xl" />
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
@@ -102,112 +97,54 @@ const trailGradientBySeason: Record<string, string> = {
       </header>
 
       <div className="fixed inset-0 z-0">
-        <Image
-          src="/sky background.png"
-          alt="Sky Background"
-          fill
-          priority
-          className="object-cover"
-          style={{ objectPosition: 'center' }}
-        />
+        <Image src="/sky background.png" alt="Sky Background" fill priority className="object-cover" style={{ objectPosition: 'center' }} />
       </div>
 
       <h1 className="text-2xl md:text-4xl font-bold mb-6 text-center z-10 mt-20">
-        Flying Season – Rufous Hummingbird Migration
+        Flying Season – {selectedBird === 'hummingbird' ? 'Rufous Hummingbird' : selectedBird === 'eagle' ? 'Bald Eagle' : 'Harlequin Duck'} Migration
       </h1>
 
       <div className="relative w-[530px] h-[600px] overflow-hidden rounded-xl border border-white z-10 shadow-lg">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/waves.gif"
-            alt="Waves"
-            fill
-            className="object-cover brightness-75"
-          />
+          <Image src="/waves.gif" alt="Waves" fill className="object-cover brightness-75" />
         </div>
 
-        <div
-          className="absolute inset-0 bg-no-repeat z-10"
-          style={{
-            backgroundImage: "url('/North america.png')",
-            backgroundSize: 'auto 100%',
-            backgroundPosition: '105% center',
-            filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.5))',
-          }}
-        />
+        <div className="absolute inset-0 bg-no-repeat z-10" style={{ backgroundImage: "url('/North america.png')", backgroundSize: 'auto 100%', backgroundPosition: '105% center', filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.5))' }} />
 
         <AnimatePresence>
           {trail.map((pos) => (
-            <motion.div
-              key={pos.id}
-              className="absolute pointer-events-none"
-              initial={{ opacity: 1, scale: 1 }}
-              animate={{ opacity: 0, scale: 1.4 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.2, ease: 'easeOut' }}
-              style={{
-                top: `${pos.top}px`,
-                left: `${pos.left}px`,
-                zIndex: 20,
-              }}
-            >
-              <div
-                className={`w-3 h-3 rounded-full blur-sm shadow-md ${trailGradientBySeason[season]}`}
-              />
+            <motion.div key={pos.id} className="absolute pointer-events-none" initial={{ opacity: 1, scale: 1 }} animate={{ opacity: 0, scale: 1.4 }} exit={{ opacity: 0 }} transition={{ duration: 1.2, ease: 'easeOut' }} style={{ top: `${pos.top}px`, left: `${pos.left}px`, zIndex: 20 }}>
+              <div className={`w-3 h-3 rounded-full blur-sm shadow-md ${trailGradientBySeason[season]}`} />
             </motion.div>
           ))}
         </AnimatePresence>
 
-        <motion.div
-          className="absolute"
-          animate={{
-            top: birdPositions[season].top,
-            left: birdPositions[season].left,
-          }}
-          transition={{
-            duration: 1.1,
-            ease: 'easeInOut',
-          }}
-          style={{
-            zIndex: 30,
-            position: 'absolute',
-          }}
-        >
-          <Image
-            src="/roufus hummingbird.png"
-            alt="Rufous Hummingbird"
-            width={50}
-            height={50}
-            className="drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)]"
-          />
+        <motion.div className="absolute" animate={birdPositions[selectedBird][season]} transition={{ duration: 1.1, ease: 'easeInOut' }} style={{ zIndex: 30, position: 'absolute' }}>
+          <Image src={birdImages[selectedBird]} alt={selectedBird} width={50} height={50} className="drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)]" />
         </motion.div>
       </div>
 
       <div className="flex gap-4 mt-6 z-10">
         {['spring', 'summer', 'fall', 'winter'].map((s) => (
-          <motion.button
-            key={s}
-            onClick={() => setSeason(s)}
-            whileHover={{ scale: 1.07 }}
-            className={`px-4 py-2 rounded transition font-medium ${
-              season === s ? 'bg-green-600' : 'bg-white/20 hover:bg-white/40'
-            }`}
-          >
+          <motion.button key={s} onClick={() => setSeason(s)} whileHover={{ scale: 1.07 }} className={`px-4 py-2 rounded transition font-medium ${season === s ? 'bg-green-600' : 'bg-white/20 hover:bg-white/40'}`}>
             {s.charAt(0).toUpperCase() + s.slice(1)}
           </motion.button>
         ))}
       </div>
 
+      <div className="flex gap-4 mt-4 z-10">
+        {(['hummingbird', 'eagle', 'duck'] as Bird[]).map((b) => (
+          <motion.button key={b} onClick={() => setSelectedBird(b)} whileHover={{ scale: 1.07 }} className={`px-4 py-2 rounded transition font-medium ${selectedBird === b ? 'bg-blue-600' : 'bg-white/20 hover:bg-white/40'}`}>
+            {b === 'hummingbird' ? 'Rufous Hummingbird' : b === 'eagle' ? 'Bald Eagle' : 'Harlequin Duck'}
+          </motion.button>
+        ))}
+      </div>
+
       <p className="mt-4 text-center text-sm text-white/70 max-w-md z-10">
-        Choose a season to see where the Rufous Hummingbird migrates.
+        Choose a season and bird to see their migration path.
       </p>
 
-      <motion.button
-        onClick={() => router.push('/birdfacts')}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded-lg shadow mt-8 z-10"
-      >
+      <motion.button onClick={() => router.push('/birdfacts')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 rounded-lg shadow mt-8 z-10">
         Learn Bird Facts
       </motion.button>
     </main>
