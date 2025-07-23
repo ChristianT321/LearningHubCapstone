@@ -1,206 +1,174 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
-import { Carousel } from 'react-responsive-carousel';
 
-import '@mantine/core/styles.css';
-import { MantineProvider, Stepper, Button, Group } from '@mantine/core';
-
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-
-export default function BirdFactsPage() {
-  const router = useRouter();
-  const [step, setStep] = useState(0);
-
-  const birdNames = ['Bald Eagle', 'Hummingbird', 'Duck'];
-
-  const birdSlides = [
-  [
-    {
-      image: '/Bald eagle.jpg',
-      alt: 'Bald Eagle',
-      desc: 'The bald eagle can spot prey from over 3 kilometers away!',
+const birds = [
+  {
+    name: '🦅 Bald Eagle',
+    slug: 'bald-eagle',
+    images: {
+      main: { src: '/Bald eagle.jpg', alt: 'Bald Eagle' },
+      feather: { src: '/Bald eagle feather.jpg', alt: 'Bald Eagle Feather' },
+      extra: { src: '/Bald eagle nest.jpg', alt: 'Eagle Nest' },
     },
-    {
-      image: '/Bald eagle feather.jpg',
-      alt: 'Bald Eagle Feather',
-      desc: 'Broad, dark feather with a white tip — perfect for soaring.',
+    facts: [
+      '🪶 Can spot prey from over 3 kilometers away.',
+      '🏞 Builds the largest nests in North America.',
+      '🦴 Talons can exert 400 lbs of pressure!',
+      '👀 Despite the name, they’re not bald!',
+    ],
+    didYouKnow: 'Bald eagles return to the same nest every year — sometimes for decades!',
+  },
+  {
+    name: '🐦 Hummingbird',
+    slug: 'hummingbird',
+    images: {
+      main: { src: '/Hummingbird.jpg', alt: 'Hummingbird' },
+      feather: { src: '/Hummingbird feather.jpg', alt: 'Hummingbird Feather' },
+      extra: { src: '/Hummingbird hovering.jpg', alt: 'Hummingbird Hovering' },
     },
-    {
-      image: '/Bald eagle nest.jpg',
-      alt: 'Bald Eagle Nest',
-      desc: 'Bald eagles build the largest nests of any bird in North America.',
+    facts: [
+      '🕊 Flaps wings up to 80 times per second.',
+      '🔁 Can hover and even fly backward.',
+      '💡 Weighs less than a nickel!',
+      '✨ Shimmers with iridescent feathers.',
+    ],
+    didYouKnow: 'Hummingbirds remember every flower they visit — and when they visited it!',
+  },
+  {
+    name: '🦆 Duck',
+    slug: 'duck',
+    images: {
+      main: { src: '/Duck.webp', alt: 'Duck' },
+      feather: { src: '/Duck feather.jpg', alt: 'Duck Feather' },
+      extra: { src: '/Ducklings.jpg', alt: 'Ducklings' },
     },
-  ],
-  [
-    {
-      image: '/Hummingbird.jpg',
-      alt: 'Hummingbird',
-      desc: 'Hummingbirds can flap their wings up to 80 times per second!',
-    },
-    {
-      image: '/Hummingbird feather.jpg',
-      alt: 'Hummingbird Feather',
-      desc: 'Tiny, iridescent feather — shimmers with color and light.',
-    },
-    {
-      image: '/Hummingbird hovering.jpg',
-      alt: 'Hummingbird Hovering',
-      desc: 'They can hover in place and even fly backward — a rare skill among birds.',
-    },
-  ],
-  [
-    {
-      image: '/Duck.webp',
-      alt: 'Duck',
-      desc: 'Ducks have waterproof feathers thanks to natural oils.',
-    },
-    {
-      image: '/Duck feather.jpg',
-      alt: 'Duck Feather',
-      desc: 'Soft, layered feather that helps keep water out.',
-    },
-    {
-      image: '/Ducklings.jpg',
-      alt: 'Ducklings',
-      desc: 'Baby ducks, called ducklings, can swim just hours after hatching.',
-    },
-  ],
+    facts: [
+      '💧 Feathers are waterproof!',
+      '🍼 Ducklings swim hours after hatching.',
+      '😴 Ducks can sleep with one eye open.',
+      '📣 Each quack means something different.',
+    ],
+    didYouKnow: 'Some ducks migrate thousands of kilometers every year!',
+  },
 ];
 
-
-  const carouselStyles = `
-    .seamless-carousel .carousel .slider {
-      transition: transform 800ms ease-in-out !important;
-    }
-    .seamless-carousel .carousel .slide {
-      min-width: 100%;
-      margin: 0;
-      transition: opacity 800ms ease-in-out;
-    }
-    .carousel-slide {
-      width: 100%;
-      height: 100%;
-    }
-    .seamless-carousel .control-arrow {
-      opacity: 1 !important;
-      background: rgba(0, 0, 0, 0.3) !important;
-      border-radius: 50% !important;
-      width: 40px !important;
-      height: 40px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      transition: all 200ms ease !important;
-    }
-    .seamless-carousel .control-arrow:hover {
-      background: rgba(0, 0, 0, 0.6) !important;
-      transform: scale(1.1) !important;
-    }
-    .seamless-carousel .control-next.control-arrow:before {
-      border-left: 8px solid white !important;
-      margin-left: 2px !important;
-    }
-    .seamless-carousel .control-prev.control-arrow:before {
-      border-right: 8px solid white !important;
-      margin-right: 2px !important;
-    }
-  `;
+export default function BirdNotebook() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const bird = birds[activeIndex];
+  const router = useRouter();
 
   return (
-    <MantineProvider>
-      <style jsx global>{carouselStyles}</style>
+    <main className="relative min-h-screen w-full overflow-hidden">
 
-      <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
-        {/* Background */}
-        <div className="fixed inset-0 z-0">
-          <Image
-            src="/sky background.png"
-            alt="Sky Background"
-            fill
-            priority
-            className="object-cover object-center"
-          />
+      {/* 🌄 Background */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src="/sky background.png"
+          alt="Sky Background"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+      </div>
+
+      {/* Content Layer */}
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen w-full px-4 py-10">
+
+        {/* 🪺 Welcome Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-extrabold text-white drop-shadow-[2px_2px_0px_black] mb-2">
+            Welcome to the Bird Explorer’s Guide
+          </h1>
+          <p className="text-white text-lg drop-shadow-[1px_1px_0px_black]">
+            Learn about these amazing birds before you play the matching game!
+          </p>
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center gap-10 w-full max-w-5xl px-4 py-8">
-          <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-10">
-            Bird Facts & Feather ID
-          </h1>
-          <p className="text-white text-lg max-w-2xl">
-            Learn cool facts about each bird and how to recognize its feathers before you play the matching game.
-          </p>
+        {/* 🧾 Notebook */}
+        <div className="flex max-w-7xl w-full rounded-3xl shadow-2xl border-[6px] border-yellow-700 overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90">
 
-          <div className="bg-black/40 rounded-xl p-6 w-full">
-            <h2 className="text-4xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-6">
-              Meet the Birds
-            </h2>
-
-            <Stepper active={step} onStepClick={setStep} color="cyan" className="w-full mb-4" size="md">
-              {birdNames.map((name, index) => (
-                <Stepper.Step key={index} label={`Step ${index + 1}`} description={name} />
-              ))}
-            </Stepper>
-
-            <Group justify="center" className="mb-6">
-              <Button variant="default" disabled={step === 0} onClick={() => setStep(step - 1)}>
-                Back
-              </Button>
-              <Button color="cyan" disabled={step === birdNames.length - 1} onClick={() => setStep(step + 1)}>
-                Next
-              </Button>
-            </Group>
-
-            <div className="bg-cyan-900 rounded-lg p-6 shadow-md mb-6">
-              <h3 className="text-3xl font-bold text-white mb-4">{birdNames[step]}</h3>
-              <p className="text-white text-lg">Swipe through to see both the bird and its feather!</p>
-            </div>
-
-            <div className="w-full rounded-lg overflow-hidden shadow-lg bg-cyan-800 bg-opacity-80 p-4 relative">
-              <Carousel
-                autoPlay
-                infiniteLoop
-                showThumbs={false}
-                showStatus={false}
-                showIndicators={false}
-                interval={5000}
-                transitionTime={800}
-                stopOnHover
-                swipeable
-                emulateTouch
-                className="seamless-carousel"
+          {/* Tabs */}
+          <div className="w-28 bg-green-800 flex flex-col justify-center items-center gap-6 py-6">
+            {birds.map((b, idx) => (
+              <button
+                key={b.slug}
+                onClick={() => setActiveIndex(idx)}
+                className={clsx(
+                  'w-20 h-20 rounded-full overflow-hidden border-4 transition-all',
+                  idx === activeIndex
+                    ? 'border-yellow-400 scale-110 ring-4 ring-yellow-200'
+                    : 'border-green-400 hover:scale-105'
+                )}
               >
-                {birdSlides[step].map((slide, idx) => (
-                  <div key={idx} className="carousel-slide">
-                    <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px] relative">
-                      <Image
-                        src={slide.image}
-                        alt={slide.alt}
-                        fill
-                        className="object-contain rounded-lg"
-                        priority={idx === 0}
-                      />
-                    </div>
-                    <p className="text-white text-lg font-semibold text-center bg-cyan-950 bg-opacity-70 py-3 px-4 mt-2 rounded">
-                      {slide.desc}
-                    </p>
-                  </div>
-                ))}
-              </Carousel>
-            </div>
+                <Image
+                  src={b.images.main.src}
+                  alt={b.name}
+                  width={80}
+                  height={80}
+                  className="object-cover w-full h-full"
+                />
+              </button>
+            ))}
           </div>
 
-          <button
-            onClick={() => router.push('/matching2')}
-            className="bg-cyan-700 hover:bg-cyan-900 text-white font-bold px-6 py-3 rounded shadow mt-8"
-          >
-            Start Matching Game
-          </button>
+          {/* Spine */}
+          <div className="w-2 bg-yellow-900" />
+
+          {/* Pages */}
+          <div className="flex-1 grid grid-cols-2 gap-0 p-6 text-black">
+            {/* Left Page */}
+            <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col">
+              <h2 className="text-4xl font-bold mb-4 text-green-900">{bird.name}</h2>
+              <div className="relative w-full h-96 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-4">
+                <Image src={bird.images.main.src} alt={bird.images.main.alt} fill className="object-contain p-2" />
+              </div>
+              <ul className="list-disc text-lg text-gray-800 pl-6 space-y-2">
+                {bird.facts.slice(0, 2).map((fact, i) => (
+                  <li key={i}>{fact}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right Page */}
+            <div className="pl-6 flex flex-col justify-between">
+              <div className="flex gap-4 mb-4">
+                {[bird.images.feather, bird.images.extra].map((img, i) => (
+                  <div
+                    key={i}
+                    className="relative flex-1 h-64 rounded-xl overflow-hidden border-4 border-green-700 shadow-md"
+                  >
+                    <Image src={img.src} alt={img.alt} fill className="object-contain p-2" />
+                  </div>
+                ))}
+              </div>
+
+              <ul className="list-disc text-lg text-gray-800 pl-6 space-y-2">
+                {bird.facts.slice(2, 4).map((fact, i) => (
+                  <li key={i}>{fact}</li>
+                ))}
+              </ul>
+
+              <div className="bg-yellow-100 border-l-4 border-yellow-600 p-4 italic text-sm text-gray-700 mt-4 shadow-sm rounded-md">
+                🔍 <strong>Did you know?</strong> {bird.didYouKnow}
+              </div>
+
+              <div className="text-right text-sm italic text-gray-500 mt-4">Explorer’s Notebook • Page {activeIndex + 1}</div>
+            </div>
+          </div>
         </div>
-      </main>
-    </MantineProvider>
+
+        {/* 🔽 Start Matching Button */}
+        <button
+          onClick={() => router.push('/matching2')}
+          className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition"
+        >
+          Start Matching Game →
+        </button>
+      </div>
+    </main>
   );
 }
