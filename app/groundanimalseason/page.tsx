@@ -1,24 +1,24 @@
 'use client';
- 
+
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Carousel } from 'react-responsive-carousel';
- 
+
 import '@mantine/core/styles.css';
 import { MantineProvider, Stepper, Button, Group, SimpleGrid, Container, Grid, Box } from '@mantine/core';
- 
+
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
- 
- 
+
+
 export default function GroundAnimalSeasonPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
- 
+
   const handleContinue = () => {
     router.push('/groundanimalfacts');
   };
- 
+
   const slidesBlackBear = [
     {
       image: '/01_Schwarzbär.jpg',
@@ -33,10 +33,10 @@ export default function GroundAnimalSeasonPage() {
     {
       image: '/beareating.jpg',
       alt: 'Bear Eating',
-      desc: 'With spring’s arrival, bears emerge from dens, hungry and ready to feast on roots, berries, and fish.',
+      desc: 'With spring\'s arrival, bears emerge from dens, hungry and ready to feast on roots, berries, and fish.',
     },
   ];
- 
+
   const slidesSpiritBear = [
     {
       image: '/Spirit Bear Spring.avif',
@@ -56,10 +56,10 @@ export default function GroundAnimalSeasonPage() {
     {
       image: '/Spirit Bear Winter.jpg',
       alt: 'Spirit Bear Winter',
-      desc: 'Bears go into hibernation, usually from November to March. They sleep in dens made in hollow trees, caves, or dug-out hillsides. While hibernating, they don’t eat, drink, or go to the bathroom — they live off their body fat. The bear stays in the den until the warmer weather returns.',
+      desc: 'Bears go into hibernation, usually from November to March. They sleep in dens made in hollow trees, caves, or dug-out hillsides. While hibernating, they don\'t eat, drink, or go to the bathroom — they live off their body fat. The bear stays in the den until the warmer weather returns.',
     },
   ];
- 
+
   const slidesGrizzlyBear = [
     {
       image: '/Grizzly Bear Spring.jpg',
@@ -82,7 +82,7 @@ export default function GroundAnimalSeasonPage() {
       desc: 'Same as the other bears, Grizzlies hibernate from November to March. They sleep in dens and live off body fat until spring returns.',
     },
   ];
- 
+
   const slidesSeaWolf = [
     {
       image: '/sea wolf swimming.avif',
@@ -105,30 +105,30 @@ export default function GroundAnimalSeasonPage() {
       desc: 'In springtime the pups are born, resting while the pack hunts for food nearby.',
     },
   ];
- 
-    const slidesCouger = [
-      {
-        image: '/Couger Spring.webp',
-        alt: 'Cougar in Spring',
-        desc: 'In spring, Cougars hunt more actively because deer and other prey start moving to new feeding areas. Mother cougars may have young kittens hidden in a den or rocky area. Cubs stay hidden while the mother hunts and brings back food.',
-      },
-      {
-        image: '/Cougar Summer.avif',
-        alt: 'Cougar in Summer',
-        desc: 'Cougars hunt mostly at night or early morning to avoid the daytime heat. They often stay near forests and rocky slopes where deer come to graze. Cubs learn to follow the mother and watch her hunt.',
-      },
-      {
-        image: '/Cougar Fall.webp',
-        alt: 'Cougar in Fall',
-        desc: 'Cubs become stronger hunters and may start hunting small prey themselves. They spend more time exploring their surroundings, practicing stalking, chasing, and pouncing. These skills improve through play and observation, helping them prepare for independent hunting as they grow older.',
-      },
-      {
-        image: '/Cougar Winter.avif',
-        alt: 'Cougar in Winter',
-        desc: 'Cougars stay active all winter — they do not hibernate. They use thick forest and rocky ledges for shelter from storms, and use these areas as hunting grounds.',
-      },
+
+  const slidesCouger = [
+    {
+      image: '/Couger Spring.webp',
+      alt: 'Cougar in Spring',
+      desc: 'In spring, Cougars hunt more actively because deer and other prey start moving to new feeding areas. Mother cougars may have young kittens hidden in a den or rocky area. Cubs stay hidden while the mother hunts and brings back food.',
+    },
+    {
+      image: '/Cougar Summer.avif',
+      alt: 'Cougar in Summer',
+      desc: 'Cougars hunt mostly at night or early morning to avoid the daytime heat. They often stay near forests and rocky slopes where deer come to graze. Cubs learn to follow the mother and watch her hunt.',
+    },
+    {
+      image: '/Cougar Fall.webp',
+      alt: 'Cougar in Fall',
+      desc: 'Cubs become stronger hunters and may start hunting small prey themselves. They spend more time exploring their surroundings, practicing stalking, chasing, and pouncing. These skills improve through play and observation, helping them prepare for independent hunting as they grow older.',
+    },
+    {
+      image: '/Cougar Winter.avif',
+      alt: 'Cougar in Winter',
+      desc: 'Cougars stay active all winter — they do not hibernate. They use thick forest and rocky ledges for shelter from storms, and use these areas as hunting grounds.',
+    },
   ];
- 
+
   const slidesWolverine = [
     {
       image: '/Wolverine Spring.webp',
@@ -151,9 +151,7 @@ export default function GroundAnimalSeasonPage() {
       desc: 'Wolverines stay active all winter — they do not hibernate. Thick fur and big paws help them walk on deep snow to find food. They hunt small prey, dig through snow to find buried carcasses, or steal from other predators. Winter snow helps them hide food and protect it from scavengers.',
     },
   ];
- 
- 
- 
+
   return (
     <MantineProvider defaultColorScheme="light">
       <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
@@ -167,17 +165,17 @@ export default function GroundAnimalSeasonPage() {
             style={{ objectPosition: 'center' }}
           />
         </div>
- 
+
         <div className="relative z-10 flex flex-col items-center gap-10 w-full max-w-5xl px-4 py-8">
           <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-10">
             Seasonal Changes for Ground Animals
           </h1>
- 
+
           <div className="bg-black/40 rounded-xl p-6 w-full">
             <h2 className="text-5xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-6">
               Bears!
             </h2>
- 
+
             <Stepper
               active={step}
               onStepClick={setStep}
@@ -189,7 +187,7 @@ export default function GroundAnimalSeasonPage() {
               <Stepper.Step label="Step 2" description="Spirit Bear" />
               <Stepper.Step label="Step 3" description="Grizzly Bear" />
             </Stepper>
- 
+
             <Group justify="center" className="mb-6">
               <Button
                 variant="default"
@@ -206,7 +204,7 @@ export default function GroundAnimalSeasonPage() {
                 Next step
               </Button>
             </Group>
- 
+
             <div className="bg-amber-800 rounded-lg p-6 shadow-md mb-6">
               {step === 0 ? (
                 <>
@@ -235,8 +233,8 @@ export default function GroundAnimalSeasonPage() {
                 </>
               )}
             </div>
- 
-            <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4">
+
+            <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 relative">
               <Carousel
                 autoPlay
                 infiniteLoop
@@ -245,6 +243,18 @@ export default function GroundAnimalSeasonPage() {
                 showIndicators={true}
                 interval={5000}
                 className="rounded"
+                renderIndicator={(onClickHandler, isSelected, index, label) => (
+                  <li
+                    className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
+                    onClick={onClickHandler}
+                    onKeyDown={onClickHandler}
+                    value={index}
+                    key={index}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${label} ${index + 1}`}
+                  />
+                )}
               >
                 {(step === 0 ? slidesBlackBear : step === 1 ? slidesSpiritBear : slidesGrizzlyBear).map(
                   (slide, idx) => (
@@ -264,107 +274,121 @@ export default function GroundAnimalSeasonPage() {
                   )
                 )}
               </Carousel>
+              <style jsx global>{`
+                .carousel .control-dots {
+                  bottom: -30px !important;
+                  margin: 0;
+                  padding: 0;
+                }
+                .carousel .control-dots .dot {
+                  background: white !important;
+                  box-shadow: none !important;
+                  width: 10px !important;
+                  height: 10px !important;
+                  margin: 0 5px !important;
+                }
+              `}</style>
             </div>
- 
-          <div className="bg-amber-950 rounded-xl p-10 w-full mt-10">
-            <h3 className="text-3xl font-bold text-white mb-11">How Bears Compare By Season</h3>
- 
-            <Container>
-              <Grid gutter="md" className="mb-8">
-                <Grid.Col span={{ base: 12, md: 4 }}>
-                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                      src="/Spirit Bear Spring.avif"
-                      alt="Spring Bear"
-                      fill
-                      className="object-cover"
-                    />
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 8 }}>
-                  <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
-                    <p className="text-white text-lg">
-                      As the snow melts and the forest begins to wake up, bears emerge from their dens after a long winter of hibernation.
-                      They are weak, hungry, and dehydrated, so they stay near the den at first to regain their strength.
-                      Early spring food includes fresh green plants like grasses, sedges, and roots, as well as insects and any animal carcasses left over from winter.
-                    </p>
-                  </Box>
-                </Grid.Col>
-              </Grid>
- 
-              <Grid gutter="md" className="mb-8">
-                <Grid.Col span={{ base: 12, md: 8 }}>
-                  <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
-                    <p className="text-white text-lg">
-                      Summer is all about eating. Food is more abundant, so bears spend most of their day feeding to build up fat for the next winter.
-                      Their diet expands to include berries like salmonberries and blueberries, insects such as ants and beetles, and small mammals.
-                      Early salmon runs may begin in some rivers, and bears will start fishing or scouting their favorite fishing spots.
-                    </p>
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 4 }}>
-                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                      src="/Spirit Bear Summer.avif"
-                      alt="Summer Bear"
-                      fill
-                      className="object-cover"
-                    />
-                  </Box>
-                </Grid.Col>
-              </Grid>
- 
-              <Grid gutter="md" className="mb-8">
-                <Grid.Col span={{ base: 12, md: 4 }}>
-                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                      src="/Spirit Bear Fall.jpg"
-                      alt="Fall Bear 1"
-                      fill
-                      className="object-cover"
-                    />
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 4 }}>
-                  <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
-                    <p className="text-white text-lg">
-                      Fall is critical: The salmon runs provide the rest of the food they need for the winter. Once fattened up, bears prepare for hibernation by finding or building a den.
-                    </p>
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 4 }}>
-                  <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                      src="/Grizzly Bear Fall.jpg"
-                      alt="Fall Bear 2"
-                      fill
-                      className="object-cover"
-                    />
-                  </Box>
-                </Grid.Col>
-              </Grid>
- 
-              <Grid gutter="md">
-                {[slidesBlackBear[1], slidesSpiritBear[3], slidesGrizzlyBear[3]].map((slide, idx) => (
-                  <Grid.Col key={idx} span={{ base: 12, md: 4 }}>
-                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
-                      <Image src={slide.image} alt={slide.alt} fill className="object-cover" />
+
+            <div className="bg-amber-950 rounded-xl p-10 w-full mt-10">
+              <h3 className="text-3xl font-bold text-white mb-11">How Bears Compare By Season</h3>
+
+              <Container>
+                <Grid gutter="md" className="mb-8">
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                      <Image
+                        src="/Spirit Bear Spring.avif"
+                        alt="Spring Bear"
+                        fill
+                        className="object-cover"
+                      />
                     </Box>
-                    <p className="text-white text-lg bg-amber-800 bg-opacity-80 rounded p-4">
-                      In winter, bears hibernate in dens, living off stored fat until spring.
-                    </p>
                   </Grid.Col>
-                ))}
-              </Grid>
-            </Container>
+                  <Grid.Col span={{ base: 12, md: 8 }}>
+                    <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
+                      <p className="text-white text-lg">
+                        As the snow melts and the forest begins to wake up, bears emerge from their dens after a long winter of hibernation.
+                        They are weak, hungry, and dehydrated, so they stay near the den at first to regain their strength.
+                        Early spring food includes fresh green plants like grasses, sedges, and roots, as well as insects and any animal carcasses left over from winter.
+                      </p>
+                    </Box>
+                  </Grid.Col>
+                </Grid>
+
+                <Grid gutter="md" className="mb-8">
+                  <Grid.Col span={{ base: 12, md: 8 }}>
+                    <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
+                      <p className="text-white text-lg">
+                        Summer is all about eating. Food is more abundant, so bears spend most of their day feeding to build up fat for the next winter.
+                        Their diet expands to include berries like salmonberries and blueberries, insects such as ants and beetles, and small mammals.
+                        Early salmon runs may begin in some rivers, and bears will start fishing or scouting their favorite fishing spots.
+                      </p>
+                    </Box>
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                      <Image
+                        src="/Spirit Bear Summer.avif"
+                        alt="Summer Bear"
+                        fill
+                        className="object-cover"
+                      />
+                    </Box>
+                  </Grid.Col>
+                </Grid>
+
+                <Grid gutter="md" className="mb-8">
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                      <Image
+                        src="/Spirit Bear Fall.jpg"
+                        alt="Fall Bear 1"
+                        fill
+                        className="object-cover"
+                      />
+                    </Box>
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="bg-amber-800 bg-opacity-80 rounded-lg p-6 shadow-md h-full flex items-center">
+                      <p className="text-white text-lg">
+                        Fall is critical: The salmon runs provide the rest of the food they need for the winter. Once fattened up, bears prepare for hibernation by finding or building a den.
+                      </p>
+                    </Box>
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                      <Image
+                        src="/Grizzly Bear Fall.jpg"
+                        alt="Fall Bear 2"
+                        fill
+                        className="object-cover"
+                      />
+                    </Box>
+                  </Grid.Col>
+                </Grid>
+
+                <Grid gutter="md">
+                  {[slidesBlackBear[1], slidesSpiritBear[3], slidesGrizzlyBear[3]].map((slide, idx) => (
+                    <Grid.Col key={idx} span={{ base: 12, md: 4 }}>
+                      <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
+                        <Image src={slide.image} alt={slide.alt} fill className="object-cover" />
+                      </Box>
+                      <p className="text-white text-lg bg-amber-800 bg-opacity-80 rounded p-4">
+                        In winter, bears hibernate in dens, living off stored fat until spring.
+                      </p>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </Container>
+            </div>
           </div>
-          </div>
- 
+
           <div className="bg-black/40 rounded-xl p-6 w-full">
             <h2 className="text-4xl font-bold text-white drop-shadow-[2px_2px_0px_black] mb-6">
               Other Carnivors
             </h2>
- 
+
             <Stepper
               active={step}
               onStepClick={setStep}
@@ -376,7 +400,7 @@ export default function GroundAnimalSeasonPage() {
               <Stepper.Step label="Step 2" description="Cougar" />
               <Stepper.Step label="Step 3" description="Wolverine" />
             </Stepper>
- 
+
             <Group justify="center" className="mb-6">
               <Button
                 variant="default"
@@ -393,7 +417,7 @@ export default function GroundAnimalSeasonPage() {
                 Next step
               </Button>
             </Group>
- 
+
             <div className="bg-amber-800 rounded-lg p-6 shadow-md mb-6">
               {step === 0 ? (
               <>
@@ -427,9 +451,9 @@ export default function GroundAnimalSeasonPage() {
                 </>
               )}
             </div>
- 
- 
-            <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4">
+
+
+            <div className="w-full rounded-lg overflow-hidden shadow-lg bg-amber-800 bg-opacity-80 p-4 relative">
               <Carousel
                 autoPlay
                 infiniteLoop
@@ -438,6 +462,18 @@ export default function GroundAnimalSeasonPage() {
                 showIndicators={true}
                 interval={5000}
                 className="rounded"
+                renderIndicator={(onClickHandler, isSelected, index, label) => (
+                  <li
+                    className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
+                    onClick={onClickHandler}
+                    onKeyDown={onClickHandler}
+                    value={index}
+                    key={index}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${label} ${index + 1}`}
+                  />
+                )}
               >
                 {(step === 0 ? slidesSeaWolf : step === 1 ? slidesCouger : slidesWolverine).map((slide, idx) => (
                   <div key={idx} className="relative">
@@ -455,13 +491,27 @@ export default function GroundAnimalSeasonPage() {
                   </div>
                 ))}
               </Carousel>
+              <style jsx global>{`
+                .carousel .control-dots {
+                  bottom: -30px !important;
+                  margin: 0;
+                  padding: 0;
+                }
+                .carousel .control-dots .dot {
+                  background: white !important;
+                  box-shadow: none !important;
+                  width: 10px !important;
+                  height: 10px !important;
+                  margin: 0 5px !important;
+                }
+              `}</style>
             </div>
          
             <div className="bg-amber-950 rounded-xl p-10 w-full mt-10">
               <h3 className="text-3xl font-bold text-white mb-11">
                 How Wolves, Cougars, and Wolverines Compare by Season
               </h3>
- 
+
               <Container my="md">
                 <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="lg">
                   <Box className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-lg">
@@ -487,7 +537,7 @@ export default function GroundAnimalSeasonPage() {
                     </Grid.Col>
                   </Grid>
                 </SimpleGrid>
- 
+
                 <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="lg">
                   <Grid gutter="md">
                     <Grid.Col span={12}>
@@ -508,12 +558,12 @@ export default function GroundAnimalSeasonPage() {
                       </Box>
                     </Grid.Col>
                   </Grid>
- 
+
                   <Box className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-lg">
                     <Image src="/Cougar Summer.avif" alt="Summer Cougar" fill className="object-cover" />
                   </Box>
                 </SimpleGrid>
- 
+
                 <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="lg">
                   <Box className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-lg">
                     <Image
@@ -524,7 +574,7 @@ export default function GroundAnimalSeasonPage() {
                     style={{ objectPosition: 'top center' }}
                     />
                   </Box>
- 
+
                   <Box className="flex flex-col justify-between h-[300px]">
                     <Box className="bg-amber-800 bg-opacity-90 rounded-lg p-4 shadow-md text-white text-sm leading-relaxed flex items-center h-[125px]">
                     In fall, wolves gather near rivers to feast on salmon, building fat reserves for winter.
@@ -541,7 +591,7 @@ export default function GroundAnimalSeasonPage() {
                     </div>
                   </Box>
                 </SimpleGrid>
- 
+
                 <Grid gutter="md" mb="lg">
                   <Grid.Col span={{ base: 12, md: 4 }}>
                     <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
@@ -551,7 +601,7 @@ export default function GroundAnimalSeasonPage() {
                       In winter, wolverines stay active, traveling long distances through deep snow to scavenge and hunt small prey.
                     </p>
                   </Grid.Col>
- 
+
                   <Grid.Col span={{ base: 12, md: 4 }}>
                     <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
                       <Image src="/Cougar Winter.avif" alt="Winter Cougar" fill className="object-cover" />
@@ -560,7 +610,7 @@ export default function GroundAnimalSeasonPage() {
                         Cougars continue hunting in winter, relying on stealth and strength to ambush prey in snowy forests and steep terrain.
                       </p>
                   </Grid.Col>
- 
+
                   <Grid.Col span={{ base: 12, md: 4 }}>
                     <Box className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg mb-2">
                       <Image src="/Sea Wolf Winter.jpg" alt="Winter Sea Wolf" fill className="object-cover" />
@@ -584,4 +634,3 @@ export default function GroundAnimalSeasonPage() {
     </MantineProvider>
   );
 }
- 

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { FaFish, FaPaw, FaDove, FaTree, FaChartLine } from 'react-icons/fa'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 export default function HomePage() {
@@ -161,7 +161,7 @@ export default function HomePage() {
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', position: 'relative' }}>
             {headerItems}
             <motion.button
               onClick={toggleProgressDropdown}
@@ -171,40 +171,47 @@ export default function HomePage() {
             >
               <FaChartLine className="text-yellow-300"/> Progress Tracker
             </motion.button>
-            {/* Dropdown */}
-            {progressDropdownOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '110%',
-                  right: 0,
-                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                  color: 'white',
-                  padding: '10px',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
-                  zIndex: 999,
-                  minWidth: '180px',
-                }}
-              >
-                {moduleList.map((mod) => (
-                  <div
-                    key={mod}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '6px 0',
-                      borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    }}
-                  >
-                    <span style={{ marginRight: '8px' }}>
-                      {progress[mod] ? '✅' : '⬜️'}
-                    </span>
-                    <span>{mod}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+            
+            {/* Dropdown with smooth animations */}
+            <AnimatePresence>
+              {progressDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  style={{
+                    position: 'absolute',
+                    top: '110%',
+                    right: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                    zIndex: 999,
+                    minWidth: '180px',
+                  }}
+                >
+                  {moduleList.map((mod) => (
+                    <div
+                      key={mod}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '6px 0',
+                        borderBottom: '1px solid rgba(255,255,255,0.1)',
+                      }}
+                    >
+                      <span style={{ marginRight: '8px' }}>
+                        {progress[mod] ? '✅' : '⬜️'}
+                      </span>
+                      <span>{mod}</span>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>
@@ -229,8 +236,8 @@ export default function HomePage() {
           AQUATIC LIFE
         </h2>
 
-        {/* Carousel */}
-        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-blue-500 bg-opacity-70 p-4 z-30">
+        {/* Carousel with adjusted indicator dots */}
+        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-blue-500 bg-opacity-70 p-4 z-30 relative">
           <Carousel
             autoPlay
             infiniteLoop
@@ -238,6 +245,18 @@ export default function HomePage() {
             showStatus={false}
             interval={5000}
             className="rounded"
+            renderIndicator={(onClickHandler, isSelected, index, label) => (
+              <li
+                className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
+                onClick={onClickHandler}
+                onKeyDown={onClickHandler}
+                value={index}
+                key={index}
+                role="button"
+                tabIndex={0}
+                aria-label={`${label} ${index + 1}`}
+              />
+            )}
           >
             {slides.map((slide, idx) => (
               <div key={idx} className="relative">
@@ -258,6 +277,20 @@ export default function HomePage() {
               </div>
             ))}
           </Carousel>
+          <style jsx global>{`
+            .carousel .control-dots {
+              bottom: -30px !important;
+              margin: 0;
+              padding: 0;
+            }
+            .carousel .control-dots .dot {
+              background: white !important;
+              box-shadow: none !important;
+              width: 10px !important;
+              height: 10px !important;
+              margin: 0 5px !important;
+            }
+          `}</style>
         </div>
 
         <p className="text-xl font-semibold text-white drop-shadow-[2px_2px_0px_black] mb-2 mt-8">
@@ -286,23 +319,25 @@ export default function HomePage() {
                 </div>
               </div>
               
-              {expandedFact === index && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-blue-600 bg-opacity-70"
-                >
-                  <ul className="p-4 pt-0 space-y-2">
-                    {fact.details.map((detail, i) => (
-                      <li key={i} className="text-white text-left pl-8">
-                        • {detail}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {expandedFact === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    className="bg-blue-600 bg-opacity-70"
+                  >
+                    <ul className="p-4 pt-0 space-y-2">
+                      {fact.details.map((detail, i) => (
+                        <li key={i} className="text-white text-left pl-8">
+                          • {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.li>
           ))}
         </ul>
