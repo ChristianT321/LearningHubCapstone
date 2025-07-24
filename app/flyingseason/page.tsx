@@ -195,16 +195,23 @@ export default function FlyingSeasonPage() {
         {nonMigratoryBirds.map((bird, index) => (
           <div key={index} className="w-[230px] h-[380px] perspective" onClick={() => toggleCard(index)}>
             <div className={`relative w-full h-full transition-transform duration-700 preserve-3d ${flippedIndex === index ? 'rotate-y-180' : ''}`}>
-              <div className="absolute w-full h-full backface-hidden bg-gray-300 border-yellow-500 border-[3px] rounded-[10px] flex items-center justify-center text-xl font-bold z-10">
-                Click to Reveal
+              <div className="absolute w-full h-full backface-hidden border-yellow-500 border-[3px] rounded-[10px] flex items-center justify-center text-xl font-bold z-10 overflow-hidden">
+                <div className="absolute w-full h-full backface-hidden border-yellow-500 border-[3px] rounded-[10px] overflow-hidden bg-[#083D5E] z-10">
+                  <Image 
+                    src="/great bear card new.png"
+                    alt="Great Bear Rainforest"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
               </div>
-
               <div className={`absolute w-full h-full backface-hidden rotate-y-180 ${bird.bgColor} border-[3px] border-yellow-500 rounded-[10px] p-3 flex flex-col justify-between z-0`} style={{ fontFamily: 'Arial, sans-serif' }}>
                 <div className="text-[18px] font-bold leading-none flex justify-between items-center px-[2px]">
                   <span>{bird.name}</span>
                   <span>{bird.icon}</span>
                 </div>
-          
+      
                 <div className="border-[3px] border-black bg-white mt-[4px] mb-[8px]">
                   <Image 
                     src={bird.image} 
