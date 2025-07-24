@@ -14,6 +14,7 @@ const fishData = [
     emoji: '🐟',
     intro: 'The legendary upstream traveler of the Great Bear Rainforest.',
     carousel: ['/salmon1.png', '/salmon2.png', '/salmon4.png'],
+    description: 'Salmon play an important role in the cultural traditions of many Indigenous peoples, symbolizing life, strength, and renewal. Their bodies, rich in nutrients, act as a natural bridge between ocean and forest, enriching riverbanks and supporting over 100 species, even after they die. During their upstream journey, they navigate countless obstacles including dams, rapids, and predators—all to return to the exact stream where they were born.',
     facts: [
       { title: 'Extreme Migration', icon: '🌊', desc: 'Salmon swim from the ocean to rivers to lay their eggs.' },
       { title: 'Ecosystem Heroes', icon: '🌲', desc: 'Their bodies feed bears, eagles, and even trees after spawning.' },
@@ -34,6 +35,7 @@ const fishData = [
     emoji: '🐟',
     intro: 'A sleek swimmer that glides near lake bottoms.',
     carousel: ['/whitefish1.jpg', '/whitefish2.jpg', '/whitefish3.jpg'],
+    description: 'Whitefish are part of the salmonid family but are often mistaken for other fish due to their small, soft mouths and lack of visible teeth. Their taste and texture make them a staple in traditional diets of northern communities and a key feature in regional ice fishing seasons. Often found in schools near the bottom, whitefish help regulate insect populations and contribute to the balance of freshwater ecosystems.',
     facts: [
       { title: 'Bottom Dwellers', icon: '🏞️', desc: 'Whitefish prefer cold, deep lake waters near the bottom.' },
       { title: 'Efficient Feeders', icon: '🍽️', desc: 'They feed on insects, plankton, and small invertebrates.' },
@@ -54,6 +56,7 @@ const fishData = [
     emoji: '🐟',
     intro: 'A deep-water predator that rules cold northern lakes.',
     carousel: ['/trout1.webp', '/trout2.jpg', '/trout3.png'],
+    description: 'Lake trout are highly sensitive to water quality and temperature, which makes them a strong indicator species for lake health. Their elusive nature and deep-water habitat make them prized by anglers, who often require specialized gear to catch them in the cold depths. These fish can grow to impressive sizes and have evolved to thrive in some of the most pristine and isolated lakes in the world.',
     facts: [
       { title: 'Ambush Predator', icon: '👀', desc: 'Lake trout wait patiently to strike passing prey.' },
       { title: 'Cold Water Lovers', icon: '❄️', desc: 'They live in deep, cold lakes where temperatures stay low.' },
@@ -75,10 +78,34 @@ export default function FishFactsPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const currentFish = fishData[step];
+  const [factIndex, setFactIndex] = useState(0);
+  const extraFactsMap: { [key: number]: { icon: string; title: string; desc: string; }[] } = {
+  0: [
+    { icon: '🌧️', title: 'Rain Boosters', desc: 'Heavy rains help salmon migrate more easily upstream by increasing river flow.' },
+    { icon: '🧬', title: 'Genetic Memory', desc: 'Salmon populations develop traits that adapt to specific rivers.' },
+    { icon: '🌿', title: 'Forest Partners', desc: 'Nitrogen from salmon supports tree and plant growth miles from water.' },
+    { icon: '🛶', title: 'Cultural Anchor', desc: 'Salmon are central to oral histories, art, and identity of many First Nations.' },
+  ],
+  1: [
+    { icon: '🥶', title: 'Ice Survivors', desc: 'Whitefish remain active under thick ice all winter long.' },
+    { icon: '👃', title: 'Sensitive Snouts', desc: 'Whitefish use sensitive noses to forage along lakebeds.' },
+    { icon: '🎣', title: 'Traditional Catch', desc: 'Ice fishing for whitefish is a tradition in many northern communities.' },
+    { icon: '🧊', title: 'Cold Preference', desc: 'Whitefish are most comfortable in waters just above freezing.' },
+  ],
+  2: [
+    { icon: '🕳️', title: 'Rocky Hideouts', desc: 'Lake trout often hide in rocky underwater crevices to ambush prey.' },
+    { icon: '🔇', title: 'Stealthy Hunters', desc: 'They approach prey slowly and strike without warning.' },
+    { icon: '🧓', title: 'Ancient Swimmers', desc: 'Some lake trout reach over 40 years of age.' },
+    { icon: '🧭', title: 'Solitary Navigators', desc: 'Lake trout are often territorial and swim alone.' },
+  ],
+  };
+  const extraFacts = extraFactsMap[step];
+  const rotatingFacts = extraFacts;
 
   return (
     <MantineProvider>
       <main className="relative min-h-screen w-full flex flex-col items-center text-center overflow-y-auto p-4">
+        {/* Background */}
         <div className="fixed inset-0 z-0">
           <Image
             src="/FIsh background.png"
@@ -89,11 +116,13 @@ export default function FishFactsPage() {
           />
         </div>
 
+        {/* Main content */}
         <div className="relative z-10 flex flex-col items-center gap-10 w-full max-w-5xl px-4 py-8">
           <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mt-10">
             Learn About the Fish
           </h1>
 
+          {/* Stepper */}
           <Stepper active={step} onStepClick={setStep} color="blue" className="w-full mb-4" size="md">
             {fishData.map((fish, index) => (
               <Stepper.Step key={index} label={`Step ${index + 1}`} description={fish.name} />
@@ -109,6 +138,7 @@ export default function FishFactsPage() {
             </Button>
           </Group>
 
+          {/* Fish Info Box */}
           <div className="bg-blue-950 text-white rounded-2xl p-8 w-full shadow-xl border-l-8 border-yellow-400">
             <h2 className="text-4xl font-extrabold text-yellow-300 mb-2">
               {currentFish.emoji} {currentFish.name}
@@ -123,6 +153,12 @@ export default function FishFactsPage() {
                   </div>
                 ))}
               </Carousel>
+            </div>
+
+            <div className="bg-blue-800/60 rounded-xl shadow-lg p-6 mb-10 max-w-4xl mx-auto border-l-4 border-yellow-300">
+              <p className="text-lg text-blue-100 leading-relaxed">
+                {currentFish.description}
+              </p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
@@ -147,8 +183,12 @@ export default function FishFactsPage() {
               ))}
             </div>
 
-            <div className="bg-yellow-200 text-yellow-900 text-lg font-semibold text-center p-4 rounded-xl shadow border border-yellow-400">
-              {currentFish.callout}
+            <div
+              className="bg-yellow-200 text-yellow-900 text-lg font-semibold text-center p-4 rounded-xl shadow border border-yellow-400 cursor-pointer hover:bg-yellow-300 transition"
+              onClick={() => setFactIndex((prev) => (prev + 1) % rotatingFacts.length)}
+            >
+              {rotatingFacts[factIndex].icon} {rotatingFacts[factIndex].title}: {rotatingFacts[factIndex].desc}
+              <div className="text-sm italic text-yellow-800 mt-2">Click to change fact</div>
             </div>
           </div>
 
@@ -163,3 +203,4 @@ export default function FishFactsPage() {
     </MantineProvider>
   );
 }
+
