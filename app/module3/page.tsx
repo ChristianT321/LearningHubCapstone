@@ -63,7 +63,7 @@ export default function HomePage() {
       desc: 'Hummingbirds migrate thousands of miles annually'
     },
     {
-      image: '/Duck.jpg',
+      image: '/Duck.webp',
       alt: 'Duck',
       desc: 'Ducks have waterproof feathers'
     }
