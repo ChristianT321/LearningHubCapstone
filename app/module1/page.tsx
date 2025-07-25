@@ -1,20 +1,27 @@
 'use client'
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { FaPaw, FaWater, FaDove, FaTree, FaChartLine } from 'react-icons/fa'
+import { FaPaw, FaDove, FaTree, FaChartLine, FaFish } from 'react-icons/fa'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 export default function HomePage() {
+  const router = useRouter()
+  const pathname = usePathname()
+
   const headerLinks = [
     { link: '/module1', label: 'Module 1', icon: FaPaw },
-    { link: '/module2', label: 'Module 2', icon: FaWater },
-    { link: '/module3', label: 'Module 3', icon: FaDove},
+    { link: '/module2', label: 'Module 2', icon: FaFish },
+    { link: '/module3', label: 'Module 3', icon: FaDove },
     { link: '/module4', label: 'Module 4', icon: FaTree },
   ];
+  
+  // Initialize active state based on current path
+  const [active, setActive] = useState(pathname || headerLinks[0].link);
+  const [expandedFact, setExpandedFact] = useState<number | null>(null);
 
   const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
@@ -28,19 +35,16 @@ export default function HomePage() {
 
   const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
   const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
-  const [expandedFact, setExpandedFact] = useState<number | null>(null);
   
   const toggleProgressDropdown = () => {
     setProgressDropdownOpen((prev) => !prev);
   };
   
   useEffect(() => {
-      setProgressState(getProgress());
-    }, []);
-
-  const [active, setActive] = useState(headerLinks[0].link);
-  
-  const router = useRouter()
+    setProgressState(getProgress());
+    // Update active state when path changes
+    setActive(pathname || headerLinks[0].link);
+  }, [pathname]);
 
   const handleContinue = () => {
     router.push('/groundanimalseason')
@@ -101,12 +105,28 @@ export default function HomePage() {
       }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 ${
-        active === link ? 'bg-amber-900 shadow-md' : 'bg-amber-900'
-      }`}
+      className={`flex items-center gap-2 px-4 py-2 text-white text-lg font-bold transition-all duration-300`}
+      style={{
+        borderRadius: '12px',
+        border: '2px solid transparent',
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
+        backgroundOrigin: 'border-box',
+        backgroundClip: 'padding-box, border-box',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
     >
       <Icon className="text-yellow-300" />
       {label}
+      {active === link && (
+        <motion.span 
+          className="absolute bottom-0 left-0 right-0 h-1 bg-yellow-300"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+      )}
     </motion.button>
     ));
 
@@ -127,6 +147,7 @@ export default function HomePage() {
           zIndex: 1000,
           boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
           padding: '12px, 0', 
+          borderBottom: '1px solid rgba(245, 158, 11, 0.3)'
         }}
       >
         <div
@@ -155,7 +176,15 @@ export default function HomePage() {
               onClick={toggleProgressDropdown}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-lg font-bold transition-all duration-300 bg-amber-900"
+              className="flex items-center gap-2 px-4 py-2 text-white text-lg font-bold transition-all duration-300"
+              style={{
+                borderRadius: '12px',
+                border: '2px solid transparent',
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+              }}
             >
               <FaChartLine className="text-yellow-300"/> Progress Tracker
             </motion.button>
@@ -175,8 +204,9 @@ export default function HomePage() {
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     color: 'white',
                     padding: '10px',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(245, 158, 11, 0.2)',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
                     zIndex: 999,
                     minWidth: '180px',
                   }}
@@ -188,7 +218,7 @@ export default function HomePage() {
                         display: 'flex',
                         alignItems: 'center',
                         padding: '6px 0',
-                        borderBottom: '1px solid rgba(255,255,255,0.1)',
+                        borderBottom: '1px solid rgba(245, 158, 11, 0.1)',
                       }}
                     >
                       <span style={{ marginRight: '8px' }}>
@@ -225,59 +255,72 @@ export default function HomePage() {
         </h2>
 
         {/* Carousel with adjusted indicator dots */}
-        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg bg-amber-900 bg-opacity-70 p-4 z-30 relative">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            interval={5000}
-            className="rounded"
-            renderIndicator={(onClickHandler, isSelected, index, label) => (
-              <li
-                className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
-                onClick={onClickHandler}
-                onKeyDown={onClickHandler}
-                value={index}
-                key={index}
-                role="button"
-                tabIndex={0}
-                aria-label={`${label} ${index + 1}`}
-              />
-            )}
-            statusFormatter={(current, total) => `Current slide: ${current} of ${total}`}
-          >
-            {slides.map((slide, idx) => (
-              <div key={idx} className="relative">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className="h-80 w-full object-cover rounded-md"
+        <div className="w-full max-w-3xl mx-auto rounded-lg overflow-hidden z-30 relative" 
+          style={{
+            border: '3px solid transparent',
+            borderRadius: '16px',
+            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
+            padding: '4px'
+          }}>
+          <div className="bg-amber-900 bg-opacity-70 p-4 rounded-[12px] h-full">
+            <Carousel
+              autoPlay
+              infiniteLoop
+              showThumbs={false}
+              showStatus={false}
+              interval={5000}
+              className="rounded-lg"
+              renderIndicator={(onClickHandler, isSelected, index, label) => (
+                <li
+                  className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
+                  onClick={onClickHandler}
+                  onKeyDown={onClickHandler}
+                  value={index}
+                  key={index}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${label} ${index + 1}`}
                   style={{
-                    width: '100%',
-                    height: '400px',
-                    objectFit: 'cover', 
-                    borderRadius: '12px'
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    background: isSelected ? 'linear-gradient(to right, #f59e0b, #d97706)' : 'rgba(255,255,255,0.5)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
                   }}
                 />
-                <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-green-700 bg-opacity-60 py-2 px-4">
-                  {slide.desc}
-                </p>
-              </div>
-            ))}
-          </Carousel>
+              )}
+              statusFormatter={(current, total) => `Current slide: ${current} of ${total}`}
+            >
+              {slides.map((slide, idx) => (
+                <div key={idx} className="relative">
+                  <img
+                    src={slide.image}
+                    alt={slide.alt}
+                    className="h-80 w-full object-cover"
+                    style={{
+                      width: '100%',
+                      height: '400px',
+                      objectFit: 'cover', 
+                      borderRadius: '8px',
+                      border: '2px solid rgba(245, 158, 11, 0.3)'
+                    }}
+                  />
+                  <p className="text-white text-lg font-semibold absolute bottom-0 left-0 right-0 bg-gradient-to-r from-green-700 to-green-800 bg-opacity-80 py-2 px-4 rounded-b-md">
+                    {slide.desc}
+                  </p>
+                </div>
+              ))}
+            </Carousel>
+          </div>
           <style jsx global>{`
             .carousel .control-dots {
               bottom: -30px !important;
               margin: 0;
               padding: 0;
-            }
-            .carousel .control-dots .dot {
-              background: white !important;
-              box-shadow: none !important;
-              width: 10px !important;
-              height: 10px !important;
-              margin: 0 5px !important;
             }
           `}</style>
         </div>
@@ -290,41 +333,51 @@ export default function HomePage() {
           {facts.map((fact, index) => (
             <motion.li
               key={index}
-              className="bg-amber-900 bg-opacity-60 rounded-lg shadow-md overflow-hidden"
+              className="rounded-lg shadow-md overflow-hidden"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
+              style={{
+                border: '2px solid transparent',
+                borderRadius: '12px',
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)'
+              }}
             >
-              <div 
-                className="p-4 cursor-pointer"
-                onClick={() => setExpandedFact(expandedFact === index ? null : index)}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-green-300 text-2xl drop-shadow">🌿</span>
-                  <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
-                    {fact.title}
-                  </span>
+              <div className="bg-amber-900 bg-opacity-60 rounded-[10px]">
+                <div 
+                  className="p-4 cursor-pointer"
+                  onClick={() => setExpandedFact(expandedFact === index ? null : index)}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-green-300 text-2xl drop-shadow">🌿</span>
+                    <span className="text-white text-lg font-semibold drop-shadow-[1px_1px_0px_black] text-left">
+                      {fact.title}
+                    </span>
+                  </div>
                 </div>
+                
+                <AnimatePresence>
+                  {expandedFact === index && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="bg-amber-800 bg-opacity-70 rounded-b-[10px]"
+                    >
+                      <ul className="p-4 pt-0 space-y-2">
+                        {fact.details.map((detail, i) => (
+                          <li key={i} className="text-white text-left pl-8">
+                            • {detail}
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-              
-              <AnimatePresence>
-                {expandedFact === index && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="bg-amber-800 bg-opacity-70"
-                  >
-                    <ul className="p-4 pt-0 space-y-2">
-                      {fact.details.map((detail, i) => (
-                        <li key={i} className="text-white text-left pl-8">
-                          • {detail}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.li>
           ))}
         </ul>
@@ -334,9 +387,25 @@ export default function HomePage() {
             onClick={handleContinue}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-amber-900 hover:bg-amber-900 text-white font-bold px-6 py-3 rounded shadow"
+            className="text-white font-bold px-6 py-3"
+            style={{
+              borderRadius: '12px',
+              border: '2px solid transparent',
+              backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
+              backgroundOrigin: 'border-box',
+              backgroundClip: 'padding-box, border-box',
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
           >
-            Continue Learning
+            <span className="relative z-10">Continue Learning</span>
+            <motion.span 
+              className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 hover:opacity-20"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 0.2 }}
+              transition={{ duration: 0.3 }}
+            />
           </motion.button>
         </div>
       </div>
