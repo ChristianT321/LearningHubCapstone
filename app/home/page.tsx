@@ -157,7 +157,8 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{paddingTop: '80px'}}>
+    <div className="min-h-screen flex flex-col">
+    <main className="flex-grow relative w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4" style={{ paddingTop: '80px' }}>
 
       {/* Header with original FaPaw logo */}
       <header
@@ -194,6 +195,7 @@ export default function HomePage() {
             <FaPaw className="text-yellow-400 text-2xl" />
             <h1 className="text-white text-xl font-bold">Great Bear Rainforest</h1>
           </motion.div>
+
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', position: 'relative' }}>
             {headerItems}
@@ -488,7 +490,9 @@ export default function HomePage() {
           padding: '16px 0',
         }}
       >
+
         <Container
+
           style={{
             maxWidth: '1200px',
             margin: '0 auto',
@@ -503,5 +507,6 @@ export default function HomePage() {
         </Container>
       </motion.footer>
     </main>
+
   )
 }

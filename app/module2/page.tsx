@@ -47,7 +47,7 @@ export default function HomePage() {
   }, [pathname]);
 
   const handleContinue = () => {
-    router.push('/fishfacts')
+    router.push('/fishseason')
   }
 
   const slides = [
