@@ -507,6 +507,6 @@ export default function HomePage() {
         </Container>
       </motion.footer>
     </main>
-
+</div>
   )
 }
