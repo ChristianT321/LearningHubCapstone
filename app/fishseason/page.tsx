@@ -52,6 +52,7 @@ export default function FishSeasonPage() {
   const [season, setSeason] = useState<Season>('spring');
   const [casting, setCasting] = useState(false);
   const [caughtFish, setCaughtFish] = useState<typeof seasonData.spring[0] | null>(null);
+  
 
   const handleCast = () => {
     setCaughtFish(null);
