@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Select } from '@mantine/core';
-import router from 'next/router';
+import { MantineProvider, Select } from '@mantine/core';
+import { useRouter } from 'next/navigation';
+
 
 const fishList = [
   {
@@ -45,6 +46,7 @@ const fishList = [
 ];
 
 export default function CompareFishPage() {
+  const router = useRouter();
   const [firstId, setFirstId] = useState('salmon');
   const [secondId, setSecondId] = useState('trout');
 
@@ -52,6 +54,7 @@ export default function CompareFishPage() {
   const fish2 = fishList.find((f) => f.id === secondId)!;
 
   return (
+    <MantineProvider>
   <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-8">
     {/* Background Image */}
     <div className="fixed inset-0 z-0">
@@ -132,5 +135,6 @@ export default function CompareFishPage() {
     </div>
     </div>
   </main>
+  </MantineProvider>
 );
 }
