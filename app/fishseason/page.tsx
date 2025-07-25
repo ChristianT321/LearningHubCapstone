@@ -18,7 +18,7 @@ const seasonData: Record<Season, { fish: string; description: string; image: str
     {
       fish: 'Salmon Fry',
       description: 'Young salmon begin their journey downstream.',
-      image: '/salmon-fry.jpg',
+      image: '/salmonfry.jpg',
       funFact: 'Some salmon spend over a year in freshwater before going to sea.',
     },
   ],
