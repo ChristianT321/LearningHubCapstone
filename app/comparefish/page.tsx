@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Select } from '@mantine/core';
-import router from 'next/router';
+import { MantineProvider, Select } from '@mantine/core';
+import { useRouter } from 'next/navigation';
+import '@mantine/core/styles.css';
+
 
 const fishList = [
   {
@@ -47,11 +49,13 @@ const fishList = [
 export default function CompareFishPage() {
   const [firstId, setFirstId] = useState('salmon');
   const [secondId, setSecondId] = useState('trout');
+  const router = useRouter();
 
   const fish1 = fishList.find((f) => f.id === firstId)!;
   const fish2 = fishList.find((f) => f.id === secondId)!;
 
   return (
+  <MantineProvider>
   <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-8">
     {/* Background Image */}
     <div className="fixed inset-0 z-0">
@@ -74,52 +78,54 @@ export default function CompareFishPage() {
     </div>
 
     {/* Fish Selectors */}
-    <div className="flex flex-col md:flex-row justify-center gap-8 mb-10">
-        <div className="flex-1">
-        <Select
-            data={fishList.map((f) => ({ label: f.name, value: f.id }))}
-            value={firstId}
-            onChange={(val) => setFirstId(val!)}
-            label="First Fish"
-            size="md"
-            className="w-full"
-        />
-        </div>
-        <div className="flex-1">
-        <Select
-            data={fishList.map((f) => ({ label: f.name, value: f.id }))}
-            value={secondId}
-            onChange={(val) => setSecondId(val!)}
-            label="Second Fish"
-            size="md"
-            className="w-full"
-        />
-        </div>
-    </div>
+<div className="flex flex-col md:flex-row justify-center gap-8 mb-10">
+            <div className="flex-1">
+              <Select
+                data={fishList.map((f) => ({ label: f.name, value: f.id }))}
+                value={firstId}
+                onChange={(val) => setFirstId(val!)}
+                label="First Fish"
+                size="md"
+                className="w-full"
+              />
+            </div>
+            <div className="flex-1">
+              <Select
+                data={fishList.map((f) => ({ label: f.name, value: f.id }))}
+                value={secondId}
+                onChange={(val) => setSecondId(val!)}
+                label="Second Fish"
+                size="md"
+                className="w-full"
+              />
+            </div>
+          </div>
 
     {/* Fish Cards */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
-        {[fish1, fish2].map((fish, i) => (
-        <div key={i} className="bg-blue-800 rounded-xl p-6 shadow-lg text-center border-l-4 border-yellow-400">
-            <h2 className="text-3xl font-bold mb-4 text-yellow-300">{fish.name}</h2>
-            <Image
-            src={fish.image}
-            alt={fish.name}
-            width={400}
-            height={300}
-            className="object-contain mx-auto rounded-lg mb-6 bg-blue-900 p-2"
-            />
-            <div className="text-left space-y-2 text-blue-100">
-            {Object.entries(fish.facts).map(([key, value]) => (
-                <p key={key}>
-                <span className="font-bold text-yellow-200">{key}:</span>{' '}
-                {value}
-                </p>
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+            {[fish1, fish2].map((fish, i) => (
+              <div
+                key={i}
+                className="bg-blue-800 rounded-xl p-6 shadow-lg text-center border-l-4 border-yellow-400"
+              >
+                <h2 className="text-3xl font-bold mb-4 text-yellow-300">{fish.name}</h2>
+                <Image
+                  src={fish.image}
+                  alt={fish.name}
+                  width={400}
+                  height={300}
+                  className="object-contain mx-auto rounded-lg mb-6 bg-blue-900 p-2"
+                />
+                <div className="text-left space-y-2 text-blue-100">
+                  {Object.entries(fish.facts).map(([key, value]) => (
+                    <p key={key}>
+                      <span className="font-bold text-yellow-200">{key}:</span> {value}
+                    </p>
+                  ))}
+                </div>
+              </div>
             ))}
-            </div>
-        </div>
-        ))}
-    </div>
+          </div>
 
     {/* Navigation Button */}
     <div className="text-center">
@@ -132,5 +138,6 @@ export default function CompareFishPage() {
     </div>
     </div>
   </main>
+  </MantineProvider>
 );
 }
