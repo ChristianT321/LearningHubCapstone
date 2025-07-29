@@ -175,22 +175,19 @@ function getRandomUniqueIndexes(total: number, count: number, exclude: number[])
 }
 
 export default function VegetationTest() {
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({})
-  const [questionIndexes, setQuestionIndexes] = useState<number[]>([])
-  const [usedIndexes, setUsedIndexes] = useState<number[]>([])
-  const [showCongrats, setShowCongrats] = useState(false)
-  const router = useRouter()
+  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
+  const [shuffledQuestions, setShuffledQuestions] = useState<any[]>([]);
+  const [showCongrats, setShowCongrats] = useState(false);
+  const router = useRouter();
 
   const score = Object.entries(selectedAnswers).filter(
-    ([index, answer]) => answer === fullQuestionPool[questionIndexes[Number(index)]].answer
-  ).length
+    ([index, answer]) => answer === shuffledQuestions[Number(index)]?.answer
+  ).length;
 
-  // Initial setup
-  useEffect(() => {
+  const generateQuiz = () => {
     const storedUsed = JSON.parse(localStorage.getItem('usedTreeQuestions') || '[]') as number[];
     let newIndexes = getRandomUniqueIndexes(fullQuestionPool.length, 10, storedUsed);
 
-    // Reset used if not enough left
     if (newIndexes.length < 10) {
       newIndexes = getRandomUniqueIndexes(fullQuestionPool.length, 10, []);
       localStorage.setItem('usedTreeQuestions', JSON.stringify(newIndexes));
@@ -199,40 +196,38 @@ export default function VegetationTest() {
       localStorage.setItem('usedTreeQuestions', JSON.stringify(updatedUsed));
     }
 
-    setQuestionIndexes(newIndexes);
-    setUsedIndexes(storedUsed);
-  }, [])
+    const shuffled = newIndexes.map((idx) => {
+      const q = fullQuestionPool[idx];
+      return {
+        ...q,
+        choices: shuffleArray(q.choices), // Shuffle ONCE
+      };
+    });
+
+    setShuffledQuestions(shuffled);
+    setSelectedAnswers({});
+  };
+
+  useEffect(() => {
+    generateQuiz();
+  }, []);
 
   const handleAnswer = (index: number, choice: string) => {
-    if (selectedAnswers[index]) return
-    setSelectedAnswers({ ...selectedAnswers, [index]: choice })
-  }
+    if (selectedAnswers[index]) return;
+    setSelectedAnswers({ ...selectedAnswers, [index]: choice });
+  };
 
   const handleReset = () => {
-    setSelectedAnswers({})
-    const storedUsed = JSON.parse(localStorage.getItem('usedTreeQuestions') || '[]') as number[];
-    let newIndexes = getRandomUniqueIndexes(fullQuestionPool.length, 10, storedUsed);
-
-    // Reset pool if not enough left
-    if (newIndexes.length < 10) {
-      newIndexes = getRandomUniqueIndexes(fullQuestionPool.length, 10, []);
-      localStorage.setItem('usedTreeQuestions', JSON.stringify(newIndexes));
-    } else {
-      const updatedUsed = [...storedUsed, ...newIndexes];
-      localStorage.setItem('usedTreeQuestions', JSON.stringify(updatedUsed));
-    }
-
-    setQuestionIndexes(newIndexes);
-    setUsedIndexes(storedUsed);
-  }
+    generateQuiz();
+  };
 
   const handleQuizComplete = () => {
     setProgress('Module 4');
     setShowCongrats(true);
   };
 
-  const allAnswered = Object.keys(selectedAnswers).length === questionIndexes.length;
-  const allAnsweredCorrectly = score === questionIndexes.length;
+  const allAnswered = Object.keys(selectedAnswers).length === shuffledQuestions.length;
+  const allAnsweredCorrectly = score === shuffledQuestions.length;
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
@@ -254,20 +249,15 @@ export default function VegetationTest() {
 
         <p className="text-center mb-8 text-lg text-gray-700 font-medium">
           Test your knowledge! <br />
-          <span className="text-2xl font-bold">{score} / {questionIndexes.length}</span>
+          <span className="text-2xl font-bold">{score} / {shuffledQuestions.length}</span>
         </p>
 
-        {questionIndexes.map((qIdx, i) => {
-          const original = fullQuestionPool[qIdx];
-          const q = {
-            ...original,
-            choices: shuffleArray(original.choices),
-          };
+        {shuffledQuestions.map((q, i) => {
           return (
             <div key={i} className="mb-8 p-6 bg-green-300 rounded-xl border border-green-500 shadow-sm">
               <p className="font-semibold text-left mb-4 text-gray-800 text-lg">{i + 1}. {q.question}</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {q.choices.map((choice) => {
+                {q.choices.map((choice: string) => {
                   const isSelected = selectedAnswers[i] === choice;
                   const isCorrect = choice === q.answer;
                   const hasAnswered = i in selectedAnswers;
@@ -314,7 +304,7 @@ export default function VegetationTest() {
 
         <div className="text-center mt-10">
           <p className="mb-6 text-xl text-gray-800 font-semibold">
-            Final Score: {score} / {questionIndexes.length}
+            Final Score: {score} / {shuffledQuestions.length}
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
