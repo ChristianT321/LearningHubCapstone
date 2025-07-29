@@ -156,6 +156,106 @@ const fullQuestionPool = [
     choices: ['Oxygen', 'Rain', 'Dust', 'Sugar'],
     answer: 'Oxygen',
   },
+  {
+  question: 'Which tree’s cones are important for helping it reproduce?',
+  choices: ['Western Hemlock', 'Coconut Palm', 'Red Alder', 'Maple'],
+  answer: 'Western Hemlock',
+  },
+  {
+    question: 'What does it mean when a tree is called “coniferous”?',
+    choices: ['It has cones and needles', 'It grows fruit', 'It changes color in fall', 'It loses bark'],
+    answer: 'It has cones and needles',
+  },
+  {
+    question: 'Which tree is known for helping prevent erosion in the rainforest?',
+    choices: ['Red Alder', 'Cactus', 'Cedar Hedge', 'Apple Tree'],
+    answer: 'Red Alder',
+  },
+  {
+    question: 'Why do trees grow new buds in spring?',
+    choices: ['To start growing leaves and cones', 'To take a break', 'To prepare for winter', 'To scare away insects'],
+    answer: 'To start growing leaves and cones',
+  },
+  {
+    question: 'How does the Western Red Cedar handle snowy winters?',
+    choices: ['It stays green and strong', 'It drops its branches', 'It changes color', 'It stops growing forever'],
+    answer: 'It stays green and strong',
+  },
+  {
+    question: 'Which part of a tree helps it stay upright and strong?',
+    choices: ['The trunk', 'The leaves', 'The seeds', 'The fruit'],
+    answer: 'The trunk',
+  },
+  {
+    question: 'What happens inside a tree’s roots?',
+    choices: ['They soak up water and send it upward', 'They grow bark', 'They make sunshine', 'They catch falling leaves'],
+    answer: 'They soak up water and send it upward',
+  },
+  {
+    question: 'What is one reason the Western Hemlock is important to forest animals?',
+    choices: ['It provides year-round cover', 'It glows at night', 'It grows fruit', 'It turns into mushrooms'],
+    answer: 'It provides year-round cover',
+  },
+  {
+    question: 'Which tree is often used for building because of its strong, rot-resistant wood?',
+    choices: ['Western Red Cedar', 'Elm', 'Fir', 'Birch'],
+    answer: 'Western Red Cedar',
+  },
+  {
+    question: 'Which tree begins producing new needle tips in the spring?',
+    choices: ['Western Hemlock', 'Maple', 'Oak', 'Cherry Blossom'],
+    answer: 'Western Hemlock',
+  },
+  {
+    question: 'Why do rainforest trees often grow tall and wide?',
+    choices: ['To reach sunlight above other plants', 'To grow apples', 'To block rivers', 'To stay close to the ground'],
+    answer: 'To reach sunlight above other plants',
+  },
+  {
+    question: 'What do the fallen leaves from deciduous trees add to the forest floor?',
+    choices: ['Nutrients', 'Rocks', 'Seeds', 'Water'],
+    answer: 'Nutrients',
+  },
+  {
+    question: 'What makes the Western Hemlock’s cones special in the fall?',
+    choices: ['They release seeds to grow new trees', 'They smell sweet', 'They turn pink', 'They fall into rivers'],
+    answer: 'They release seeds to grow new trees',
+  },
+  {
+    question: 'Which tree is best known for fixing nitrogen in the soil?',
+    choices: ['Red Alder', 'Oak', 'Spruce', 'Cedar'],
+    answer: 'Red Alder',
+  },
+  {
+    question: 'What makes evergreen trees different from deciduous trees?',
+    choices: ['They keep their needles year-round', 'They have no roots', 'They grow in deserts', 'They bloom in winter'],
+    answer: 'They keep their needles year-round',
+  },
+  {
+    question: 'What helps a forest stay healthy and full of life?',
+    choices: ['Trees providing shade and nutrients', 'Removing all plants', 'Cutting down trees each season', 'Dry, rocky soil'],
+    answer: 'Trees providing shade and nutrients',
+  },
+  {
+    question: 'What’s one way a tree supports wildlife during winter?',
+    choices: ['It gives shelter in its branches', 'It turns into water', 'It produces flowers', 'It makes firewood'],
+    answer: 'It gives shelter in its branches',
+  },
+  {
+    question: 'How do Western Hemlocks help grow new trees?',
+    choices: ['By spreading seeds from cones', 'By planting roots in animals', 'By melting into soil', 'By changing color'],
+    answer: 'By spreading seeds from cones',
+  },
+  {
+    question: 'Why is rain important for rainforest trees?',
+    choices: ['It helps them grow and stay hydrated', 'It washes them away', 'It turns them yellow', 'It makes them shorter'],
+    answer: 'It helps them grow and stay hydrated',
+  },
+  {
+    question: 'What does bark do for a tree?',
+    choices: ['Protects the inside of the tree', 'Makes the tree soft', 'Turns into soil', 'Eats insects'],
+    answer: 'Protects the inside of the tree',
+  },
 ];
 
 function shuffleArray<T>(array: T[]): T[] {
