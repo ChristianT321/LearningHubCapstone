@@ -201,6 +201,91 @@ app.post('/student/login', async (req, res) => {
   }
 })
 
+app.get('/students/:id/tests', async (req, res) => {
+  const { id } = req.params
+  try {
+    const result = await pool.query(
+      'SELECT test_name AS "testName", score FROM test_results WHERE student_id = $1',
+      [id]
+    )
+    res.json(result.rows)
+  } catch (err) {
+    console.error('Error fetching test results:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/students/:id/tests', async (req, res) => {
+  const { testName, score } = req.body
+  const { id } = req.params
+
+  if (!testName || typeof score !== 'number') {
+    return res.status(400).json({ error: 'Test name and score are required' })
+  }
+
+  try {
+    await pool.query(
+      `INSERT INTO test_results (student_id, test_name, score)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (student_id, test_name)
+       DO UPDATE SET score = $3`,
+      [id, testName, score]
+    )
+    res.status(200).json({ message: 'Test result recorded' })
+  } catch (err) {
+    console.error('Error saving test result:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.get('/students/:id/progress', async (req, res) => {
+  const { id } = req.params
+  try {
+    const result = await pool.query(
+      'SELECT module_name AS "moduleName", completed FROM progress_tracker WHERE student_id = $1',
+      [id]
+    )
+    res.json(result.rows)
+  } catch (err) {
+    console.error('Error fetching progress:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/students/:id/progress', async (req, res) => {
+  const { moduleName, completed } = req.body
+  const { id } = req.params
+
+  if (!moduleName || typeof completed !== 'boolean') {
+    return res.status(400).json({ error: 'Module name and completion status required' })
+  }
+
+  try {
+    await pool.query(
+      `INSERT INTO progress_tracker (student_id, module_name, completed)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (student_id, module_name)
+       DO UPDATE SET completed = $3`,
+      [id, moduleName, completed]
+    )
+    res.status(200).json({ message: 'Progress updated' })
+  } catch (err) {
+    console.error('Error saving progress:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.delete('/students/:id/progress', async (req, res) => {
+  const { id } = req.params
+  try {
+    await pool.query('DELETE FROM progress_tracker WHERE student_id = $1', [id])
+    res.status(200).json({ message: 'Progress cleared for student.' })
+  } catch (err) {
+    console.error('Error clearing progress:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
 })

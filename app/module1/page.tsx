@@ -25,13 +25,51 @@ export default function HomePage() {
 
   const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
-  const getProgress = (): { [key: string]: boolean } => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('progress');
-      return saved ? JSON.parse(saved) : {};
+  type ProgressItem = {
+    moduleName: string
+    completed: boolean
+  }
+
+  const fetchBackendProgress = async (studentId: number): Promise<{ [key: string]: boolean }> => {
+    try {
+      const res = await fetch(`http://localhost:3001/students/${studentId}/progress`)
+      const data: ProgressItem[] = await res.json()
+      const mapped: { [key: string]: boolean } = {}
+      data.forEach(item => {
+        mapped[item.moduleName] = item.completed
+      })
+      return mapped
+    } catch (err) {
+      console.error('Failed to fetch progress:', err)
+      return {}
     }
-    return {};
-  };
+  }
+
+  const clearStudentProgress = async () => {
+  const studentId = Number(localStorage.getItem('studentId'))
+  if (!studentId) {
+    alert('No student ID found.')
+    return
+  }
+
+  const confirm = window.confirm('Are you sure you want to clear all progress?')
+  if (!confirm) return
+
+  try {
+    const res = await fetch(`http://localhost:3001/students/${studentId}/progress`, {
+      method: 'DELETE',
+    })
+    if (res.ok) {
+      alert('Progress cleared successfully.')
+      setProgressState({})  // Reset frontend state
+    } else {
+      alert('Failed to clear progress.')
+    }
+  } catch (err) {
+    console.error('Error clearing progress:', err)
+    alert('Error occurred while clearing progress.')
+  }
+}
 
   const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
   const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
@@ -41,9 +79,16 @@ export default function HomePage() {
   };
   
   useEffect(() => {
-    setProgressState(getProgress());
-    // Update active state when path changes
-    setActive(pathname || headerLinks[0].link);
+    const studentId = Number(localStorage.getItem('studentId'))
+  if (!studentId) return
+
+  const loadProgress = async () => {
+    const backendProgress = await fetchBackendProgress(studentId)
+    setProgressState(backendProgress)
+  }
+
+  loadProgress()
+  setActive(pathname || headerLinks[0].link)
   }, [pathname]);
 
   const handleContinue = () => {
@@ -171,7 +216,7 @@ export default function HomePage() {
           </motion.div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', position: 'relative' }}>
-            {headerItems}
+            {headerItems}          
             <motion.button
               onClick={toggleProgressDropdown}
               whileHover={{ scale: 1.1 }}
