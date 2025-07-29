@@ -227,7 +227,7 @@ export default function VegetationTest() {
   };
 
   const allAnswered = Object.keys(selectedAnswers).length === shuffledQuestions.length;
-  const allAnsweredCorrectly = score === shuffledQuestions.length;
+  const passedQuiz = score >= 8;
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start text-center overflow-y-auto p-4">
@@ -315,7 +315,7 @@ export default function VegetationTest() {
               Reset
             </button>
 
-            {allAnswered && allAnsweredCorrectly && (
+            {allAnswered && passedQuiz && (
               <button
                 onClick={handleQuizComplete}
                 className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
@@ -362,7 +362,7 @@ export default function VegetationTest() {
             </div>
           )}
 
-          {allAnswered && !allAnsweredCorrectly && (
+          {allAnswered && !passedQuiz && (
             <p className="mt-6 text-red-600 font-semibold text-lg">
               Sorry, all questions must be correct to pass. Please try again.
             </p>
