@@ -75,13 +75,19 @@ app.put('/student/:id', async (req, res) => {
 
 app.delete('/student/:id', async (req, res) => {
   try {
-    await pool.query('DELETE FROM students WHERE id = $1', [req.params.id])
-    res.status(204).send()
+    const result = await pool.query('DELETE FROM students WHERE id = $1', [req.params.id])
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Student not exists' })
+    }
+
+    res.status(200).json({ message: 'Student deleted successfully' })
   } catch (err) {
     console.error('Error deleting student:', err)
     res.status(500).json({ error: err.message })
   }
 })
+
 
 app.post('/students/bulk', async (req, res) => {
   const students = req.body.students
