@@ -20,10 +20,12 @@ const pool = new Pool({
   password: process.env.PG_PASSWORD,
 })
 
+// Root route
 app.get('/', (req, res) => {
   res.send('Backend is running!')
 })
 
+// Get all students
 app.get('/students', async (req, res) => {
   try {
     const result = await pool.query(
@@ -36,6 +38,7 @@ app.get('/students', async (req, res) => {
   }
 })
 
+// Get students by class code
 app.get('/students/:classCode', async (req, res) => {
   try {
     const result = await pool.query(
@@ -49,6 +52,7 @@ app.get('/students/:classCode', async (req, res) => {
   }
 })
 
+// Update a student
 app.put('/student/:id', async (req, res) => {
   const { firstName, lastName, classCode } = req.body
   const studentId = req.params.id
@@ -73,6 +77,7 @@ app.put('/student/:id', async (req, res) => {
   }
 })
 
+// Delete a student
 app.delete('/student/:id', async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM students WHERE id = $1', [req.params.id])
@@ -88,7 +93,7 @@ app.delete('/student/:id', async (req, res) => {
   }
 })
 
-
+// Bulk insert students
 app.post('/students/bulk', async (req, res) => {
   const students = req.body.students
 
@@ -134,6 +139,7 @@ app.post('/students/bulk', async (req, res) => {
   }
 })
 
+// Create a teacher
 app.post('/teacher', async (req, res) => {
   const { email, classCode } = req.body
 
@@ -163,6 +169,7 @@ app.post('/teacher', async (req, res) => {
   }
 })
 
+// Get all teachers
 app.get('/teachers', async (req, res) => {
   try {
     const result = await pool.query(
@@ -175,6 +182,7 @@ app.get('/teachers', async (req, res) => {
   }
 })
 
+// Student login
 app.post('/student/login', async (req, res) => {
   const { firstName, lastName, classCode } = req.body
 
@@ -204,6 +212,63 @@ app.post('/student/login', async (req, res) => {
   } catch (err) {
     console.error('Error during student login:', err)
     res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/student/highscore', async (req, res) => {
+  const { studentId, highscore } = req.body;
+
+  if (!studentId || typeof highscore !== 'number') {
+    return res.status(400).json({ error: 'Student ID and highscore are required' });
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT highscore FROM students WHERE id = $1',
+      [studentId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    const currentHighscore = result.rows[0].highscore ?? 0;
+
+    if (highscore > currentHighscore) {
+      const updateResult = await pool.query(
+        `UPDATE students 
+         SET highscore = $1 
+         WHERE id = $2 
+         RETURNING id, highscore`,
+        [highscore, studentId]
+      );
+      return res.status(200).json(updateResult.rows[0]);
+    } else {
+      return res.status(200).json({ message: 'Highscore not updated — new score not higher' });
+    }
+  } catch (err) {
+    console.error('Error saving highscore:', err);
+    res.status(500).json({ error: err.message });
+  }
+})
+
+app.get('/student/:id/highscore', async (req, res) => {
+  const studentId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      `SELECT highscore FROM students WHERE id = $1`,
+      [studentId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    res.json({ highscore: result.rows[0].highscore });
+  } catch (err) {
+    console.error('Error getting highscore:', err)
+    res.status(500).json({ error: err.message });
   }
 })
 
