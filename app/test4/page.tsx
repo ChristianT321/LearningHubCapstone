@@ -169,7 +169,7 @@ export default function VegetationTest() {
             <button
               onClick={() => {
                 setShowCongrats(false);
-                router.push('/certificate');
+                router.push('/reptiles');
               }}
               style={{
                 backgroundColor: '#22c55e',
