@@ -318,6 +318,80 @@ app.post('/complete-module1', async (req, res) => {
   }
 });
 
+app.post('/complete-module2', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test2_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module2_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 2 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 2:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/complete-module3', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test3_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module3_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 3 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 3:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/complete-module4', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test4_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module4_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 4 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 4:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.get('/progress/:studentId', async (req, res) => {
   const { studentId } = req.params;
