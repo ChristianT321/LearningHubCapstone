@@ -291,45 +291,33 @@ app.get('/student/:id/highscore', async (req, res) => {
   }
 })
 
-app.post('/test-results/test1', async (req, res) => {
+app.post('/complete-module1', async (req, res) => {
   const { studentId, score } = req.body;
 
-  if (!studentId || typeof score !== 'number') {
-    return res.status(400).json({ error: 'studentId and score are required' });
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
   }
 
   try {
-    const result = await pool.query(
-      `UPDATE test_results SET test1_score = $1 WHERE student_id = $2`,
+    // Update test_results
+    await pool.query(
+      'UPDATE test_results SET test1_score = $1 WHERE student_id = $2',
       [score, studentId]
     );
 
-    res.status(200).json({ message: 'Test 1 score updated successfully' });
-  } catch (err) {
-    console.error('Error updating test1 score:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/progress/module1', async (req, res) => {
-  const { studentId } = req.body;
-
-  if (!studentId) {
-    return res.status(400).json({ error: 'studentId is required' });
-  }
-
-  try {
-    const result = await pool.query(
-      `UPDATE progress_tracker SET module1_complete = true WHERE student_id = $1`,
+    // Update progress_tracker
+    await pool.query(
+      'UPDATE progress_tracker SET module1_complete = true WHERE student_id = $1',
       [studentId]
     );
 
-    res.status(200).json({ message: 'Module 1 marked as complete' });
+    res.status(200).json({ message: 'Module 1 complete and test score saved' });
   } catch (err) {
-    console.error('Error updating progress tracker:', err);
-    res.status(500).json({ error: err.message });
+    console.error('Error completing module 1:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 app.get('/progress/:studentId', async (req, res) => {
   const { studentId } = req.params;

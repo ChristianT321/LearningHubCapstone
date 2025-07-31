@@ -41,37 +41,29 @@ export default function Test1() {
 
 
   const handleQuizComplete = async () => {
+  const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
   try {
-    const storedStudent = localStorage.getItem('student');
-    if (!storedStudent) {
-      alert('No student data found.');
-      return;
+    const res = await fetch('http://localhost:3001/complete-module1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        studentId: user.id,
+        score: score,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setProgress('Module 1');
+      setShowCongrats(true);
+    } else {
+      console.error(data.error || 'Failed to update module completion');
     }
-
-    const student = JSON.parse(storedStudent);
-    const studentId = student.id;
-
-    // Save progress
-    await fetch('http://localhost:3001/progress/module1', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId }),
-    });
-
-    // Save test score
-    await fetch('http://localhost:3001/test-results/test1', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId, score }),
-    });
-
-    setProgress('Module 1');
-    setShowCongrats(true);
   } catch (err) {
-    console.error('Error completing module 1:', err);
-    alert('Something went wrong completing the module.');
+    console.error('Request failed:', err);
   }
-  setShowCongrats(true);  
 };
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length
