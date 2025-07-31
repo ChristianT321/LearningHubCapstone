@@ -158,6 +158,46 @@ app.post('/students/bulk', async (req, res) => {
   }
 });
 
+app.post('/student', async (req, res) => {
+  const { firstname, lastname, classcode } = req.body;
+
+  if (!firstname || !lastname || !classcode) {
+    return res.status(400).json({ error: 'Missing required student info' });
+  }
+
+  try {
+    // 1. Insert into students table
+    const studentResult = await pool.query(
+      `INSERT INTO students (first_name, last_name, class_code)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [firstname, lastname, classcode]
+    );
+
+    const studentId = studentResult.rows[0].id;
+
+    // 2. Insert into test_results table
+    await pool.query(
+      `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score)
+       VALUES ($1, 0, 0, 0, 0)`,
+      [studentId]
+    );
+
+    // 3. Insert into progress_tracker table
+    await pool.query(
+      `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete)
+       VALUES ($1, false, false, false, false)`,
+      [studentId]
+    );
+
+    res.status(201).json({ message: 'Student created successfully', studentId });
+
+  } catch (err) {
+    console.error('Error creating student:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Create a teacher
 app.post('/teacher', async (req, res) => {
   const { email, classCode } = req.body
