@@ -2,6 +2,13 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import pkg from 'pg'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log("🔥 Backend loaded from:", __dirname);
 
 const { Pool } = pkg
 dotenv.config()
@@ -95,49 +102,70 @@ app.delete('/student/:id', async (req, res) => {
 
 // Bulk insert students
 app.post('/students/bulk', async (req, res) => {
-  const students = req.body.students
+  const students = req.body.students;
 
   if (!Array.isArray(students)) {
-    return res.status(400).json({ error: 'Expected an array of students' })
+    return res.status(400).json({ error: 'Expected an array of students' });
   }
 
-  const client = await pool.connect()
+  const client = await pool.connect();
   try {
-    await client.query('BEGIN')
-    const insertedStudents = []
+    await client.query('BEGIN');
+    const insertedStudents = [];
 
     for (const student of students) {
-      const { firstName, lastName, classCode } = student
+      const { firstName, lastName, classCode } = student;
 
+      // Prevent duplicate student
       const exists = await client.query(
         `SELECT id FROM students WHERE LOWER(first_name) = LOWER($1) AND LOWER(last_name) = LOWER($2) AND LOWER(class_code) = LOWER($3)`,
         [firstName, lastName, classCode]
-      )
+      );
 
       if (exists.rows.length > 0) {
-        await client.query('ROLLBACK')
-        return res.status(409).json({ error: 'Duplicate student exists' })
+        await client.query('ROLLBACK');
+        return res.status(409).json({ error: 'Duplicate student exists' });
       }
 
+      // Insert student
       const result = await client.query(
         `INSERT INTO students (first_name, last_name, class_code)
          VALUES ($1, $2, $3)
          RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"`,
         [firstName || '', lastName || '', classCode || '']
-      )
-      insertedStudents.push(result.rows[0])
+      );
+
+      const newStudent = result.rows[0];
+      const studentId = newStudent.id;
+
+      // Insert into progress_tracker
+      await client.query(
+        `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete)
+         VALUES ($1, false, false, false, false)`,
+        [studentId]
+      );
+
+      // Insert into test_results
+      await client.query(
+        `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score)
+         VALUES ($1, 0, 0, 0, 0)`,
+        [studentId]
+      );
+
+      insertedStudents.push(newStudent);
     }
 
-    await client.query('COMMIT')
-    res.status(201).json(insertedStudents)
+    await client.query('COMMIT');
+    res.status(201).json(insertedStudents);
   } catch (err) {
-    await client.query('ROLLBACK')
-    console.error('Error bulk inserting students:', err)
-    res.status(500).json({ error: err.message })
+    await client.query('ROLLBACK');
+    console.error('❌ Error bulk inserting students:', err);
+    res.status(500).json({ error: err.message });
   } finally {
-    client.release()
+    client.release();
   }
-})
+});
+
 
 // Create a teacher
 app.post('/teacher', async (req, res) => {
