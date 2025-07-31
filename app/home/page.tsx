@@ -68,12 +68,21 @@ const headerLinks = [
 
 const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
-const getProgress = (): { [key: string]: boolean } => {
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('progress');
-    return saved ? JSON.parse(saved) : {};
+const getProgress = async (studentId: number): Promise<{ [key: string]: boolean }> => {
+  try {
+    const res = await fetch(`http://localhost:3001/progress/${studentId}`);
+    if (!res.ok) throw new Error('Failed to fetch progress');
+    const data = await res.json();
+    return {
+      'Module 1': data.module1_complete,
+      'Module 2': data.module2_complete,
+      'Module 3': data.module3_complete,
+      'Module 4': data.module4_complete,
+    };
+  } catch (err) {
+    console.error('Error loading progress:', err);
+    return {};
   }
-  return {};
 };
 
 export default function HomePage() {
@@ -89,8 +98,11 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    setProgressState(getProgress());
-  }, []);
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  if (currentUser?.id) {
+    getProgress(currentUser.id).then((data) => setProgressState(data));
+  }
+}, []);
 
   const headerItems = headerLinks.map(({link, label, icon: Icon}) => (
     <motion.button
