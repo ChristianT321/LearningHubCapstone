@@ -40,11 +40,32 @@ export default function HomePage() {
     setProgressDropdownOpen((prev) => !prev);
   };
   
-  useEffect(() => {
-    setProgressState(getProgress());
-    // Update active state when path changes
-    setActive(pathname || headerLinks[0].link);
-  }, [pathname]);
+useEffect(() => {
+  const fetchProgress = async () => {
+    const studentId = localStorage.getItem('studentId');
+    if (!studentId) return;
+
+    try {
+      const response = await fetch(`http://localhost:3001/progress/${studentId}`);
+      const data = await response.json();
+
+      if (data) {
+        const updated = {
+          'Module 1': data.module1_complete,
+          'Module 2': data.module2_complete,
+          'Module 3': data.module3_complete,
+          'Module 4': data.module4_complete,
+        };
+        setProgressState(updated);
+      }
+    } catch (error) {
+      console.error('Failed to fetch progress:', error);
+    }
+  };
+
+  fetchProgress();
+  setActive(pathname || headerLinks[0].link);
+}, [pathname]);
 
   const handleContinue = () => {
     router.push('/groundanimalseason')

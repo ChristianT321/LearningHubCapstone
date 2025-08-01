@@ -25,13 +25,23 @@ export default function HomePage() {
 
   const moduleList = ['Module 1', 'Module 2', 'Module 3', 'Module 4']
 
-  const getProgress = (): { [key: string]: boolean } => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('progress');
-      return saved ? JSON.parse(saved) : {};
-    }
+  const getProgress = async (studentId: number): Promise<{ [key: string]: boolean }> => {
+  try {
+    const res = await fetch(`http://localhost:3001/progress/${studentId}`);
+    if (!res.ok) throw new Error('Failed to fetch progress');
+    const data = await res.json();
+    return {
+      'Module 1': data.module1_complete,
+      'Module 2': data.module2_complete,
+      'Module 3': data.module3_complete,
+      'Module 4': data.module4_complete,
+    };
+  } catch (err) {
+    console.error('Error loading progress:', err);
     return {};
-  };
+  }
+};
+
 
   const [progressDropdownOpen, setProgressDropdownOpen] = useState(false);
   const [progress, setProgressState] = useState<{ [key: string]: boolean }>({});
@@ -41,10 +51,11 @@ export default function HomePage() {
   };
   
   useEffect(() => {
-    setProgressState(getProgress());
-    // Update active state when path changes
-    setActive(pathname || headerLinks[2].link);
-  }, [pathname]);
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  if (currentUser?.id) {
+    getProgress(currentUser.id).then((data) => setProgressState(data));
+  }
+}, []);
 
   const handleContinue = () => {
     router.push('/flyingseason')

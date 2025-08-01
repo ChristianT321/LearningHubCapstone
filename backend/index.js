@@ -123,19 +123,17 @@ app.post('/students/bulk', async (req, res) => {
       );
 
       if (exists.rows.length > 0) {
-        await client.query('ROLLBACK');
-        return res.status(409).json({ error: 'Duplicate student exists' });
+        continue; // Skip duplicate
       }
 
-      // Insert student
-      const result = await client.query(
+      const studentResult = await client.query(
         `INSERT INTO students (first_name, last_name, class_code)
          VALUES ($1, $2, $3)
          RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"`,
         [firstName || '', lastName || '', classCode || '']
       );
 
-      const newStudent = result.rows[0];
+      const newStudent = studentResult.rows[0];
       const studentId = newStudent.id;
 
       // Insert into progress_tracker
@@ -156,16 +154,56 @@ app.post('/students/bulk', async (req, res) => {
     }
 
     await client.query('COMMIT');
+    console.log('Students added to all tables');
     res.status(201).json(insertedStudents);
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('❌ Error bulk inserting students:', err);
+    console.error('Error in bulk insert:', err);
     res.status(500).json({ error: err.message });
   } finally {
     client.release();
   }
 });
 
+app.post('/student', async (req, res) => {
+  const { firstname, lastname, classcode } = req.body;
+
+  if (!firstname || !lastname || !classcode) {
+    return res.status(400).json({ error: 'Missing required student info' });
+  }
+
+  try {
+    // 1. Insert into students table
+    const studentResult = await pool.query(
+      `INSERT INTO students (first_name, last_name, class_code)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [firstname, lastname, classcode]
+    );
+
+    const studentId = studentResult.rows[0].id;
+
+    // 2. Insert into test_results table
+    await pool.query(
+      `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score)
+       VALUES ($1, 0, 0, 0, 0)`,
+      [studentId]
+    );
+
+    // 3. Insert into progress_tracker table
+    await pool.query(
+      `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete)
+       VALUES ($1, false, false, false, false)`,
+      [studentId]
+    );
+
+    res.status(201).json({ message: 'Student created successfully', studentId });
+
+  } catch (err) {
+    console.error('Error creating student:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Create a teacher
 app.post('/teacher', async (req, res) => {
@@ -299,6 +337,122 @@ app.get('/student/:id/highscore', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
+
+app.post('/complete-module1', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    // Update test_results
+    await pool.query(
+      'UPDATE test_results SET test1_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    // Update progress_tracker
+    await pool.query(
+      'UPDATE progress_tracker SET module1_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 1 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 1:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/complete-module2', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test2_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module2_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 2 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 2:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/complete-module3', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test3_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module3_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 3 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 3:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/complete-module4', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test4_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module4_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 4 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 4:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/progress/:studentId', async (req, res) => {
+  const { studentId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM progress_tracker WHERE student_id = $1',
+      [studentId]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error fetching progress:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)

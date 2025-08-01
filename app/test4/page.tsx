@@ -47,9 +47,30 @@ export default function VegetationTest() {
     setSelectedAnswers({})
   }
 
-  const handleQuizComplete = () => {
-  setProgress('Module 4');
-  setShowCongrats(true);  
+  const handleQuizComplete = async () => {
+   const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+  try {
+    const res = await fetch('http://localhost:3001/complete-module4', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        studentId: user.id,
+        score: score,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setProgress('Module 4');
+      setShowCongrats(true);
+    } else {
+      console.error(data.error || 'Failed to update module 4');
+    }
+  } catch (err) {
+    console.error('Module 4 request failed:', err);
+  }  
   };
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length

@@ -40,9 +40,30 @@ export default function Test1() {
   ).length
 
 
-  const handleQuizComplete = () => {
-  setProgress('Module 1');
-  setShowCongrats(true);  
+  const handleQuizComplete = async () => {
+  const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+  try {
+    const res = await fetch('http://localhost:3001/complete-module1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        studentId: user.id,
+        score: score,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setProgress('Module 1');
+      setShowCongrats(true);
+    } else {
+      console.error(data.error || 'Failed to update module completion');
+    }
+  } catch (err) {
+    console.error('Request failed:', err);
+  }
 };
 
   const allAnswered = Object.keys(selectedAnswers).length === questions.length
