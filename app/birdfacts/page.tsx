@@ -5,128 +5,267 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 
-const birds = [
-  {
-    name: '🦅 Bald Eagle',
-    slug: 'bald-eagle',
-    images: {
-      main: { src: '/Bald eagle.jpg', alt: 'Bald Eagle' },
-      feather: { src: '/Bald eagle feather.jpg', alt: 'Bald Eagle Feather' },
-      extra: { src: '/Bald eagle nest.jpg', alt: 'Bald Eagle Nest' },
-      food: { src: '/Bald eagle hunting.jpg', alt: 'Bald Eagle Hunting' },
+type Bird = {
+  name: string;
+  slug: string;
+  images: {
+    main: { src: string; alt: string };
+    feather: { src: string; alt: string };
+    extra: { src: string; alt: string };
+    food: { src: string; alt: string };
+  };
+  intro: string;
+  featherInfo: string;
+  nesting: {
+    image: string;
+    caption: string;
+    fact: string;
+  };
+  food: {
+    text: string;
+    unique: string;
+  };
+  didYouKnow: string;
+};
+
+type BirdGroups = {
+  [groupName: string]: Bird[];
+};
+
+const birdGroups: BirdGroups = {
+  'Birds of Prey': [
+    {
+      name: '🦅 Bald Eagle',
+      slug: 'bald-eagle',
+      images: {
+        main: { src: '/Bald eagle.jpg', alt: 'Bald Eagle' },
+        feather: { src: '/Bald eagle feather.jpg', alt: 'Bald Eagle Feather' },
+        extra: { src: '/Bald eagle nest.jpg', alt: 'Bald Eagle Nest' },
+        food: { src: '/Bald eagle hunting.jpg', alt: 'Bald Eagle Hunting' },
+      },
+      intro: 'The bald eagle is a powerful bird of prey native to North America. It is known for its white head, yellow beak, and strong wingspan that allows it to soar high above lakes and rivers.',
+      featherInfo: 'Bald eagle feathers are broad and stiff, ideal for gliding and soaring at high altitudes. These feathers are sacred in many Indigenous cultures.',
+      nesting: {
+        image: '/Bald eagle nest.jpg',
+        caption: 'Bald eagles build enormous nests in tall trees, returning to them year after year.',
+        fact: 'Some eagle nests can reach up to 2.5 meters in diameter and weigh over a ton!'
+      },
+      food: {
+        text: 'Bald eagles primarily hunt fish, swooping down with incredible speed and precision. They also scavenge and sometimes steal food from other birds.',
+        unique: 'They can spot prey from over 3 kilometers away, thanks to their incredible eyesight.'
+      },
+      didYouKnow: 'Bald eagles return to the same nest every year — sometimes for decades!'
     },
-    intro: 'The bald eagle is a powerful bird of prey native to North America. It is known for its white head, yellow beak, and strong wingspan that allows it to soar high above lakes and rivers.',
-    featherInfo: 'Bald eagle feathers are broad and stiff, ideal for gliding and soaring at high altitudes. These feathers are sacred in many Indigenous cultures.',
-    nesting: {
-      image: '/Bald eagle nest.jpg',
-      caption: 'Bald eagles build enormous nests in tall trees, returning to them year after year.',
-      fact: 'Some eagle nests can reach up to 2.5 meters in diameter and weigh over a ton!',
+    {
+      name: '🦉 Great Horned Owl',
+      slug: 'great-horned-owl',
+      images: {
+        main: { src: '/Great horned owl.jpg', alt: 'Great Horned Owl' },
+        feather: { src: '/Great horned owl feather.jpg', alt: 'Great Horned Owl Feather' },
+        extra: { src: '/Great horned owl nest.jpg', alt: 'Great Horned Owl Nest' },
+        food: { src: '/Great horned owl hunting.jpg', alt: 'Great Horned Owl Hunting' },
+      },
+      intro: 'Great Horned Owls are powerful nocturnal hunters with tufted ears and piercing yellow eyes. They live in forests, deserts, and urban areas across the Americas.',
+      featherInfo: 'Their soft-edged feathers allow for silent flight — perfect for sneaking up on prey in the dark.',
+      nesting: {
+        image: '/Great horned owl nest.jpg',
+        caption: 'These owls often reuse nests built by other large birds or squirrels.',
+        fact: 'They are one of the first birds to nest in the year, sometimes as early as January.'
+      },
+      food: {
+        text: 'They hunt small to medium-sized animals like rabbits, mice, and even skunks.',
+        unique: 'Their powerful grip can exert 500 psi — stronger than the bite of a large dog!'
+      },
+      didYouKnow: 'Their deep hoots can be heard from miles away on quiet nights.'
     },
-    food: {
-      text: 'Bald eagles primarily hunt fish, swooping down with incredible speed and precision. They also scavenge and sometimes steal food from other birds.',
-      unique: 'They can spot prey from over 3 kilometers away, thanks to their incredible eyesight.',
+    {
+      name: '🪶 Northern Goshawk',
+      slug: 'northern-goshawk',
+      images: {
+        main: { src: '/Northern goshawk.jpg', alt: 'Northern Goshawk' },
+        feather: { src: '/Northern goshawk feather.jpg', alt: 'Goshawk Feather' },
+        extra: { src: '/Northern goshawk nest.jpg', alt: 'Goshawk Nest' },
+        food: { src: '/Northern goshawk hunting.jpg', alt: 'Goshawk Hunting' },
+      },
+      intro: 'Northern Goshawks are powerful forest-dwelling raptors known for their speed and agility among trees.',
+      featherInfo: 'Their feathers are designed for silent flight and quick maneuvers through dense forests.',
+      nesting: {
+        image: '/Northern goshawk nest.jpg',
+        caption: 'They build large stick nests high in mature trees, often reusing them each year.',
+        fact: 'Goshawks can aggressively defend their nests, even against humans!',
+      },
+      food: {
+        text: 'They hunt birds and small mammals like squirrels with sudden bursts of speed.',
+        unique: 'Their long tails and short wings help them twist through forest branches at high speed.',
+      },
+      didYouKnow: 'The name “goshawk” comes from the Old English for “goose hawk” due to their hunting strength.'
     },
-    didYouKnow: 'Bald eagles return to the same nest every year — sometimes for decades!',
-  },
-  {
-    name: '🐦 Hummingbird',
-    slug: 'hummingbird',
-    images: {
-      main: { src: '/Hummingbird.jpg', alt: 'Hummingbird' },
-      feather: { src: '/Hummingbird feather.jpg', alt: 'Hummingbird Feather' },
-      extra: { src: '/Hummingbird nest.jpg', alt: 'Hummingbird Nest' },
-      food: { src: '/Hummingbird feeding.jpg', alt: 'Hummingbird Feeding' },
-    },
-    intro: 'Hummingbirds are tiny birds with incredible speed and agility. Their wings move so fast they create a humming sound, which gives them their name.',
-    featherInfo: 'Hummingbird feathers shimmer with iridescent colors that change with the light. Their feathers are light and flexible to allow rapid wing movement.',
-    nesting: {
-      image: '/Hummingbird nest.jpg',
-      caption: 'Hummingbirds build cup-shaped nests from plant fibers and spider silk, often attaching them to branches with camouflage.',
-      fact: 'Their nests are so small they can fit in the palm of your hand!',
-    },
-    food: {
-      text: 'Hummingbirds feed on nectar from flowers, using their long beaks and tongues. They also eat small insects for protein.',
-      unique: 'They can fly backward and hover in midair, thanks to their unique wing structure.',
-    },
-    didYouKnow: 'Hummingbirds remember every flower they visit — and when they visited it!',
-  },
-  {
-    name: '🦆 Duck',
-    slug: 'duck',
-    images: {
-      main: { src: '/Duck.webp', alt: 'Duck' },
-      feather: { src: '/Duck feather.jpg', alt: 'Duck Feather' },
-      extra: { src: '/Ducklings.jpg', alt: 'Ducklings' },
-      food: { src: '/Duck feeding.jpg', alt: 'Duck Feeding' },
-    },
-    intro: 'Ducks are water-loving birds known for their waddling walk and loud quacks. They live in ponds, lakes, and rivers around the world.',
-    featherInfo: 'Duck feathers are coated in a special oil that keeps them waterproof, helping ducks float and stay dry even in wet conditions.',
-    nesting: {
-      image: '/Ducklings.jpg',
-      caption: 'Ducks nest on the ground near water, laying several eggs at a time and caring closely for their ducklings.',
-      fact: 'Ducklings can swim just a few hours after hatching!',
-    },
-    food: {
-      text: 'Ducks eat a variety of foods, including aquatic plants, insects, and small fish. They use their flat bills to filter food from the water.',
-      unique: 'Some ducks migrate thousands of kilometers every year to find better feeding grounds.',
-    },
-    didYouKnow: 'Some ducks migrate thousands of kilometers every year!',
-  },
-  {
-    name: '🧠 Raven',
-    slug: 'raven',
-    images: {
-      main: { src: '/Raven.jpg', alt: 'Raven' },
-      feather: { src: '/Raven feather.png', alt: 'Raven Feather' },
-      extra: { src: '/Raven nest.jpg', alt: 'Raven Nest' },
-      food: { src: '/Raven eating.jpg', alt: 'Raven Eating' },
-    },
-    intro: 'Ravens are highly intelligent birds known for their problem-solving skills and complex social behaviors. With glossy black feathers and a deep croaking call, they are both mysterious and fascinating.',
-    featherInfo: 'Raven feathers are sleek, jet-black, and slightly iridescent. These feathers help them blend into their environment and play a role in flight agility and warmth.',
-    nesting: {
-      image: '/Raven nest.jpg',
-      caption: 'Ravens build large, bulky nests high in trees or on cliffs, using sticks, moss, and animal hair.',
-      fact: 'Ravens sometimes use shiny objects to decorate their nests!',
-    },
-    food: {
-      text: 'Ravens are omnivores and scavengers, eating everything from small animals and insects to berries and human leftovers. They use tools and can work together to access food.',
-      unique: 'They can mimic sounds from their surroundings, including human speech!',
-    },
-    didYouKnow: 'Ravens can remember faces and hold grudges against people who treat them badly!'
-  },
-];
+    {
+        name: '⚡ Peregrine Falcon',
+        slug: 'peregrine-falcon',
+        images: {
+          main: { src: '/Peregrine falcon.jpg', alt: 'Peregrine Falcon' },
+          feather: { src: '/Peregrine falcon feather.jpg', alt: 'Falcon Feather' },
+          extra: { src: '/Peregrine falcon nest.jpg', alt: 'Falcon Nest' },
+          food: { src: '/Peregrine falcon hunting.jpg', alt: 'Falcon Hunting' },
+        },
+        intro: 'Peregrine Falcons are the fastest animals on Earth, capable of diving at over 300 km/h.',
+        featherInfo: 'Their aerodynamic feathers reduce drag and allow for unmatched speed.',
+        nesting: {
+          image: '/Peregrine falcon nest.jpg',
+          caption: 'They nest on high cliffs or skyscrapers in urban areas.',
+          fact: 'Unlike many birds, peregrines don’t build nests but lay eggs on bare surfaces.',
+        },
+        food: {
+          text: 'They feed almost exclusively on birds, catching them mid-flight with dramatic stoops.',
+          unique: 'Their nostrils have special bony structures to help them breathe at high speeds.',
+        },
+        didYouKnow: 'Peregrine Falcons have adapted well to cities, using tall buildings like cliffs.'
+      },
+      {
+        name: '🐟 Osprey',
+        slug: 'osprey',
+        images: {
+          main: { src: '/Osprey.jpg', alt: 'Osprey' },
+          feather: { src: '/Osprey feather.jpg', alt: 'Osprey Feather' },
+          extra: { src: '/Osprey nest.jpg', alt: 'Osprey Nest' },
+          food: { src: '/Osprey hunting.jpg', alt: 'Osprey Hunting' },
+        },
+        intro: 'Ospreys are large raptors found near water, known for their fish-catching talents.',
+        featherInfo: 'Their feathers are oily and dense to keep them dry when diving.',
+        nesting: {
+          image: '/Osprey nest.jpg',
+          caption: 'They often build large platform nests atop poles, trees, or cliffs.',
+          fact: 'Ospreys return to the same nest year after year, adding new material each season.',
+        },
+        food: {
+          text: 'Ospreys eat almost exclusively fish, diving feet-first into water to catch them.',
+          unique: 'Their feet have backward-facing toes and barbed pads to grip slippery fish.',
+        },
+        didYouKnow: 'Ospreys have a unique reversible outer toe to better grasp their prey.'
+      }
+
+  ],
+  'Water Birds': [
+    {
+      name: '🦆 Mallard Duck',
+      slug: 'mallard-duck',
+      images: {
+        main: { src: '/Duck.webp', alt: 'Mallard Duck' },
+        feather: { src: '/Duck feather.jpg', alt: 'Duck Feather' },
+        extra: { src: '/Ducklings.jpg', alt: 'Ducklings' },
+        food: { src: '/Duck feeding.jpg', alt: 'Duck Feeding' },
+      },
+      intro: 'Mallards are one of the most common ducks found in North America. They are known for their green heads and cheerful quacking.',
+      featherInfo: 'Their feathers are waterproof thanks to oils from a special gland near the tail.',
+      nesting: {
+        image: '/Ducklings.jpg',
+        caption: 'They nest on the ground near water and care closely for their ducklings.',
+        fact: 'Ducklings can swim just hours after hatching!'
+      },
+      food: {
+        text: 'They feed on aquatic vegetation, insects, and small fish using their flat bills.',
+        unique: 'Some Mallards travel thousands of kilometers during seasonal migrations.'
+      },
+      didYouKnow: 'Mallards can sleep with one eye open to stay alert for predators.'
+    }
+  ],
+  'Forest Birds': [
+    {
+      name: '🧠 Common Raven',
+      slug: 'raven',
+      images: {
+        main: { src: '/Raven.jpg', alt: 'Raven' },
+        feather: { src: '/Raven feather.png', alt: 'Raven Feather' },
+        extra: { src: '/Raven nest.jpg', alt: 'Raven Nest' },
+        food: { src: '/Raven eating.jpg', alt: 'Raven Eating' },
+      },
+      intro: 'Ravens are highly intelligent birds known for problem-solving and mimicry. They can mimic sounds, including human speech.',
+      featherInfo: 'Raven feathers are sleek, jet-black, and slightly iridescent, aiding in flight and warmth.',
+      nesting: {
+        image: '/Raven nest.jpg',
+        caption: 'Ravens build large nests high in trees or cliffs using sticks and moss.',
+        fact: 'They sometimes decorate nests with shiny objects!'
+      },
+      food: {
+        text: 'Omnivores and scavengers — they eat small animals, berries, and even garbage.',
+        unique: 'They use tools and can cooperate to solve problems!'
+      },
+      didYouKnow: 'Ravens remember faces and can hold grudges against humans who treat them badly.'
+    }
+  ],
+  'Small Flyers': [
+    {
+      name: '🐦 Rufous Hummingbird',
+      slug: 'hummingbird',
+      images: {
+        main: { src: '/Hummingbird.jpg', alt: 'Hummingbird' },
+        feather: { src: '/Hummingbird feather.jpg', alt: 'Hummingbird Feather' },
+        extra: { src: '/Hummingbird nest.jpg', alt: 'Hummingbird Nest' },
+        food: { src: '/Hummingbird feeding.jpg', alt: 'Hummingbird Feeding' },
+      },
+      intro: 'Rufous Hummingbirds are tiny, fast, and brightly colored. They migrate farther than any other hummingbird species.',
+      featherInfo: 'Their iridescent feathers shimmer in the light, helping them communicate and attract mates.',
+      nesting: {
+        image: '/Hummingbird nest.jpg',
+        caption: 'They build cup-shaped nests from spider silk and moss.',
+        fact: 'Their nests are smaller than a walnut!'
+      },
+      food: {
+        text: 'They feed on nectar using long tongues and beaks, also eating small insects.',
+        unique: 'They can hover, fly backwards, and even upside down!'
+      },
+      didYouKnow: 'They remember every flower they’ve visited and when it will bloom again!'
+    }
+  ]
+};
+
 
 export default function BirdNotebook() {
+  const groupNames = Object.keys(birdGroups);
+  const [selectedGroup, setSelectedGroup] = useState(groupNames[0]);
+  const groupBirds = birdGroups[selectedGroup];
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const bird = birds[activeIndex];
+  const bird = groupBirds[activeIndex];
   const router = useRouter();
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
       <div className="fixed inset-0 z-0">
-        <Image
-          src="/sky background.png"
-          alt="Sky Background"
-          fill
-          priority
-          className="object-cover object-center"
-        />
+        <Image src="/sky background.png" alt="Sky Background" fill priority className="object-cover object-center" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen w-full px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-extrabold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-            Welcome to the Bird Explorer’s Guide
-          </h1>
-          <p className="text-white text-lg drop-shadow-[1px_1px_0px_black]">
-            Learn about these amazing birds before you play the matching game!
-          </p>
+          <h1 className="text-5xl font-extrabold text-white drop-shadow-[2px_2px_0px_black] mb-2">Welcome to the Bird Explorer’s Guide</h1>
+          <p className="text-white text-lg drop-shadow-[1px_1px_0px_black]">Learn about these amazing birds before you play the matching game!</p>
+        </div>
+
+        <div className="mb-4 flex gap-4 justify-center">
+          {groupNames.map((group) => (
+            <button
+              key={group}
+              onClick={() => {
+                setSelectedGroup(group);
+                setActiveIndex(0);
+                setCurrentPage(1);
+              }}
+              className={clsx(
+                'px-4 py-2 rounded-full font-bold border-2',
+                group === selectedGroup
+                  ? 'bg-yellow-600 text-white border-yellow-700'
+                  : 'bg-white text-gray-800 border-gray-400 hover:bg-yellow-100'
+              )}
+            >
+              {group}
+            </button>
+          ))}
         </div>
 
         <div className="flex max-w-7xl w-full rounded-3xl shadow-2xl border-[6px] border-yellow-700 overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90">
           <div className="w-28 bg-green-800 flex flex-col justify-center items-center gap-6 py-6">
-            {birds.map((b, idx) => (
+            {groupBirds.map((b, idx) => (
               <button
                 key={b.slug}
                 onClick={() => { setActiveIndex(idx); setCurrentPage(1); }}
@@ -137,13 +276,7 @@ export default function BirdNotebook() {
                     : 'border-green-400 hover:scale-105'
                 )}
               >
-                <Image
-                  src={b.images.main.src}
-                  alt={b.name}
-                  width={80}
-                  height={80}
-                  className="object-cover w-full h-full"
-                />
+                <Image src={b.images.main.src} alt={b.name} width={80} height={80} className="object-cover w-full h-full" />
               </button>
             ))}
           </div>
@@ -151,10 +284,7 @@ export default function BirdNotebook() {
           <div className="w-2 bg-yellow-900" />
 
           <div className="flex-1 grid grid-cols-2 gap-0 p-6 text-black relative">
-            <button
-              onClick={() => setCurrentPage(currentPage === 1 ? 2 : 1)}
-              className="absolute top-4 right-4 bg-yellow-800 text-white px-4 py-2 rounded-full z-20 shadow-lg hover:bg-yellow-900 transition"
-            >
+            <button onClick={() => setCurrentPage(currentPage === 1 ? 2 : 1)} className="absolute top-4 right-4 bg-yellow-800 text-white px-4 py-2 rounded-full z-20 shadow-lg hover:bg-yellow-900 transition">
               Flip Page →
             </button>
 
@@ -204,14 +334,10 @@ export default function BirdNotebook() {
           </div>
         </div>
 
-        <button
-          onClick={() => router.push('/matching2')}
-          className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition"
-        >
+        <button onClick={() => router.push('/matching2')} className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition">
           Start Matching Game →
         </button>
       </div>
     </main>
   );
 }
-
