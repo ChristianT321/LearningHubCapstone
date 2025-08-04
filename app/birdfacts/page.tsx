@@ -60,8 +60,8 @@ const birdGroups: BirdGroups = {
       name: '🦉 Great Horned Owl',
       slug: 'great-horned-owl',
       images: {
-        main: { src: '/Great horned owl.jpg', alt: 'Great Horned Owl' },
-        feather: { src: '/Great horned owl feather.jpg', alt: 'Great Horned Owl Feather' },
+        main: { src: '/great horned owl.webp', alt: 'Great Horned Owl' },
+        feather: { src: '/great horned owl feather.jpg', alt: 'Great Horned Owl Feather' },
         extra: { src: '/Great horned owl nest.jpg', alt: 'Great Horned Owl Nest' },
         food: { src: '/Great horned owl hunting.jpg', alt: 'Great Horned Owl Hunting' },
       },
@@ -82,10 +82,10 @@ const birdGroups: BirdGroups = {
       name: '🪶 Northern Goshawk',
       slug: 'northern-goshawk',
       images: {
-        main: { src: '/Northern goshawk.jpg', alt: 'Northern Goshawk' },
+        main: { src: '/Norther goshawk.webp', alt: 'Northern Goshawk' },
         feather: { src: '/Northern goshawk feather.jpg', alt: 'Goshawk Feather' },
-        extra: { src: '/Northern goshawk nest.jpg', alt: 'Goshawk Nest' },
-        food: { src: '/Northern goshawk hunting.jpg', alt: 'Goshawk Hunting' },
+        extra: { src: '/northern goshawk nest.jpg', alt: 'Goshawk Nest' },
+        food: { src: '/Northern goshwak hunting.webp', alt: 'Goshawk Hunting' },
       },
       intro: 'Northern Goshawks are powerful forest-dwelling raptors known for their speed and agility among trees.',
       featherInfo: 'Their feathers are designed for silent flight and quick maneuvers through dense forests.',
@@ -104,7 +104,7 @@ const birdGroups: BirdGroups = {
         name: '⚡ Peregrine Falcon',
         slug: 'peregrine-falcon',
         images: {
-          main: { src: '/Peregrine falcon.jpg', alt: 'Peregrine Falcon' },
+          main: { src: '/Peregrine falcon.webp', alt: 'Peregrine Falcon' },
           feather: { src: '/Peregrine falcon feather.jpg', alt: 'Falcon Feather' },
           extra: { src: '/Peregrine falcon nest.jpg', alt: 'Falcon Nest' },
           food: { src: '/Peregrine falcon hunting.jpg', alt: 'Falcon Hunting' },
@@ -126,8 +126,8 @@ const birdGroups: BirdGroups = {
         name: '🐟 Osprey',
         slug: 'osprey',
         images: {
-          main: { src: '/Osprey.jpg', alt: 'Osprey' },
-          feather: { src: '/Osprey feather.jpg', alt: 'Osprey Feather' },
+          main: { src: '/Osprey.webp', alt: 'Osprey' },
+          feather: { src: '/Osprey feather.webp', alt: 'Osprey Feather' },
           extra: { src: '/Osprey nest.jpg', alt: 'Osprey Nest' },
           food: { src: '/Osprey hunting.jpg', alt: 'Osprey Hunting' },
         },
@@ -144,7 +144,6 @@ const birdGroups: BirdGroups = {
         },
         didYouKnow: 'Ospreys have a unique reversible outer toe to better grasp their prey.'
       }
-
   ],
   'Water Birds': [
     {
@@ -168,7 +167,74 @@ const birdGroups: BirdGroups = {
         unique: 'Some Mallards travel thousands of kilometers during seasonal migrations.'
       },
       didYouKnow: 'Mallards can sleep with one eye open to stay alert for predators.'
+    },
+    {
+      name: '🐧 Marbled Murrelet',
+      slug: 'marbled-murrelet',
+      images: {
+        main: { src: '/Marbled murrelet.webp', alt: 'Marbled Murrelet' },
+        feather: { src: '/Marbled murrelet feather.webp', alt: 'Murrelet Feather' },
+        extra: { src: '/Marbled murrelet nest.jpg', alt: 'Murrelet Nest' },
+        food: { src: '/Marbled murrelet feeding.webp', alt: 'Murrelet Feeding' },
+      },
+      intro: 'Marbled Murrelets are small seabirds that live at sea but nest deep in old-growth forests — a rare combination!',
+      featherInfo: 'Their feathers are waterproof and provide excellent insulation in cold ocean waters.',
+      nesting: {
+        image: '/Marbled murrelet nest.jpg',
+        caption: 'Unlike most seabirds, they nest on mossy branches high in coastal forests.',
+        fact: 'They fly up to 80 km inland to nest on a single tree branch!',
+      },
+      food: {
+        text: 'They dive underwater to catch small fish and crustaceans.',
+        unique: 'They use their wings to “fly” through the water while chasing prey.',
+      },
+      didYouKnow: 'Scientists didn’t know where they nested until the 1970s!'
+    },
+    {
+      name: '🪶 Sandhill Crane',
+      slug: 'sandhill-crane',
+      images: {
+        main: { src: '/Sandhill crane.jpg', alt: 'Sandhill Crane' },
+        feather: { src: '/Sandhill crane feather.jpg', alt: 'Crane Feather' },
+        extra: { src: '/Sandhill crane nest.jpg', alt: 'Crane Nest' },
+        food: { src: '/Sandhill crane feeding.jpg', alt: 'Crane Feeding' },
+      },
+      intro: 'Sandhill Cranes are tall, elegant birds known for their loud trumpeting calls and impressive migrations.',
+      featherInfo: 'Their long, gray feathers are often stained with mud during preening.',
+      nesting: {
+        image: '/Sandhill crane nest.jpg',
+        caption: 'They nest in wetlands, building mounds of vegetation above the waterline.',
+        fact: 'Chicks are able to leave the nest and walk just a day after hatching!',
+      },
+      food: {
+        text: 'Cranes eat a mix of grains, insects, frogs, and small mammals.',
+        unique: 'They forage by probing the ground with their long bills.',
+      },
+      didYouKnow: 'Some populations migrate over 6,000 kilometers each year!'
+    },
+    {
+      name: '🪻 Great Blue Heron',
+      slug: 'great-blue-heron',
+      images: {
+        main: { src: '/Great blue heron.jpg', alt: 'Great Blue Heron' },
+        feather: { src: '/Great blue heron feather.jpg', alt: 'Heron Feather' },
+        extra: { src: '/Great blue heron nest.jpg', alt: 'Heron Nest' },
+        food: { src: '/Great blue heron feeding.jpg', alt: 'Heron Feeding' },
+      },
+      intro: 'The Great Blue Heron is a tall, graceful wading bird often seen stalking fish in shallow water.',
+      featherInfo: 'They have long, elegant feathers that drape from their chest and back.',
+      nesting: {
+        image: '/Great blue heron nest.jpg',
+        caption: 'Herons nest in colonies high up in trees, often near water.',
+        fact: 'A single tree may hold dozens of large heron nests!',
+      },
+      food: {
+        text: 'They hunt fish, frogs, and small animals by standing still and striking quickly.',
+        unique: 'They can swallow prey whole — even large ones!',
+      },
+      didYouKnow: 'Herons have a wingspan of nearly 2 meters!'
     }
+
   ],
   'Forest Birds': [
     {
