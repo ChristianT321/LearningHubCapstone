@@ -197,7 +197,7 @@ const birdGroups: BirdGroups = {
         main: { src: '/Sandhill crane.jpg', alt: 'Sandhill Crane' },
         feather: { src: '/Sandhill crane feather.jpg', alt: 'Crane Feather' },
         extra: { src: '/Sandhill crane nest.jpg', alt: 'Crane Nest' },
-        food: { src: '/Sandhill crane feeding.jpg', alt: 'Crane Feeding' },
+        food: { src: '/Sandhill crane feeding.webp', alt: 'Crane Feeding' },
       },
       intro: 'Sandhill Cranes are tall, elegant birds known for their loud trumpeting calls and impressive migrations.',
       featherInfo: 'Their long, gray feathers are often stained with mud during preening.',
@@ -216,8 +216,8 @@ const birdGroups: BirdGroups = {
       name: '🪻 Great Blue Heron',
       slug: 'great-blue-heron',
       images: {
-        main: { src: '/Great blue heron.jpg', alt: 'Great Blue Heron' },
-        feather: { src: '/Great blue heron feather.jpg', alt: 'Heron Feather' },
+        main: { src: '/Great blue heron.webp', alt: 'Great Blue Heron' },
+        feather: { src: '/Great blue heron feathr.webp', alt: 'Heron Feather' },
         extra: { src: '/Great blue heron nest.jpg', alt: 'Heron Nest' },
         food: { src: '/Great blue heron feeding.jpg', alt: 'Heron Feeding' },
       },
@@ -233,8 +233,139 @@ const birdGroups: BirdGroups = {
         unique: 'They can swallow prey whole — even large ones!',
       },
       didYouKnow: 'Herons have a wingspan of nearly 2 meters!'
-    }
-
+    },
+    {
+      name: '🪿 American White Pelican',
+      slug: 'american-white-pelican',
+      images: {
+        main: { src: '/American white pelican.jpg', alt: 'American White Pelican' },
+        feather: { src: '/Pelican feather.jpg', alt: 'Pelican Feather' },
+        extra: { src: '/Pelican nest.jpg', alt: 'Pelican Nest' },
+        food: { src: '/Pelican feeding.jpg', alt: 'Pelican Feeding' },
+      },
+      intro: 'The American White Pelican is one of the largest birds in North America, with a giant wingspan and a pouch-like bill used for catching fish.',
+      featherInfo: 'Their white feathers with black wingtips are striking in flight and provide buoyancy in water.',
+      nesting: {
+        image: '/Pelican nest.jpg',
+        caption: 'They nest in large colonies on remote islands in freshwater lakes.',
+        fact: 'Pelican chicks often form “nurseries” where they huddle together!',
+      },
+      food: {
+        text: 'They scoop up fish with their large bill pouch while swimming cooperatively in groups.',
+        unique: 'Unlike brown pelicans, they do not dive — they feed while floating.',
+      },
+      didYouKnow: 'Their bills can hold up to 11 liters of water — more than their belly!'
+    },
+    {
+      name: '🦢 Trumpeter Swan',
+      slug: 'trumpeter-swan',
+      images: {
+        main: { src: '/Trumpeter swan.jpg', alt: 'Trumpeter Swan' },
+        feather: { src: '/Swan feather.webp', alt: 'Swan Feather' },
+        extra: { src: '/Swan nest.jpg', alt: 'Swan Nest' },
+        food: { src: '/Swan feeding.jpg', alt: 'Swan Feeding' },
+      },
+      intro: 'Trumpeter Swans are North America’s largest native waterfowl, famous for their trumpet-like calls and graceful appearance.',
+      featherInfo: 'Their feathers are all white and extremely dense, providing insulation in icy waters.',
+      nesting: {
+        image: '/Swan nest.jpg',
+        caption: 'They build massive nests near shallow wetlands and ponds.',
+        fact: 'A swan nest can be over 2 meters wide and weigh 20 kilograms!',
+      },
+      food: {
+        text: 'They feed on aquatic plants by dipping their long necks below the water’s surface.',
+        unique: 'They can pull up vegetation from over a meter deep!',
+      },
+      didYouKnow: 'They mate for life and often return to the same nesting area year after year.'
+    },
+    {
+      name: '🎨 Harlequin Duck',
+      slug: 'harlequin-duck',
+      images: {
+        main: { src: '/Harlequin duck.jpg', alt: 'Harlequin Duck' },
+        feather: { src: '/Harlequin duck feather.webp', alt: 'Harlequin Duck Feather' },
+        extra: { src: '/Harlequin duck nest.jpg', alt: 'Harlequin Duck Nest' },
+        food: { src: '/Harlequin duck feeding.jpg', alt: 'Harlequin Duck Feeding' },
+      },
+      intro: 'Harlequin Ducks are colorful and compact diving ducks that live along fast-moving mountain streams and coastal waters.',
+      featherInfo: 'Their feathers are dense and waterproof to help them dive in cold, fast-moving water.',
+      nesting: {
+        image: '/Harlequin duck nest.jpg',
+        caption: 'They nest near rushing streams, often in crevices, under logs, or hidden in vegetation.',
+        fact: 'Harlequin Ducks are one of the only ducks that breed in turbulent river environments.',
+      },
+      food: {
+        text: 'They feed on aquatic insects, mollusks, and crustaceans by diving and picking food from the bottom.',
+        unique: 'They are excellent underwater swimmers and use their wings to steer while diving.',
+      },
+      didYouKnow: 'They get their name from their clown-like plumage patterns and colors.'
+    },
+    {
+      name: '🖤 Common Loon',
+      slug: 'common-loon',
+      images: {
+        main: { src: '/Common loon.jpg', alt: 'Common Loon' },
+        feather: { src: '/Common loon feather.jpg', alt: 'Loon Feather' },
+        extra: { src: '/Common loon nest.jpg', alt: 'Loon Nest' },
+        food: { src: '/Common loon feeding.webp', alt: 'Loon Feeding' },
+      },
+      intro: 'Common Loons are iconic diving birds known for their haunting calls and checkered black-and-white plumage.',
+      featherInfo: 'Their dense feathers trap air for insulation and buoyancy in cold northern lakes.',
+      nesting: {
+        image: '/Loon nest.jpg',
+        caption: 'They build floating nests along the edges of quiet lakes.',
+        fact: 'Loons have trouble walking on land due to their rear-set legs, so they nest close to the water.',
+      },
+      food: {
+        text: 'Loons dive underwater to catch fish, frogs, and aquatic invertebrates.',
+        unique: 'They can stay submerged for over a minute and dive more than 60 meters deep!',
+      },
+      didYouKnow: 'Their eerie calls echo across northern lakes and are used to mark territory and attract mates.'
+    },
+    {
+      name: '🍁 Canada Goose',
+      slug: 'canada-goose',
+      images: {
+        main: { src: '/Canada goose.webp', alt: 'Canada Goose' },
+        feather: { src: '/Goose feather.jpg', alt: 'Goose Feather' },
+        extra: { src: '/Goose nest.jpg', alt: 'Goose Nest' },
+        food: { src: '/Goose feeding.jpg', alt: 'Goose Feeding' },
+      },
+      intro: 'Canada Geese are large, social birds recognized by their black heads, white cheeks, and loud honking.',
+      featherInfo: 'Their feathers provide excellent insulation, especially for long-distance flights and cold-weather survival.',
+      nesting: {
+        image: '/Goose nest.jpg',
+        caption: 'They build nests near water in grassy areas, often guarded fiercely by the parents.',
+        fact: 'Both parents aggressively defend the nest and lead their goslings to water after hatching.',
+      },
+      food: {
+        text: 'They graze on grasses, aquatic plants, grains, and occasionally insects.',
+        unique: 'They migrate in a signature V-formation that helps conserve energy.',
+      },
+      didYouKnow: 'Canada Geese can fly over 1,500 km in a single day during migration!'
+    },
+    {
+      name: '🎵 American Dipper',
+      slug: 'american-dipper',
+      images: {
+        main: { src: '/American dipper.jpg', alt: 'American Dipper' },
+        feather: { src: '/Dipper feather.webp', alt: 'Dipper Feather' },
+        extra: { src: '/Dipper nest.jpg', alt: 'Dipper Nest' },
+        food: { src: '/Dipper feeding.jpg', alt: 'Dipper Feeding' },
+      },
+      intro: 'The American Dipper is a plump, grey songbird that walks underwater in fast-moving mountain streams.',
+      featherInfo: 'They have extra oil and a thick coat of feathers to stay dry and warm in cold water.',
+      nesting: {
+        image: '/Dipper nest.jpg',
+        caption: 'They often nest in crevices near waterfalls or under bridges.',
+        fact: 'Dippers sing even in winter — and even while standing in freezing streams!',
+      },
+      food: {
+        text: 'They hunt insects, larvae, and small aquatic animals by dipping and swimming underwater.',
+        unique: 'They can close their nostrils and have a nictitating membrane to see clearly underwater.',
+      },
+      didYouKnow: 'They are the only aquatic songbird in North America!'
+    },
   ],
   'Forest Birds': [
     {
@@ -258,6 +389,94 @@ const birdGroups: BirdGroups = {
         unique: 'They use tools and can cooperate to solve problems!'
       },
       didYouKnow: 'Ravens remember faces and can hold grudges against humans who treat them badly.'
+    },
+    {
+      name: '💙 Steller’s Jay',
+      slug: 'stellers-jay',
+      images: {
+        main: { src: '/Stellers jay.jpg', alt: 'Steller’s Jay' },
+        feather: { src: '/Stellers jay feather.jpg', alt: 'Steller’s Jay Feather' },
+        extra: { src: '/Stellers jay nest.jpg', alt: 'Steller’s Jay Nest' },
+        food: { src: '/Stellers jay feeding.jpg', alt: 'Steller’s Jay Feeding' },
+      },
+      intro: 'Steller’s Jays are striking blue and black birds with bold personalities. They are often seen in conifer forests, calling loudly and investigating campers.',
+      featherInfo: 'Their feathers are deep blue with black crests, helping them blend into shady forest canopies.',
+      nesting: {
+        image: '/Stellers jay nest.jpg',
+        caption: 'They build nests from twigs and mud, usually placed high in evergreen trees.',
+        fact: 'They sometimes steal nesting material or food from other birds!',
+      },
+      food: {
+        text: 'Omnivores, they eat seeds, insects, berries, and even small animals or eggs.',
+        unique: 'They cache food like acorns and peanuts to eat later — and remember where they hid them.',
+      },
+      didYouKnow: 'Steller’s Jays can mimic the calls of hawks to scare off other birds!'
+    },
+    {
+      name: '🧡 Varied Thrush',
+      slug: 'varied-thrush',
+      images: {
+        main: { src: '/Varied thrush.jpg', alt: 'Varied Thrush' },
+        feather: { src: '/Varied thrush feather.jpg', alt: 'Varied Thrush Feather' },
+        extra: { src: '/Varied thrush nest.jpg', alt: 'Varied Thrush Nest' },
+        food: { src: '/Varied thrush feeding.jpg', alt: 'Varied Thrush Feeding' },
+      },
+      intro: 'The Varied Thrush is a shy forest bird with bold orange and black patterns and a haunting, echoing song.',
+      featherInfo: 'Their bright orange breast and black band help them hide among dappled light and leaf litter.',
+      nesting: {
+        image: '/Varied thrush nest.jpg',
+        caption: 'They build cup-shaped nests in shrubs or low tree branches in dense forests.',
+        fact: 'They line their nests with moss, bark, and soft grasses.',
+      },
+      food: {
+        text: 'They feed on insects in summer and switch to berries and seeds in winter.',
+        unique: 'They forage quietly on the forest floor, hopping and pausing between steps.',
+      },
+      didYouKnow: 'Their flutelike, single-note song sounds like a forest flute echoing through the trees.'
+    },
+    {
+      name: '🪵 Pacific Wren',
+      slug: 'pacific-wren',
+      images: {
+        main: { src: '/Pacific wren.jpg', alt: 'Pacific Wren' },
+        feather: { src: '/Pacific wren feather.webp', alt: 'Pacific Wren Feather' },
+        extra: { src: '/Pacific wren nest.jpg', alt: 'Pacific Wren Nest' },
+        food: { src: '/Pacific wren feeding.jpg', alt: 'Pacific Wren Feeding' },
+      },
+      intro: 'Pacific Wrens are tiny brown birds with a huge voice. They live deep in mossy rainforests, flitting close to the ground.',
+      featherInfo: 'Their brown and speckled feathers give them perfect camouflage in the underbrush.',
+      nesting: {
+        image: '/Pacific wren nest.jpg',
+        caption: 'They build dome-shaped nests hidden in roots, logs, or mossy banks.',
+        fact: 'Males build multiple dummy nests to impress females!',
+      },
+      food: {
+        text: 'They eat insects, spiders, and other small invertebrates found in leaf litter and crevices.',
+        unique: 'Despite their size, their song can be heard far through the forest and lasts over 5 seconds.',
+      },
+      didYouKnow: 'They sing more notes per second than almost any other songbird!'
+    },
+    {
+      name: '🟤 Chestnut-backed Chickadee',
+      slug: 'chestnut-backed-chickadee',
+      images: {
+        main: { src: '/Chestnut chickadee.jpg', alt: 'Chestnut-backed Chickadee' },
+        feather: { src: '/Chickadee feather.jpg', alt: 'Chickadee Feather' },
+        extra: { src: '/Chickadee nest.jpg', alt: 'Chickadee Nest' },
+        food: { src: '/Chickadee feeding.webp', alt: 'Chickadee Feeding' },
+      },
+      intro: 'The Chestnut-backed Chickadee is a tiny forest bird with a black cap, white cheeks, and warm reddish-brown back.',
+      featherInfo: 'Its soft feathers provide insulation for year-round forest life, especially in damp climates.',
+      nesting: {
+        image: '/Chickadee nest.jpg',
+        caption: 'They nest in cavities — often in old woodpecker holes or decaying stumps.',
+        fact: 'They line their nests with fur, moss, and plant down to keep chicks warm.',
+      },
+      food: {
+        text: 'They eat insects, spiders, seeds, and berries — often hanging upside-down to forage.',
+        unique: 'They store food in bark crevices and can remember hundreds of hiding spots!',
+      },
+      didYouKnow: 'Chickadees change their calls to warn of different predators — and other birds listen in!'
     }
   ],
   'Small Flyers': [
@@ -282,7 +501,73 @@ const birdGroups: BirdGroups = {
         unique: 'They can hover, fly backwards, and even upside down!'
       },
       didYouKnow: 'They remember every flower they’ve visited and when it will bloom again!'
-    }
+    },
+    {
+    name: '📸 Belted Kingfisher',
+    slug: 'belted-kingfisher',
+    images: {
+      main: { src: '/Belted kingfisher.jpg', alt: 'Belted Kingfisher' },
+      feather: { src: '/Belted kingfisher feather.webp', alt: 'Kingfisher Feather' },
+      extra: { src: '/Belted kingfisher nest.jpg', alt: 'Kingfisher Nest' },
+      food: { src: '/Belted kingfisher feeding.webp', alt: 'Kingfisher Feeding' },
+    },
+    intro: 'The Belted Kingfisher is a bold, blue-gray bird known for its rattling call and dramatic fishing dives.',
+    featherInfo: 'Their feathers are sleek and slightly waterproof to help them recover quickly after diving.',
+    nesting: {
+      image: '/Belted kingfisher nest.jpg',
+      caption: 'They nest in long tunnels dug into riverbanks or sandy cliffs.',
+      fact: 'Their nesting tunnels can be over 2 meters long!',
+    },
+    food: {
+      text: 'They dive headfirst into water to catch fish, holding their prey crosswise in their bills.',
+      unique: 'They beat fish on a rock or branch to kill it before eating.',
+    },
+    didYouKnow: 'Unlike most birds, the female Belted Kingfisher is more colorful than the male!'
+  },
+  {
+    name: '💛 American Goldfinch',
+    slug: 'american-goldfinch',
+    images: {
+      main: { src: '/American goldfinch.jpg', alt: 'American Goldfinch' },
+      feather: { src: '/Goldfinch feather.jpg', alt: 'Goldfinch Feather' },
+      extra: { src: '/Goldfinch nest.jpg', alt: 'Goldfinch Nest' },
+      food: { src: '/Goldfinch feeding.webp', alt: 'Goldfinch Feeding' },
+    },
+    intro: 'The American Goldfinch is a bright yellow songbird known for its bouncing flight and cheerful calls.',
+    featherInfo: 'Males turn brilliant yellow in summer and molt to olive-brown for winter.',
+    nesting: {
+      image: '/Goldfinch nest.jpg',
+      caption: 'They build tightly woven nests in shrubs or trees late in the summer.',
+      fact: 'Their nests are so well-made they can hold water!',
+    },
+    food: {
+      text: 'They feed almost entirely on seeds, especially thistle and sunflower.',
+      unique: 'They are one of the latest nesting birds, timing their broods with peak seed availability.',
+    },
+    didYouKnow: 'They can cling to flower heads while feeding, even upside-down!'
+  },
+  {
+    name: '🟢 Ruby-crowned Kinglet',
+    slug: 'ruby-crowned-kinglet',
+    images: {
+      main: { src: '/Ruby-crowned kinglet.jpg', alt: 'Ruby-crowned Kinglet' },
+      feather: { src: '/Kinglet feather.jpg', alt: 'Kinglet Feather' },
+      extra: { src: '/Kinglet nest.jpg', alt: 'Kinglet Nest' },
+      food: { src: '/Kinglet feeding.jpg', alt: 'Kinglet Feeding' },
+    },
+    intro: 'The Ruby-crowned Kinglet is a tiny olive bird that flits rapidly among branches, flashing its red crown when excited.',
+    featherInfo: 'Their plumage blends into conifers, with a hidden crown patch that males display only when agitated.',
+    nesting: {
+      image: '/Kinglet nest.jpg',
+      caption: 'They build hanging nests in dense conifer trees, hidden from sight.',
+      fact: 'A single nest can contain 10+ eggs — more than almost any other small songbird!',
+    },
+    food: {
+      text: 'They feed on berries, insects, and spiders from needles and bark with constant wing-flicking.',
+      unique: 'Their body is tiny, but their voice is loud and complex.',
+    },
+    didYouKnow: 'Despite their size, they migrate long distances across North America every year.'
+  }
   ]
 };
 
@@ -295,6 +580,7 @@ export default function BirdNotebook() {
   const [currentPage, setCurrentPage] = useState(1);
   const bird = groupBirds[activeIndex];
   const router = useRouter();
+  const isWater = selectedGroup === 'Water Birds';
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
@@ -329,41 +615,60 @@ export default function BirdNotebook() {
           ))}
         </div>
 
-        <div className="flex max-w-7xl w-full rounded-3xl shadow-2xl border-[6px] border-yellow-700 overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90">
-          <div className="w-28 bg-green-800 flex flex-col justify-center items-center gap-6 py-6">
-            {groupBirds.map((b, idx) => (
-              <button
-                key={b.slug}
-                onClick={() => { setActiveIndex(idx); setCurrentPage(1); }}
-                className={clsx(
-                  'w-20 h-20 rounded-full overflow-hidden border-4 transition-all',
-                  idx === activeIndex
-                    ? 'border-yellow-400 scale-110 ring-4 ring-yellow-200'
-                    : 'border-green-400 hover:scale-105'
-                )}
-              >
-                <Image src={b.images.main.src} alt={b.name} width={80} height={80} className="object-cover w-full h-full" />
-              </button>
-            ))}
+        <div className="flex max-w-7xl w-full h-[700px] rounded-3xl shadow-2xl border-[6px] border-yellow-700 overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90">
+          <div className={clsx(
+            'bg-green-800 py-6 px-3 overflow-y-auto',
+            isWater ? 'w-36' : 'w-28'
+          )}>
+            <div className={clsx(
+              'grid gap-x-4 gap-y-15 place-items-center',
+              isWater ? 'grid-cols-2' : 'grid-cols-1'
+            )}>
+              {groupBirds.map((b, idx) => (
+                <button
+                  key={b.slug}
+                  onClick={() => { setActiveIndex(idx); setCurrentPage(1); }}
+                  className={clsx(
+                    'rounded-full overflow-hidden border-4 transition-all',
+                    isWater ? 'w-16 h-16' : 'w-20 h-20',
+                    idx === activeIndex
+                      ? 'border-yellow-400 scale-110 ring-4 ring-yellow-200'
+                      : 'border-green-400 hover:scale-105',
+                      isWater && idx % 2 === 1 ? 'translate-y-16' : ''
+                  )}
+                >
+                  <Image
+                    src={b.images.main.src}
+                    alt={b.name}
+                    width={isWater ? 64 : 80}
+                    height={isWater ? 64 : 80}
+                    className="object-cover w-full h-full"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="w-2 bg-yellow-900" />
 
-          <div className="flex-1 grid grid-cols-2 gap-0 p-6 text-black relative">
+
+          <div className="w-2 bg-yellow-900" />
+
+          <div className="flex-1 grid grid-cols-2 gap-0 p-6 text-black relative h-full">
             <button onClick={() => setCurrentPage(currentPage === 1 ? 2 : 1)} className="absolute top-4 right-4 bg-yellow-800 text-white px-4 py-2 rounded-full z-20 shadow-lg hover:bg-yellow-900 transition">
               Flip Page →
             </button>
 
             {currentPage === 1 ? (
               <>
-                <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col">
+                <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col overflow-y-auto">
                   <h2 className="text-4xl font-bold mb-4 text-green-900">{bird.name}</h2>
                   <div className="relative w-full h-96 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-4">
                     <Image src={bird.images.main.src} alt={bird.images.main.alt} fill className="object-contain p-2" />
                   </div>
                   <p className="text-lg text-gray-800">{bird.intro}</p>
                 </div>
-                <div className="pl-6 flex flex-col justify-between">
+                <div className="pl-6 flex flex-col justify-between overflow-y-auto">
                   <div className="relative h-64 rounded-xl overflow-hidden border-4 border-green-700 shadow-md mb-4">
                     <Image src={bird.images.feather.src} alt={bird.images.feather.alt} fill className="object-contain p-2" />
                   </div>
@@ -377,11 +682,11 @@ export default function BirdNotebook() {
             ) : (
               <>
                 <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col">
-                  <div className="relative w-full h-80 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-4">
+                  <div className="relative w-full h-80 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-18">
                     <Image src={bird.nesting.image} alt="Nesting" fill className="object-contain p-2" />
                   </div>
-                  <p className="text-lg text-gray-800">{bird.nesting.caption}</p>
-                  <div className="bg-blue-100 border-l-4 border-blue-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md">
+                  <p className="text-lg text-gray-800 mb-18">{bird.nesting.caption}</p>
+                  <div className="bg-blue-100 border-l-4 border-blue-600 p-4 italic text-sm text-gray-700 shadow-sm rounded-md">
                     🪹 <strong>Fun Nest Fact:</strong> {bird.nesting.fact}
                   </div>
                 </div>
