@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { FaDove } from 'react-icons/fa';
 
 const birds = [
   {
@@ -104,6 +106,7 @@ export default function BirdNotebook() {
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
+      {/* Sky Background */}
       <div className="fixed inset-0 z-0">
         <Image
           src="/sky background.png"
@@ -114,28 +117,39 @@ export default function BirdNotebook() {
         />
       </div>
 
+      {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen w-full px-4 py-10">
+        {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-extrabold text-white drop-shadow-[2px_2px_0px_black] mb-2">
-            Welcome to the Bird Explorer’s Guide
+          <h1 className="text-5xl font-extrabold text-white drop-shadow-[3px_3px_0px_black] mb-2">
+            BIRD EXPLORER&apos;S GUIDE
           </h1>
           <p className="text-white text-lg drop-shadow-[1px_1px_0px_black]">
-            Learn about these amazing birds before you play the matching game!
+            Discover fascinating facts about rainforest birds
           </p>
         </div>
 
-        <div className="flex max-w-7xl w-full rounded-3xl shadow-2xl border-[6px] border-yellow-700 overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90">
-          <div className="w-28 bg-green-800 flex flex-col justify-center items-center gap-6 py-6">
+        {/* Notebook Container */}
+        <div className="flex max-w-7xl w-full rounded-3xl shadow-2xl overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90 border-[6px] border-yellow-700">
+          {/* Sidebar Navigation */}
+          <div className="w-28 bg-gradient-to-b from-green-800 to-green-900 flex flex-col justify-center items-center gap-6 py-6">
             {birds.map((b, idx) => (
-              <button
+              <motion.button
                 key={b.slug}
                 onClick={() => { setActiveIndex(idx); setCurrentPage(1); }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 className={clsx(
                   'w-20 h-20 rounded-full overflow-hidden border-4 transition-all',
                   idx === activeIndex
                     ? 'border-yellow-400 scale-110 ring-4 ring-yellow-200'
-                    : 'border-green-400 hover:scale-105'
+                    : 'border-green-400'
                 )}
+                style={{
+                  backgroundImage: idx === activeIndex 
+                    ? 'linear-gradient(rgba(0, 0, 0, 0.2), linear-gradient(to right, #60a5fa, #3b82f6)'
+                    : 'none'
+                }}
               >
                 <Image
                   src={b.images.main.src}
@@ -144,74 +158,136 @@ export default function BirdNotebook() {
                   height={80}
                   className="object-cover w-full h-full"
                 />
-              </button>
+              </motion.button>
             ))}
           </div>
 
-          <div className="w-2 bg-yellow-900" />
+          <div className="w-2 bg-gradient-to-b from-yellow-800 to-yellow-900" />
 
+          {/* Main Content Area */}
           <div className="flex-1 grid grid-cols-2 gap-0 p-6 text-black relative">
-            <button
+            {/* Flip Page Button - Restored Original Color Scheme */}
+            <motion.button
               onClick={() => setCurrentPage(currentPage === 1 ? 2 : 1)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="absolute top-4 right-4 bg-yellow-800 text-white px-4 py-2 rounded-full z-20 shadow-lg hover:bg-yellow-900 transition"
+              style={{
+                border: '2px solid rgba(100, 200, 255, 0.3)',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+              }}
             >
-              Flip Page →
-            </button>
+              {currentPage === 1 ? 'Flip Page →' : '← Back to Page'}
+            </motion.button>
 
+            {/* Page 1 Content */}
             {currentPage === 1 ? (
               <>
                 <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col">
                   <h2 className="text-4xl font-bold mb-4 text-green-900">{bird.name}</h2>
                   <div className="relative w-full h-96 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-4">
-                    <Image src={bird.images.main.src} alt={bird.images.main.alt} fill className="object-contain p-2" />
+                    <Image 
+                      src={bird.images.main.src} 
+                      alt={bird.images.main.alt} 
+                      fill 
+                      className="object-contain p-2" 
+                    />
                   </div>
                   <p className="text-lg text-gray-800">{bird.intro}</p>
                 </div>
                 <div className="pl-6 flex flex-col justify-between">
                   <div className="relative h-64 rounded-xl overflow-hidden border-4 border-green-700 shadow-md mb-4">
-                    <Image src={bird.images.feather.src} alt={bird.images.feather.alt} fill className="object-contain p-2" />
+                    <Image 
+                      src={bird.images.feather.src} 
+                      alt={bird.images.feather.alt} 
+                      fill 
+                      className="object-contain p-2" 
+                    />
                   </div>
                   <p className="text-lg text-gray-800 mb-4">{bird.featherInfo}</p>
-                  <div className="bg-yellow-100 border-l-4 border-yellow-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md">
+                  <div 
+                    className="bg-yellow-100 border-l-4 border-yellow-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md"
+                    style={{ background: 'rgba(255, 255, 240, 0.8)' }}
+                  >
                     🔍 <strong>Did you know?</strong> {bird.didYouKnow}
                   </div>
-                  <div className="text-right text-sm italic text-gray-500 mt-4">Explorer’s Notebook • Page 1</div>
+                  <div className="text-right text-sm italic text-gray-500 mt-4">
+                    Explorer&apos;s Notebook •
+                  </div>
                 </div>
               </>
             ) : (
               <>
                 <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col">
                   <div className="relative w-full h-80 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-4">
-                    <Image src={bird.nesting.image} alt="Nesting" fill className="object-contain p-2" />
+                    <Image 
+                      src={bird.nesting.image} 
+                      alt="Nesting" 
+                      fill 
+                      className="object-contain p-2" 
+                    />
                   </div>
                   <p className="text-lg text-gray-800">{bird.nesting.caption}</p>
-                  <div className="bg-blue-100 border-l-4 border-blue-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md">
+                  <div 
+                    className="bg-blue-100 border-l-4 border-blue-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md"
+                    style={{ background: 'rgba(240, 248, 255, 0.8)' }}
+                  >
                     🪹 <strong>Fun Nest Fact:</strong> {bird.nesting.fact}
                   </div>
                 </div>
                 <div className="pl-6 flex flex-col justify-between">
                   <div className="relative h-64 rounded-xl overflow-hidden border-4 border-green-700 shadow-md mb-4">
-                    <Image src={bird.images.food.src} alt={bird.images.food.alt} fill className="object-contain p-2" />
+                    <Image 
+                      src={bird.images.food.src} 
+                      alt={bird.images.food.alt} 
+                      fill 
+                      className="object-contain p-2" 
+                    />
                   </div>
                   <p className="text-lg text-gray-800 mb-4">{bird.food.text}</p>
-                  <div className="bg-green-100 border-l-4 border-green-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md">
+                  <div 
+                    className="bg-green-100 border-l-4 border-green-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md"
+                    style={{ background: 'rgba(240, 255, 240, 0.8)' }}
+                  >
                     🍖 <strong>Unique Trait:</strong> {bird.food.unique}
                   </div>
-                  <div className="text-right text-sm italic text-gray-500 mt-4">Explorer’s Notebook • Page 2</div>
+                  <div className="text-right text-sm italic text-gray-500 mt-4">
+                    Explorer&apos;s Notebook •
+                  </div>
                 </div>
               </>
             )}
           </div>
         </div>
 
-        <button
+        {/* Start Game Button */}
+        <motion.button
           onClick={() => router.push('/matching2')}
-          className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition"
+          whileHover={{ 
+            scale: 1.05,
+            boxShadow: '0 6px 12px rgba(0, 0, 0, 0.3)'
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="mt-8 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #60a5fa, #3b82f6, #2563eb)',
+            border: '2px solid rgba(100, 200, 255, 0.3)',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
         >
-          Start Matching Game →
-        </button>
+          <span className="relative z-10 flex items-center gap-2">
+            <FaDove /> Start Matching Game →
+          </span>
+          <motion.span 
+            className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 opacity-0 hover:opacity-20"
+            initial={{ opacity: 0 }}
+            whileHover={{ opacity: 0.2 }}
+            transition={{ duration: 0.3 }}
+          />
+        </motion.button>
       </div>
     </main>
   );
 }
-
