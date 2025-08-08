@@ -1,4 +1,3 @@
-//This page was made using teh help of DeepSeek. Prompt: "Help me make a page that uses an API call using the following web link:https://www.tides.gc.ca/en/stations."
 'use client'
 
 import { useState, useEffect } from 'react'
