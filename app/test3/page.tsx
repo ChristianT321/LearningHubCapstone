@@ -380,7 +380,7 @@ export default function BirdQuiz() {
 
           {allAnswered && !passed && (
             <p className="mt-6 text-red-600 font-semibold text-lg">
-              Sorry, you muat gwt 8/10 questions correct to pass.
+              Sorry, you must get 8/10 questions correct to pass.
             </p>
           )}
         </div>
