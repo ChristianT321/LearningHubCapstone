@@ -5,10 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Carousel } from 'react-responsive-carousel';
 import '@mantine/core/styles.css';
-import { MantineProvider, Stepper, Group } from '@mantine/core';
+import { MantineProvider, Stepper, Button, Group } from '@mantine/core';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaFish } from 'react-icons/fa';
 
 const fishData = [
   {
@@ -25,7 +23,7 @@ const fishData = [
       { title: 'Indigenous Importance', icon: '🧍‍♂️', desc: 'Salmon are vital in Indigenous culture, food, and ceremony.' },
     ],
     gallery: [
-      { src: '/salmon-closeup.webp', caption: "A salmon's jaw during spawning." },
+      { src: '/salmon-closeup.webp', caption: 'A salmon’s jaw during spawning.' },
       { src: '/salmon-fry.jpg', caption: 'Salmon fry begin life in river gravel.' },
       { src: '/salmon-bear.jpg', caption: 'Bears rely on salmon during autumn.' },
     ],
@@ -76,13 +74,11 @@ const fishData = [
 export default function FishFactsPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
-  const [expandedFact, setExpandedFact] = useState<number | null>(null);
   const currentFish = fishData[step];
 
   return (
     <MantineProvider>
-      <main className="relative min-h-screen w-full flex flex-col items-center text-center overflow-y-auto p-4" style={{ paddingTop: '80px' }}>
-        {/* Background Image */}
+      <main className="relative min-h-screen w-full flex flex-col items-center text-center overflow-y-auto p-4">
         <div className="fixed inset-0 z-0">
           <Image
             src="/FIsh background.png"
@@ -98,242 +94,70 @@ export default function FishFactsPage() {
             Learn About the Fish
           </h1>
 
-          {/* Enhanced Stepper */}
-          <Stepper 
-            active={step} 
-            onStepClick={setStep} 
-            color="blue" 
-            className="w-full mb-4" 
-            size="md"
-            styles={{
-              stepBody: { marginTop: 8 },
-              stepLabel: { color: 'white', fontWeight: 'bold', fontSize: '1rem' },
-              stepDescription: { color: '#bfdbfe', fontSize: '0.9rem' },
-            }}
-          >
+          <Stepper active={step} onStepClick={setStep} color="blue" className="w-full mb-4" size="md">
             {fishData.map((fish, index) => (
-              <Stepper.Step 
-                key={index} 
-                label={`Step ${index + 1}`} 
-                description={fish.name}
-                icon={<FaFish className="text-yellow-300" />}
-              />
+              <Stepper.Step key={index} label={`Step ${index + 1}`} description={fish.name} />
             ))}
           </Stepper>
 
-          {/* Enhanced Navigation Buttons */}
-          <Group justify="center" className="mb-6 gap-4">
-            <motion.button
-              onClick={() => setStep(step - 1)}
-              disabled={step === 0}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-white font-bold px-6 py-2"
-              style={{
-                borderRadius: '12px',
-                border: '2px solid transparent',
-                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #3b82f6, #1d4ed8, #1e40af)',
-                backgroundOrigin: 'border-box',
-                backgroundClip: 'padding-box, border-box',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                opacity: step === 0 ? 0.5 : 1,
-                cursor: step === 0 ? 'not-allowed' : 'pointer'
-              }}
-            >
+          <Group justify="center" className="mb-6">
+            <Button variant="default" disabled={step === 0} onClick={() => setStep(step - 1)}>
               Back
-            </motion.button>
-            <motion.button
-              onClick={() => setStep(step + 1)}
-              disabled={step === fishData.length - 1}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-white font-bold px-6 py-2"
-              style={{
-                borderRadius: '12px',
-                border: '2px solid transparent',
-                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #3b82f6, #1d4ed8, #1e40af)',
-                backgroundOrigin: 'border-box',
-                backgroundClip: 'padding-box, border-box',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                opacity: step === fishData.length - 1 ? 0.5 : 1,
-                cursor: step === fishData.length - 1 ? 'not-allowed' : 'pointer'
-              }}
-            >
+            </Button>
+            <Button color="blue" disabled={step === fishData.length - 1} onClick={() => setStep(step + 1)}>
               Next
-            </motion.button>
+            </Button>
           </Group>
 
-          {/* Enhanced Main Content Container */}
-          <motion.div 
-            className="rounded-2xl p-8 w-full shadow-xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              border: '3px solid transparent',
-              backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #3b82f6, #1d4ed8, #1e40af)',
-              backgroundOrigin: 'border-box',
-              backgroundClip: 'padding-box, border-box',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
-            }}
-          >
+          <div className="bg-blue-950 text-white rounded-2xl p-8 w-full shadow-xl border-l-8 border-yellow-400">
             <h2 className="text-4xl font-extrabold text-yellow-300 mb-2">
               {currentFish.emoji} {currentFish.name}
             </h2>
             <p className="text-lg text-blue-200 italic mb-6">{currentFish.intro}</p>
 
-            {/* Enhanced Carousel without indicators */}
             <div className="rounded-xl overflow-hidden shadow-lg mb-8">
-              <div style={{
-                border: '2px solid rgba(100, 200, 255, 0.3)',
-                borderRadius: '16px',
-                background: 'rgba(0, 0, 0, 0.4)',
-                padding: '4px'
-              }}>
-                <Carousel 
-                  autoPlay 
-                  infiniteLoop 
-                  showThumbs={false} 
-                  showStatus={false}
-                  showIndicators={false}
-                  interval={5000}
-                  className="rounded-lg"
-                >
-                  {currentFish.carousel.map((src, i) => (
-                    <div key={i} className="flex items-center justify-center bg-blue-950 rounded-lg h-[500px] p-6">
-                      <Image 
-                        src={src} 
-                        alt={`${currentFish.name} ${i}`} 
-                        width={1000} 
-                        height={500} 
-                        className="object-cover w-full h-full rounded-md"
-                        style={{ border: '1px solid rgba(100, 200, 255, 0.2)' }}
-                      />
-                    </div>
-                  ))}
-                </Carousel>
-              </div>
+              <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={5000}>
+                {currentFish.carousel.map((src, i) => (
+                  <div key={i} className="flex items-center justify-center bg-blue-950 rounded-lg h-[500px] p-6">
+                    <Image src={src} alt={`${currentFish.name} ${i}`} width={1000} height={500} className="object-cover w-full h-full" />
+                  </div>
+                ))}
+              </Carousel>
             </div>
 
-            {/* Enhanced Facts Section with Expandable Buttons */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
               {currentFish.facts.map((fact, i) => (
-                <motion.div 
-                  key={i}
-                  className="rounded-xl overflow-hidden"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  style={{
-                    border: '2px solid transparent',
-                    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #3b82f6, #1d4ed8, #1e40af)',
-                    backgroundOrigin: 'border-box',
-                    backgroundClip: 'padding-box, border-box',
-                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)'
-                  }}
-                >
-                  <button
-                    onClick={() => setExpandedFact(expandedFact === i ? null : i)}
-                    className="w-full text-left p-4 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{fact.icon}</span>
-                      <h4 className="text-xl font-semibold text-yellow-200">
-                        {fact.title}
-                      </h4>
-                    </div>
-                  </button>
-                  
-                  <AnimatePresence>
-                    {expandedFact === i && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="bg-blue-600 bg-opacity-70"
-                      >
-                        <div className="p-4 pt-2">
-                          <p className="text-blue-100">{fact.desc}</p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
+                <div key={i} className="bg-blue-800 rounded-xl p-4 border-l-4 border-yellow-400 shadow hover:shadow-xl transition">
+                  <h4 className="text-xl font-semibold mb-2 text-yellow-200">
+                    {fact.icon} {fact.title}
+                  </h4>
+                  <p className="text-blue-100">{fact.desc}</p>
+                </div>
               ))}
             </div>
 
-            {/* Enhanced Gallery Section */}
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
               {currentFish.gallery.map((img, i) => (
-                <motion.div 
-                  key={i} 
-                  className="rounded-xl overflow-hidden shadow-md"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div style={{
-                    border: '2px solid rgba(100, 200, 255, 0.3)',
-                    borderRadius: '12px',
-                    overflow: 'hidden'
-                  }}>
-                    <Image 
-                      src={img.src} 
-                      alt={img.caption} 
-                      width={400} 
-                      height={250} 
-                      className="object-cover w-full h-[200px]"
-                    />
-                    <p className="text-sm text-white text-center mt-2 bg-blue-800/80 px-3 py-2 rounded-md font-medium shadow">
-                      {img.caption}
-                    </p>
-                  </div>
-                </motion.div>
+                <div key={i} className="rounded-xl overflow-hidden shadow-md">
+                  <Image src={img.src} alt={img.caption} width={400} height={250} className="object-cover w-full h-[200px]" />
+                  <p className="text-sm text-white text-center mt-2 bg-blue-800/80 px-3 py-2 rounded-md font-medium shadow">
+                    {img.caption}
+                  </p>
+                </div>
               ))}
             </div>
 
-            {/* Enhanced Callout */}
-            <motion.div 
-              className="text-lg font-semibold text-center p-4 rounded-xl shadow"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              transition={{ repeat: Infinity, repeatType: "reverse", duration: 3 }}
-              style={{
-                background: 'linear-gradient(to right, rgba(253, 230, 138, 0.9), rgba(254, 240, 138, 0.9))',
-                color: '#92400e',
-                border: '2px solid rgba(245, 158, 11, 0.5)',
-                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)'
-              }}
-            >
+            <div className="bg-yellow-200 text-yellow-900 text-lg font-semibold text-center p-4 rounded-xl shadow border border-yellow-400">
               {currentFish.callout}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Enhanced Compare Button */}
-          <motion.button
+          <button
             onClick={() => router.push('/comparefish')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="font-bold px-6 py-3 mt-8"
-            style={{
-              borderRadius: '12px',
-              border: '2px solid transparent',
-              backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #3b82f6, #1d4ed8, #1e40af)',
-              backgroundOrigin: 'border-box',
-              backgroundClip: 'padding-box, border-box',
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-              color: 'white',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
+            className="bg-blue-700 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded shadow mt-8"
           >
-            <span className="relative z-10">Compare Fish</span>
-            <motion.span 
-              className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 opacity-0 hover:opacity-20"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 0.2 }}
-              transition={{ duration: 0.3 }}
-            />
-          </motion.button>
+            Compare Fish
+          </button>
         </div>
       </main>
     </MantineProvider>
