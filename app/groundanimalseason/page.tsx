@@ -257,9 +257,28 @@ export default function GroundAnimalSeasonPage() {
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
-                showIndicators={false}
                 interval={5000}
                 className="rounded-lg"
+                renderIndicator={(onClickHandler, isSelected, index, label) => (
+                  <li
+                    className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
+                    onClick={onClickHandler}
+                    onKeyDown={onClickHandler}
+                    value={index}
+                    key={index}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${label} ${index + 1}`}
+                    style={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      background: isSelected ? 'linear-gradient(to right, #f59e0b, #d97706)' : 'rgba(255,255,255,0.5)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                  />
+                )}
               >
                 {(step === 0 ? slidesBlackBear : step === 1 ? slidesSpiritBear : slidesGrizzlyBear).map(
                   (slide, idx) => (
@@ -451,9 +470,28 @@ export default function GroundAnimalSeasonPage() {
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
-                showIndicators={false}
                 interval={5000}
                 className="rounded-lg"
+                renderIndicator={(onClickHandler, isSelected, index, label) => (
+                  <li
+                    className={`inline-block mx-1.5 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
+                    onClick={onClickHandler}
+                    onKeyDown={onClickHandler}
+                    value={index}
+                    key={index}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${label} ${index + 1}`}
+                    style={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      background: isSelected ? 'linear-gradient(to right, #f59e0b, #d97706)' : 'rgba(255,255,255,0.5)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                  />
+                )}
               >
                 {(step === 0 ? slidesSeaWolf : step === 1 ? slidesCouger : slidesWolverine).map(
                   (slide, idx) => (

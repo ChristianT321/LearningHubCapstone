@@ -4,8 +4,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { FaDove } from 'react-icons/fa';
 
 type Bird = {
   name: string;
@@ -586,88 +584,131 @@ export default function BirdNotebook() {
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
-      {/* Sky Background */}
       <div className="fixed inset-0 z-0">
         <Image src="/sky background.png" alt="Sky Background" fill priority className="object-cover object-center" />
       </div>
 
-      {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen w-full px-4 py-10">
-        {/* Header */}
         <div className="text-center mb-8">
+          <h1 className="text-5xl font-extrabold text-white drop-shadow-[2px_2px_0px_black] mb-2">Welcome to the Bird Explorer’s Guide</h1>
+          <p className="text-white text-lg drop-shadow-[1px_1px_0px_black]">Learn about these amazing birds before you play the matching game!</p>
+        </div>
 
+        <div className="mb-4 flex gap-4 justify-center">
+          {groupNames.map((group) => (
+            <button
+              key={group}
+              onClick={() => {
+                setSelectedGroup(group);
+                setActiveIndex(0);
+                setCurrentPage(1);
+              }}
+              className={clsx(
+                'px-4 py-2 rounded-full font-bold border-2',
+                group === selectedGroup
+                  ? 'bg-yellow-600 text-white border-yellow-700'
+                  : 'bg-white text-gray-800 border-gray-400 hover:bg-yellow-100'
+              )}
+            >
+              {group}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex max-w-7xl w-full h-[700px] rounded-3xl shadow-2xl border-[6px] border-yellow-700 overflow-hidden relative bg-gradient-to-br from-[#fdf5e6] via-[#f5f0d6] to-[#f1e7c0]/90">
+          <div className={clsx(
+            'bg-green-800 py-6 px-3 overflow-y-auto',
+            isWater ? 'w-36' : 'w-28'
+          )}>
+            <div className={clsx(
+              'grid gap-x-4 gap-y-15 place-items-center',
+              isWater ? 'grid-cols-2' : 'grid-cols-1'
+            )}>
+              {groupBirds.map((b, idx) => (
+                <button
+                  key={b.slug}
+                  onClick={() => { setActiveIndex(idx); setCurrentPage(1); }}
+                  className={clsx(
+                    'rounded-full overflow-hidden border-4 transition-all',
+                    isWater ? 'w-16 h-16' : 'w-20 h-20',
+                    idx === activeIndex
+                      ? 'border-yellow-400 scale-110 ring-4 ring-yellow-200'
+                      : 'border-green-400 hover:scale-105',
+                      isWater && idx % 2 === 1 ? 'translate-y-16' : ''
+                  )}
+                >
+                  <Image
+                    src={b.images.main.src}
+                    alt={b.name}
+                    width={isWater ? 64 : 80}
+                    height={isWater ? 64 : 80}
+                    className="object-cover w-full h-full"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="w-2 bg-gradient-to-b from-yellow-800 to-yellow-900" />
+          <div className="w-2 bg-yellow-900" />
 
 
+          <div className="w-2 bg-yellow-900" />
 
-            {/* Page 1 Content */}
+          <div className="flex-1 grid grid-cols-2 gap-0 p-6 text-black relative h-full">
+            <button onClick={() => setCurrentPage(currentPage === 1 ? 2 : 1)} className="absolute top-4 right-4 bg-yellow-800 text-white px-4 py-2 rounded-full z-20 shadow-lg hover:bg-yellow-900 transition">
+              Flip Page →
+            </button>
+
             {currentPage === 1 ? (
               <>
                 <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col overflow-y-auto">
                   <h2 className="text-4xl font-bold mb-4 text-green-900">{bird.name}</h2>
                   <div className="relative w-full h-96 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-4">
-                    <Image 
-                      src={bird.images.main.src} 
-                      alt={bird.images.main.alt} 
-                      fill 
-                      className="object-contain p-2" 
-                    />
+                    <Image src={bird.images.main.src} alt={bird.images.main.alt} fill className="object-contain p-2" />
                   </div>
                   <p className="text-lg text-gray-800">{bird.intro}</p>
                 </div>
                 <div className="pl-6 flex flex-col justify-between overflow-y-auto">
                   <div className="relative h-64 rounded-xl overflow-hidden border-4 border-green-700 shadow-md mb-4">
-                    <Image 
-                      src={bird.images.feather.src} 
-                      alt={bird.images.feather.alt} 
-                      fill 
-                      className="object-contain p-2" 
-                    />
+                    <Image src={bird.images.feather.src} alt={bird.images.feather.alt} fill className="object-contain p-2" />
                   </div>
                   <p className="text-lg text-gray-800 mb-4">{bird.featherInfo}</p>
-                  <div 
-                    className="bg-yellow-100 border-l-4 border-yellow-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md"
-                    style={{ background: 'rgba(255, 255, 240, 0.8)' }}
-                  >
+                  <div className="bg-yellow-100 border-l-4 border-yellow-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md">
                     🔍 <strong>Did you know?</strong> {bird.didYouKnow}
                   </div>
-                  <div className="text-right text-sm italic text-gray-500 mt-4">
-                    Explorer&apos;s Notebook •
-                  </div>
+                  <div className="text-right text-sm italic text-gray-500 mt-4">Explorer’s Notebook • Page 1</div>
                 </div>
               </>
             ) : (
               <>
                 <div className="pr-6 border-r-[3px] border-yellow-800 flex flex-col">
-
+                  <div className="relative w-full h-80 rounded-xl overflow-hidden border-4 border-yellow-700 shadow-md mb-18">
+                    <Image src={bird.nesting.image} alt="Nesting" fill className="object-contain p-2" />
+                  </div>
+                  <p className="text-lg text-gray-800 mb-18">{bird.nesting.caption}</p>
+                  <div className="bg-blue-100 border-l-4 border-blue-600 p-4 italic text-sm text-gray-700 shadow-sm rounded-md">
                     🪹 <strong>Fun Nest Fact:</strong> {bird.nesting.fact}
                   </div>
                 </div>
                 <div className="pl-6 flex flex-col justify-between">
                   <div className="relative h-64 rounded-xl overflow-hidden border-4 border-green-700 shadow-md mb-4">
-                    <Image 
-                      src={bird.images.food.src} 
-                      alt={bird.images.food.alt} 
-                      fill 
-                      className="object-contain p-2" 
-                    />
+                    <Image src={bird.images.food.src} alt={bird.images.food.alt} fill className="object-contain p-2" />
                   </div>
                   <p className="text-lg text-gray-800 mb-4">{bird.food.text}</p>
-                  <div 
-                    className="bg-green-100 border-l-4 border-green-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md"
-                    style={{ background: 'rgba(240, 255, 240, 0.8)' }}
-                  >
+                  <div className="bg-green-100 border-l-4 border-green-600 p-4 italic text-sm text-gray-700 mt-2 shadow-sm rounded-md">
                     🍖 <strong>Unique Trait:</strong> {bird.food.unique}
                   </div>
-                  <div className="text-right text-sm italic text-gray-500 mt-4">
-                    Explorer&apos;s Notebook •
-                  </div>
+                  <div className="text-right text-sm italic text-gray-500 mt-4">Explorer’s Notebook • Page 2</div>
                 </div>
               </>
             )}
           </div>
         </div>
 
-
+        <button onClick={() => router.push('/matching2')} className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition">
+          Start Matching Game →
+        </button>
+      </div>
+    </main>
+  );
+}
