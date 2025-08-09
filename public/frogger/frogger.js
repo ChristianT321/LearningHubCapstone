@@ -4,6 +4,10 @@
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 
+canvas.setAttribute('tabindex', '0');
+canvas.focus();
+canvas.addEventListener('pointerdown', () => canvas.focus()); // click/tap to refocus if needed
+
 // Game constants
 const grid = 48;              // grid size (each hop is 48px)
 const gridGap = 10;           // gap between grid rows (for visual spacing)

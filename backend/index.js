@@ -71,6 +71,7 @@ app.put('/student/:id', async (req, res) => {
     }
 
     res.status(200).json(result.rows[0])
+
   } catch (err) {
     console.error('Error updating student:', err)
     res.status(500).json({ error: err.message })
@@ -87,6 +88,7 @@ app.delete('/student/:id', async (req, res) => {
     }
 
     res.status(200).json({ message: 'Student deleted successfully' })
+    
   } catch (err) {
     console.error('Error deleting student:', err)
     res.status(500).json({ error: err.message })

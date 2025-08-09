@@ -1,7 +1,7 @@
 //// GLOBAL CONFIGURATIONS AND GAME STATE ////
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
 
 // Canvas dimensions and grid settings
 const CANVAS_WIDTH = canvas.width;    // e.g., 480
@@ -17,16 +17,22 @@ const laneTypes = { ROAD: 'road', WATER: 'water', SAFE: 'safe' };
 let score = 0;
 let highScore = 0;
 let gameOver = false;
-let gamePaused = false;  // used to pause the game loop briefly (e.g., during death sequence)
+let gamePaused = false;  // can pause the game loop (e.g., during death or user pause)
+let invulnFrames = 0;
+let debugNoDeath = true;
+
+window.onerror = (msg, src, line, col, err) => {
+  console.error('UNCAUGHT ERROR', { msg, src, line, col, err });
+};
 
 // Load high score from localStorage if it exists
-highScore = parseInt(localStorage.getItem('froggerHighScore')) || 0;
+highScore = parseInt(localStorage.getItem('froggerHighScore'), 10) || 0;
 
 // Difficulty parameters (initial settings, scale up with score)
 let baseSpeed = 2;            // base speed for cars/logs at start (pixels per frame)
 let speedIncrement = 0.05;    // how much speed increases per score point
 let spawnChance = 0.02;       // base probability per frame to spawn a vehicle or log in a lane (2%)
-// (Spawn chance will slightly increase as score goes up for added difficulty)
+// (Spawn chance may increase slightly as score goes up for added difficulty)
 
 // Frog object representing the player
 const frog = {
@@ -38,8 +44,7 @@ const frog = {
   jumpFrameIndex: 0,      // current frame index of the jump animation (0-5)
   onPlatform: false,      // if the frog is currently on a moving platform (log or croc)
   vx: 0,                  // horizontal velocity if being carried by a platform
-  dead: false             // whether the frog is dead (triggers death sequence)
-  // Note: We removed `deathCause` and separate death sprites; frog simply disappears on death.
+  dead: false             // whether the frog is dead (triggers death sequence/game over)
 };
 
 // Lanes array holding the lanes in the game’s active view
@@ -75,15 +80,15 @@ const lilyPadCountRange = [2, 3];  // number of lily pads in a lily pad lane (ra
 // Frog animation frames (facing upward by default). We will rotate these for the frog's direction.
 const frogFrames = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
 for (let i = 0; i < frogFrames.length; i++) {
-  frogFrames[i].src = `frog${i+1}.png`;  // loads frog1.png, frog2.png, ..., frog6.png
+  frogFrames[i].src = `/frogger-endless/frog${i+1}.png`;  // loads frog1.png, frog2.png, ..., frog6.png
 }
 
 // Car sprites (four cars of different colors)
 const carImages = [ new Image(), new Image(), new Image(), new Image() ];
-carImages[0].src = 'car1.png';  // e.g., purple car
-carImages[1].src = 'car2.png';  // e.g., orange car
-carImages[2].src = 'car3.png';  // e.g., yellow car
-carImages[3].src = 'car4.png';  // e.g., red car
+carImages[0].src = '/frogger-endless/car1.png';
+carImages[1].src = '/frogger-endless/car2.png';
+carImages[2].src = '/frogger-endless/car3.png';
+carImages[3].src = '/frogger-endless/car4.png';
 
 // Other sprites (logs, crocs, lily pads, terrain tiles)
 const imgLog     = new Image();
@@ -92,31 +97,64 @@ const imgLilypad = new Image();
 const imgGrass   = new Image();
 const imgRoad    = new Image();
 const imgWater   = new Image();
-imgLog.src       = 'log.png';
-imgCroc.src      = 'croc.png';
-imgLilypad.src   = 'lilypad.png';
-imgGrass.src     = 'tile_grass.png';
-imgRoad.src      = 'tile_road.png';
-imgWater.src     = 'tile_water.png';
+imgLog.src     = '/frogger-endless/log.png';
+imgCroc.src    = '/frogger-endless/croc.png';
+imgLilypad.src = '/frogger-endless/lilypad.png';
+imgGrass.src   = '/frogger-endless/tile_grass.png';
+imgRoad.src    = '/frogger-endless/tile_road.png';
+imgWater.src   = '/frogger-endless/tile_water.png';
 
-// Ensure all images are loaded before starting the game
+const allImgs = [
+  ...frogFrames,
+  ...carImages,
+  imgLog, imgCroc, imgLilypad, imgGrass, imgRoad, imgWater
+];
+
 let assetsLoaded = 0;
-const totalAssets = 16;  // total number of image files to load (6 frog frames + 4 cars + 6 others)
-function onAssetLoad() {
+const totalAssets = allImgs.length;
+
+function markLoaded(tag) {
   assetsLoaded++;
+  console.log(`Loaded ${tag} (${assetsLoaded}/${totalAssets})`);
   if (assetsLoaded >= totalAssets) {
     startGame();
   }
 }
-// Attach onload handler to each image asset
-frogFrames.forEach(img => { img.onload = onAssetLoad; });
-carImages.forEach(img => { img.onload = onAssetLoad; });
-imgLog.onload     = onAssetLoad;
-imgCroc.onload    = onAssetLoad;
-imgLilypad.onload = onAssetLoad;
-imgGrass.onload   = onAssetLoad;
-imgRoad.onload    = onAssetLoad;
-imgWater.onload   = onAssetLoad;
+function drawDebug() {
+  const fl = lanes.find(l => l.index === frog.laneIndex);
+  ctx.fillStyle = 'white';
+  ctx.font = '12px monospace';
+  const text = `lane=${frog.laneIndex}  type=${fl ? fl.type + (fl.isLilyPadLane ? '(pads)' : '') : 'MISSING'}  x=${Math.round(frog.x)}  cars=${fl && fl.cars ? fl.cars.length : 0}  plats=${fl && fl.platforms ? fl.platforms.length : 0}`;
+  ctx.fillText(text, 8, 16);
+}
+
+function markError(tag, src) {
+  console.error(`FAILED to load ${tag} -> ${src}`);
+  markLoaded(`${tag} (error)`);
+}
+
+// Attach onload and onerror handlers to each image asset
+[
+  ['frog1', frogFrames[0]],
+  ['frog2', frogFrames[1]],
+  ['frog3', frogFrames[2]],
+  ['frog4', frogFrames[3]],
+  ['frog5', frogFrames[4]],
+  ['frog6', frogFrames[5]],
+  ['car1', carImages[0]],
+  ['car2', carImages[1]],
+  ['car3', carImages[2]],
+  ['car4', carImages[3]],
+  ['log', imgLog],
+  ['croc', imgCroc],
+  ['lilypad', imgLilypad],
+  ['grass', imgGrass],
+  ['road', imgRoad],
+  ['water', imgWater]
+].forEach(([tag, img]) => {
+  img.onload = () => markLoaded(tag);
+  img.onerror = () => markError(tag, img.src);
+});
 
 //// GAME INITIALIZATION ////
 
@@ -132,7 +170,7 @@ function startGame() {
   frog.facing = 'up';
   frog.jumping = false;
   frog.jumpFrameIndex = 0;
-  // Position frog at bottom center of the canvas (starting lane 0)
+  // Position frog at bottom-center of the canvas (starting lane 0)
   frog.x = (CANVAS_WIDTH / 2) - (frog.width / 2);
   // Update score display
   document.getElementById('scoreDisplay').innerText = `Score: 0    High: ${highScore}`;
@@ -180,6 +218,39 @@ function startGame() {
   requestAnimationFrame(gameLoop);
 }
 
+function drawObjects() {
+  for (let lane of lanes) {
+    const y = Math.floor(getLaneScreenY(lane.index));
+
+    if (lane.type === laneTypes.ROAD) {
+      for (let car of lane.cars) {
+        const cx = Math.floor(car.x);
+        if (lane.dir === 1) {
+          ctx.save();
+          ctx.scale(-1, 1);
+          ctx.drawImage(car.sprite, -cx - car.width, y, car.width, LANE_HEIGHT);
+          ctx.restore();
+        } else {
+          ctx.drawImage(car.sprite, cx, y, car.width, LANE_HEIGHT);
+        }
+      }
+    } else if (lane.type === laneTypes.WATER) {
+      if (lane.isLilyPadLane) {
+        for (let pad of lane.platforms) {
+          const px = Math.floor(pad.x);
+          ctx.drawImage(pad.sprite, px, y, pad.width, LANE_HEIGHT);
+        }
+      } else {
+        for (let pl of lane.platforms) {
+          const px = Math.floor(pl.x);
+          ctx.drawImage(pl.sprite, px, y, pl.width, LANE_HEIGHT);
+        }
+      }
+    }
+  }
+}
+
+
 // Helper to get a random integer between min and max inclusive
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -201,19 +272,16 @@ function createLane(index, type) {
     // Safe lane (grass) — static, no hazards
     lane.dir = 0;
     lane.speed = 0;
-    // Background will be grass; no cars or platforms.
-  }
-  else if (type === laneTypes.ROAD) {
+    // No moving objects in safe lanes
+  } else if (type === laneTypes.ROAD) {
     // Road lane — contains moving cars
     const prevLane = lanes.length ? lanes[lanes.length - 1] : null;
     // Alternate direction relative to previous road lane for variety
     lane.dir = (prevLane && prevLane.type === laneTypes.ROAD) ? prevLane.dir * -1 
              : (Math.random() < 0.5 ? 1 : -1);
-    // Set lane speed (increases with score for difficulty)
     lane.speed = baseSpeed + score * speedIncrement;
     lane.cars = [];  // cars will spawn dynamically
-  }
-  else if (type === laneTypes.WATER) {
+  } else if (type === laneTypes.WATER) {
     // Water lane — contains logs/crocs (moving platforms) or lily pads
     let makeLilyPadLane = Math.random() < lilyPadProbability;
     const prevLane = lanes.length ? lanes[lanes.length - 1] : null;
@@ -230,7 +298,7 @@ function createLane(index, type) {
       const occupiedCols = [];
       for (let p = 0; p < padCount; p++) {
         let col;
-        // Choose a random column that’s not already occupied by another pad
+        // Choose a random column that’s not already occupied
         do {
           col = getRandomInt(0, NUM_COLS - 1);
         } while (occupiedCols.includes(col));
@@ -245,7 +313,7 @@ function createLane(index, type) {
     } else {
       // Moving water lane (logs and crocs)
       const prevLane = lanes.length ? lanes[lanes.length - 1] : null;
-      // Alternate direction relative to previous water lane (treat lily pad lane as having no direction)
+      // Alternate direction relative to previous water lane (treat lily pad lane as static)
       if (prevLane && prevLane.type === laneTypes.WATER) {
         const prevDir = prevLane.dir !== 0 ? prevLane.dir : 1;
         lane.dir = prevDir * -1;
@@ -263,54 +331,70 @@ function createLane(index, type) {
 //// GAME LOOP ////
 
 function gameLoop() {
-  if (gameOver) return;
+  // If game is paused, don't advance the frame, but keep RAF running so we can unpause cleanly
+  if (gamePaused) {
+    requestAnimationFrame(gameLoop);
+    return;
+  }
 
-  // Update positions of cars/logs and spawn new hazards as needed
-  updateObjects();
-  // Check for collisions or losing conditions (car hits, drowning, etc.)
-  checkCollisions();
-  // Remove lanes that have moved off-screen and add new lanes at the top
-  manageLanes();
+  try {
+    // Update positions of cars/logs and spawn new hazards
+    updateObjects();
 
-  // If the frog died during this update, handle death (pause and reset)
-  if (frog.dead) {
-    gamePaused = true;
-    // Draw the final state without the frog (frog is not drawn when dead)
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    drawBackground();
-    drawObjects();
-    // (No frog drawn because there's no death sprite; frog simply disappears)
-    // After a short pause, reset the game
-    setTimeout(() => {
+    // Check for collisions or losing conditions
+    checkCollisions();
+
+    // Remove lanes off-screen and add new lanes at top
+    manageLanes();
+
+    // If the frog died during this update, handle game over sequence
+    if (frog.dead && !debugNoDeath) {
+      gameOver = true;
       if (score > highScore) {
         highScore = score;
         localStorage.setItem('froggerHighScore', highScore.toString());
       }
-      startGame();
-    }, 1000);
-    return;
+      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      drawBackground();
+      drawObjects();
+      ctx.fillStyle = 'yellow';
+      ctx.font = '24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 10);
+      ctx.fillText('Press R to Restart', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 20);
+      document.getElementById('scoreDisplay').innerText =
+        `Score: ${score}    High: ${highScore}    - GAME OVER! Press R to restart`;
+      // still request next frame so we can see if something else breaks
+      requestAnimationFrame(gameLoop);
+      return;
+    }
+
+    // Normal draw
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    drawBackground();
+    drawObjects();
+    drawFrog();
+    drawDebug(); // <- keep this visible
+
+  } catch (e) {
+    console.error('gameLoop crashed!', e);
   }
 
-  // Clear canvas and draw the current frame
-  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  drawBackground();
-  drawObjects();
-  drawFrog();
-
-  // Continue the game loop
+  // NEVER stop while debugging
   requestAnimationFrame(gameLoop);
 }
+
 
 //// UPDATE FUNCTIONS ////
 
 function updateObjects() {
-  if (gamePaused) return;  // skip updates if game is paused (e.g., during death sequence)
+  if (gamePaused) return;  // skip updates if game is paused
 
   // Move cars and logs/crocs in each lane, and spawn new ones occasionally
   for (let lane of lanes) {
     if (lane.type === laneTypes.ROAD) {
       // Road lane: possibly spawn a new car
-      const effectiveSpawnChance = spawnChance + (score * 0.0005);  // increase spawn rate slightly with score
+      const effectiveSpawnChance = spawnChance + (score * 0.0005);
       if (Math.random() < effectiveSpawnChance) {
         spawnCar(lane);
       }
@@ -322,9 +406,8 @@ function updateObjects() {
       lane.cars = lane.cars.filter(car =>
         car.x + car.width > -50 && car.x < CANVAS_WIDTH + 50
       );
-    }
-    else if (lane.type === laneTypes.WATER && !lane.isLilyPadLane) {
-      // Water lane (moving platforms): possibly spawn a new log or croc
+    } else if (lane.type === laneTypes.WATER && !lane.isLilyPadLane) {
+      // Water lane: possibly spawn a new log or croc
       if (Math.random() < spawnChance) {
         spawnPlatform(lane);
       }
@@ -337,111 +420,140 @@ function updateObjects() {
         pl.x + pl.width > -100 && pl.x < CANVAS_WIDTH + 100
       );
     }
-    // Note: Safe lanes and lily pad lanes have no moving objects to update.
+    // Safe lanes and lily pad lanes have no moving objects to update
   }
 
-  // If frog is on a moving platform (log or croc), carry it along horizontally
+  // If frog is on a moving platform, carry it along horizontally
   if (frog.onPlatform) {
     frog.x += frog.vx;
   }
 
-  // Keep frog within canvas horizontal bounds
+  // Keep frog within canvas bounds
   if (frog.x < 0) frog.x = 0;
-  if (frog.x + frog.width > CANVAS_WIDTH) frog.x = CANVAS_WIDTH - frog.width;
+  if (frog.x + frog.width > CANVAS_WIDTH) {
+    frog.x = CANVAS_WIDTH - frog.width;
+  }
 }
 
 function checkCollisions() {
   if (gamePaused) return;
+  const SKIP_DEATH = debugNoDeath;
+  if (invulnFrames > 0) { invulnFrames--; return; }
 
   const frogLane = lanes.find(l => l.index === frog.laneIndex);
   if (!frogLane) return;
 
   if (frogLane.type === laneTypes.ROAD) {
-    // Check collision with any car in this road lane
+    // Hit a car
     for (let car of frogLane.cars) {
       if (frog.x < car.x + car.width && frog.x + frog.width > car.x) {
-        // Frog overlaps a car – squish!
-        frog.dead = true;
-        return;
+        if (SKIP_DEATH) {
+  console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
+} else {
+  frog.dead = true;
+}
       }
     }
   }
 
-  // Reset platform carry-over each frame
+  // Reset platform carry each frame
   frog.onPlatform = false;
   frog.vx = 0;
+
   if (frogLane.type === laneTypes.WATER) {
     if (frogLane.isLilyPadLane) {
-      // Water lane with lily pads (stationary safe spots)
+      // Must be on a lily pad
       let safe = false;
       for (let pad of frogLane.platforms) {
         if (frog.x < pad.x + pad.width && frog.x + frog.width > pad.x) {
-          // Frog is on a pad
           safe = true;
           break;
         }
       }
       if (!safe) {
-        // Frog fell into water (no pad underneath)
-        frog.dead = true;
+        if (SKIP_DEATH) {
+  console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
+} else {
+  frog.dead = true;
+}
         return;
       }
     } else {
-      // Water lane with moving logs or crocs
+      // Must be on a moving platform
       let onPlatform = false;
       for (let pl of frogLane.platforms) {
         if (frog.x < pl.x + pl.width && frog.x + frog.width > pl.x) {
-          // Frog is on a log or croc
           onPlatform = true;
           frog.onPlatform = true;
-          frog.vx = pl.speed;  // frog moves with the platform
+          frog.vx = pl.speed;  // carry frog with the platform
           break;
         }
       }
       if (!onPlatform) {
-        // Frog in water with no platform – drowned
-        frog.dead = true;
+        if (SKIP_DEATH) {
+  console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
+} else {
+  frog.dead = true;
+}
         return;
       }
     }
-    // If frog is on a platform, also check if it gets carried off the screen edges
+
+    // Carried off screen
     if (frog.onPlatform) {
       if (frog.x < -frog.width || frog.x > CANVAS_WIDTH) {
-        // Frog was carried beyond the screen bounds
-        frog.dead = true;
+        if (debugNoDeath) {
+          console.log('Would die here', { reason: 'carried off screen', lane: frogLane.index, frogX: frog.x });
+        } else {
+          frog.dead = true;
+        }
         return;
       }
     }
   }
 }
 
+
 function manageLanes() {
-  // Remove lanes that have scrolled off the bottom of the visible area
+  const VISIBLE_AHEAD  = Math.ceil(CANVAS_HEIGHT / LANE_HEIGHT / 2) + 2;
+  const VISIBLE_BEHIND = Math.ceil(CANVAS_HEIGHT / LANE_HEIGHT / 2) + 3;
+
+  // Keep the frog’s current lane no matter what
   lanes = lanes.filter(lane => {
-    const screenY = getLaneScreenY(lane.index);
-    return screenY < CANVAS_HEIGHT + LANE_HEIGHT;
+    if (lane.index === frog.laneIndex) return true;
+    const y = getLaneScreenY(lane.index);
+    return y > -LANE_HEIGHT * VISIBLE_BEHIND && y < CANVAS_HEIGHT + LANE_HEIGHT;
   });
 
-  // Determine the highest (topmost) lane index currently present
-  let maxIndex = Math.max(...lanes.map(l => l.index));
+  // If somehow missing, re-seed the frog’s lane as SAFE
+  if (!lanes.find(l => l.index === frog.laneIndex)) {
+    createLane(frog.laneIndex, laneTypes.SAFE);
+  }
 
-  // Add new lanes at the top if needed to maintain continuous gameplay
-  while (getLaneScreenY(maxIndex) > -LANE_HEIGHT) {
+  // If lanes ever emptied out, seed around the frog
+  if (lanes.length === 0) {
+    createLane(frog.laneIndex, laneTypes.SAFE);
+  }
+
+  let maxIndex = Math.max(...lanes.map(l => l.index));
+  if (!isFinite(maxIndex)) maxIndex = frog.laneIndex; // extra safety
+
+  const targetTopIndex = frog.laneIndex + VISIBLE_AHEAD;
+
+  for (let safety = 0; maxIndex < targetTopIndex && safety < 100; safety++) {
     const newIndex = maxIndex + 1;
     const prevLane = lanes.find(l => l.index === maxIndex);
+
     if (prevLane && prevLane.type === laneTypes.SAFE) {
-      // After a safe lane, decide next section type and how many lanes it will have
-      if (nextSectionType === laneTypes.ROAD) {
-        lanesInSectionRemaining = getRandomInt(MIN_ROAD_LANES, MAX_ROAD_LANES);
-      } else {
-        lanesInSectionRemaining = getRandomInt(MIN_WATER_LANES, MAX_WATER_LANES);
-      }
+      lanesInSectionRemaining = (nextSectionType === laneTypes.ROAD)
+        ? getRandomInt(MIN_ROAD_LANES, MAX_ROAD_LANES)
+        : getRandomInt(MIN_WATER_LANES, MAX_WATER_LANES);
     }
+
     if (lanesInSectionRemaining > 0) {
       createLane(newIndex, nextSectionType);
       lanesInSectionRemaining--;
       if (lanesInSectionRemaining === 0) {
-        // Completed a hazard section; next lane will be safe, and alternate the section type
         nextSectionType = (nextSectionType === laneTypes.ROAD) ? laneTypes.WATER : laneTypes.ROAD;
       }
     } else {
@@ -451,18 +563,21 @@ function manageLanes() {
   }
 }
 
+
+
+
 // Compute a lane’s Y position on the canvas relative to the frog’s current position
 function getLaneScreenY(laneIndex) {
-  const frogScreenY = CANVAS_HEIGHT / 2;  // frog is roughly kept around mid-screen
+  const frogScreenY = CANVAS_HEIGHT / 2;  // keep frog around mid-screen
   const indexDiff = laneIndex - frog.laneIndex;
-  // Lanes ahead of the frog (higher index) will appear lower on screen, lanes behind appear higher.
+  // Lanes ahead of the frog (higher index) appear lower on screen, lanes behind appear higher.
   return frogScreenY - (indexDiff * LANE_HEIGHT);
 }
 
 //// SPAWNING HELPERS ////
 
 function spawnCar(lane) {
-  // Create a new car at the start of the lane, moving in the lane’s direction
+  // Create a new car at the edge of the lane moving in the lane’s direction
   const goingRight = (lane.dir === 1);
   const carWidth = 32;
   const carSpeed = lane.speed * lane.dir;
@@ -503,16 +618,16 @@ function spawnPlatform(lane) {
 //// RENDERING FUNCTIONS ////
 
 function drawBackground() {
-  // Draw the appropriate tile background for each lane (grass, road, or water)
+  // Draw background tiles for each lane (grass, road, water)
   for (let lane of lanes) {
-    const y = getLaneScreenY(lane.index);
+    const y = Math.floor(getLaneScreenY(lane.index));
     if (lane.type === laneTypes.SAFE) {
-      // Grass lane – fill the row with grass tiles (32x32 each)
+      // Grass lane – fill with grass tiles (32x32 each)
       for (let x = 0; x < CANVAS_WIDTH; x += 32) {
         ctx.drawImage(imgGrass, x, y, 32, LANE_HEIGHT);
       }
     } else if (lane.type === laneTypes.ROAD) {
-      // Road lane – fill with road tiles (64x32 each, including lane markings)
+      // Road lane – fill with road tiles (64x32 each including lane markings)
       for (let x = 0; x < CANVAS_WIDTH; x += 64) {
         ctx.drawImage(imgRoad, x, y, 64, LANE_HEIGHT);
       }
@@ -525,85 +640,105 @@ function drawBackground() {
   }
 }
 
-function drawObjects() {
-  // Draw all dynamic objects (cars, logs, crocs, lily pads) in their respective lanes
-  for (let lane of lanes) {
-    const y = getLaneScreenY(lane.index);
-    if (lane.type === laneTypes.ROAD) {
-      // Draw each car in this road lane
-      for (let car of lane.cars) {
-        if (lane.dir === 1) {
-          // Cars moving right – flip the sprite horizontally
-          ctx.save();
+for (let lane of lanes) {
+  const y = Math.floor(getLaneScreenY(lane.index));
+
+  if (lane.type === laneTypes.ROAD) {
+    for (let car of lane.cars) {
+      const cx = Math.floor(car.x);                   // <= snap X
+      if (lane.dir === 1) {
+        ctx.save();
+        try {
           ctx.scale(-1, 1);
-          ctx.drawImage(car.sprite, -car.x - car.width, y, car.width, LANE_HEIGHT);
-          ctx.restore();
-        } else {
-          // Cars moving left – draw normally
-          ctx.drawImage(car.sprite, car.x, y, car.width, LANE_HEIGHT);
-        }
-      }
-    } else if (lane.type === laneTypes.WATER) {
-      if (lane.isLilyPadLane) {
-        // Draw lily pads (stationary platforms)
-        for (let pad of lane.platforms) {
-          ctx.drawImage(pad.sprite, pad.x, y, pad.width, LANE_HEIGHT);
-        }
+          ctx.drawImage(car.sprite, -cx - car.width, y, car.width, LANE_HEIGHT);
+        } finally { ctx.restore(); }
       } else {
-        // Draw moving logs and crocs
-        for (let pl of lane.platforms) {
-          ctx.drawImage(pl.sprite, pl.x, y, pl.width, LANE_HEIGHT);
-        }
+        ctx.drawImage(car.sprite, cx, y, car.width, LANE_HEIGHT);
       }
     }
-    // (SAFE lanes have no objects to draw)
+  } else if (lane.type === laneTypes.WATER) {
+    if (lane.isLilyPadLane) {
+      for (let pad of lane.platforms) {
+        const px = Math.floor(pad.x);
+        ctx.drawImage(pad.sprite, px, y, pad.width, LANE_HEIGHT);
+      }
+    } else {
+      for (let pl of lane.platforms) {
+        const px = Math.floor(pl.x);
+        ctx.drawImage(pl.sprite, px, y, pl.width, LANE_HEIGHT);
+      }
+    }
   }
 }
 
+
 function drawFrog() {
-  if (frog.dead) {
-    return;  // do not draw the frog if dead (no death sprite available)
+  if (frog.dead) return;
+
+  const y  = Math.floor(getLaneScreenY(frog.laneIndex));
+  const fx = Math.floor(frog.x);
+
+  let frameIdx = frog.jumping ? Math.min(frog.jumpFrameIndex, frogFrames.length - 1) : 0;
+  const frameImg = frogFrames[frameIdx] || frogFrames[0];
+
+  let angle = 0;
+  switch (frog.facing) {
+    case 'right': angle = Math.PI / 2; break;
+    case 'down':  angle = Math.PI;     break;
+    case 'left':  angle = -Math.PI/2;  break;
   }
-  const frogScreenY = getLaneScreenY(frog.laneIndex);
-  let frameImg;
-  // Choose the correct frog sprite frame
+
+  ctx.save();
+  ctx.translate(fx + frog.width/2, y + frog.height/2);
+  ctx.rotate(angle);
+  if (frameImg && frameImg.width > 0) {
+    ctx.drawImage(frameImg, -frog.width/2, -frog.height/2, frog.width, frog.height);
+  }
+  ctx.restore();
+
   if (frog.jumping) {
-    // If in mid-jump, use the current animation frame and then advance to the next frame
-    frameImg = frogFrames[frog.jumpFrameIndex];
     frog.jumpFrameIndex++;
     if (frog.jumpFrameIndex >= frogFrames.length) {
-      // Reached the last frame of the jump animation; end the jump
       frog.jumping = false;
       frog.jumpFrameIndex = 0;
     }
-  } else {
-    // If not jumping (idle), use the first frame (frog crouched, ready to jump)
-    frameImg = frogFrames[0];
   }
-
-  // Draw the frog, rotated according to the direction it's facing
-  ctx.save();
-  // Translate to the frog’s center point for rotation
-  ctx.translate(frog.x + frog.width / 2, frogScreenY + frog.height / 2);
-  // Set rotation angle (in radians) based on direction. Positive angles rotate clockwise on canvas.
-  let angle = 0;
-  switch (frog.facing) {
-    case 'up':    angle = 0; break;
-    case 'right': angle = Math.PI / 2; break;
-    case 'down':  angle = Math.PI; break;
-    case 'left':  angle = -Math.PI / 2; break;
-  }
-  ctx.rotate(angle);
-  // Draw the frog image centered at the origin (which is now the frog’s center)
-  ctx.drawImage(frameImg, -frog.width / 2, -frog.height / 2, frog.width, frog.height);
-  ctx.restore();
 }
+
+
 
 //// INPUT HANDLING ////
 
-document.addEventListener('keydown', (e) => {
-  if (gameOver || gamePaused || frog.dead || frog.jumping) return;  // ignore input if game is over, paused, dead, or already mid-jump
+function onKey(e) {
+  console.log('keydown', e.key, { lane: frog.laneIndex, x: frog.x });
   const key = e.key;
+
+  if (key === 'p' || key === 'P') {
+    // Toggle pause
+    if (!gameOver) {
+      gamePaused = !gamePaused;
+      if (!gamePaused) {
+        requestAnimationFrame(gameLoop);
+      }
+    }
+    e.preventDefault();
+    return;
+  }
+
+  if (key === 'r' || key === 'R') {
+    // Restart game if over
+    if (gameOver) {
+      gameOver = false;
+      startGame();
+    }
+    e.preventDefault();
+    return;
+  }
+
+  // Ignore input if game not active or frog busy
+  if (gameOver || gamePaused || frog.dead || frog.jumping) return;
+
+  // Handle movement keys (arrow keys or WASD)
   if (key === 'ArrowUp' || key === 'w' || key === 'W') {
     moveFrog(0, -1);
   } else if (key === 'ArrowDown' || key === 's' || key === 'S') {
@@ -612,43 +747,57 @@ document.addEventListener('keydown', (e) => {
     moveFrog(-1, 0);
   } else if (key === 'ArrowRight' || key === 'd' || key === 'D') {
     moveFrog(1, 0);
+  } else {
+    return;
   }
-});
+
+  e.preventDefault();
+}
+
+// Attach keyboard listeners
+canvas.setAttribute('tabindex', '0');  // make canvas focusable to capture key events if needed
+window.addEventListener('keydown', onKey);
 
 function moveFrog(dx, dy) {
   if (dx === 0 && dy === 0) return;
-  // Set the frog’s facing direction based on input
+  // Set frog’s facing direction based on input
   if (dx < 0) frog.facing = 'left';
   if (dx > 0) frog.facing = 'right';
   if (dy < 0) frog.facing = 'up';
   if (dy > 0) frog.facing = 'down';
+  invulnFrames = 10;
 
-  // Start the jump animation
+
+  // Start jump animation
   frog.jumping = true;
   frog.jumpFrameIndex = 0;
 
-  // Horizontal movement (left or right)
+  // Horizontal movement
   if (dx !== 0) {
     frog.x += dx * COL_WIDTH;
     // Clamp frog’s x within screen bounds
     if (frog.x < 0) frog.x = 0;
-    if (frog.x + frog.width > CANVAS_WIDTH) frog.x = CANVAS_WIDTH - frog.width;
+    if (frog.x + frog.width > CANVAS_WIDTH) {
+      frog.x = CANVAS_WIDTH - frog.width;
+    }
   }
-  // Vertical movement (up or down)
+  // Vertical movement
   if (dy !== 0) {
     if (dy < 0) {
-      // Jumping up: move to the next lane forward and increment score
+      // Moving up: advance to next lane and increment score
       frog.laneIndex += 1;
       score += 1;
       document.getElementById('scoreDisplay').innerText = `Score: ${score}    High: ${highScore}`;
-    } else if (dy > 0 && frog.laneIndex > 0) {
-      // Jumping down: move to the previous lane (if not at the starting lane)
-      frog.laneIndex -= 1;
-      // Optionally decrease score when moving backward to discourage retreating
-      if (score > 0) score -= 1;
-      document.getElementById('scoreDisplay').innerText = `Score: ${score}    High: ${highScore}`;
+    } else if (dy > 0) {
+      // Moving down: go back a lane (if possible) and optionally adjust score
+      const minLaneIndex = Math.min(...lanes.map(l => l.index));
+      if (frog.laneIndex > 0 && frog.laneIndex > minLaneIndex) {
+        frog.laneIndex -= 1;
+        if (score > 0) score -= 1;
+        document.getElementById('scoreDisplay').innerText = `Score: ${score}    High: ${highScore}`;
+      }
+      // If at bottom or no lane behind, frog stays put
     }
-    // If frog.laneIndex is 0 (bottom), it cannot move further down.
   }
 }
 
