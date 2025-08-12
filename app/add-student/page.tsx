@@ -74,9 +74,9 @@ export default function AddStudentPage() {
 
   const handleSaveStudent = async (index: number, firstName: string, lastName: string) => {
     const studentData = {
-      firstname: firstName.trim(),
-      lastname: lastName.trim(),
-      classcode: classCode,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      classCode: classCode,
     }
 
     try {
