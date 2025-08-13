@@ -219,7 +219,7 @@ export default function TreeQuiz() {
     if (!user?.id) return
 
     try {
-      const res = await fetch('http://localhost:3001/complete-module14', {
+      const res = await fetch('http://localhost:3001/complete-module4', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ studentId: user.id, score }),
@@ -319,7 +319,7 @@ export default function TreeQuiz() {
                 onClick={handleQuizComplete}
                 className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
               >
-                Complete Module 1
+                Complete Module 4
               </button>
             )}
           </div>
