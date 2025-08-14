@@ -224,7 +224,7 @@ export default function GroundAnimalQuiz() {
     if (!user?.id) return
 
     try {
-      const res = await fetch('http://localhost:3001/complete-module4', {
+      const res = await fetch('http://localhost:3001/complete-module1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -234,10 +234,10 @@ export default function GroundAnimalQuiz() {
       })
 
       if (res.ok) {
-        setProgress('Module 4')
+        setProgress('Module 1')
         setShowCongrats(true)
       } else {
-        console.error('Failed to complete module 4')
+        console.error('Failed to complete module 1')
       }
     } catch (err) {
       console.error('Module 4 request failed:', err)
@@ -336,7 +336,7 @@ export default function GroundAnimalQuiz() {
                 onClick={handleQuizComplete}
                 className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
               >
-                Complete Module 4
+                Complete Module 1
               </button>
             )}
           </div>
@@ -357,11 +357,11 @@ export default function GroundAnimalQuiz() {
                 textAlign: 'center',
               }}
             >
-              <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 4!</p>
+              <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 1!</p>
               <button
                 onClick={() => {
                   setShowCongrats(false)
-                  router.push('/module5')
+                  router.push('/module2')
                 }}
                 style={{
                   backgroundColor: '#22c55e',

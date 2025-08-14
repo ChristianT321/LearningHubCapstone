@@ -51,7 +51,7 @@ export default function GoFishGame() {
       setHand(prev => prev.filter(f => f !== fish))
       setDiscardPile(prev => [...prev, fish])
       setMessage(`Correct! You gave away a ${fish}.`)
-      askForFish()
+      askForFish() 
     } else {
       setMessage(`Sorry, try again.`)
     }
@@ -63,10 +63,9 @@ export default function GoFishGame() {
       setMessage(`But you do have a ${currentRequest}!`)
       return
     }
-    
-    setHand(prev => [...prev, currentRequest])
-    setMessage(`You drew a ${currentRequest} from the pond!`)
-    askForFish()
+
+  setHand(prev => [...prev, currentRequest])
+  setMessage(`You drew a ${currentRequest} from the pond! Now click it to give it away.`)
   }
 
   return (

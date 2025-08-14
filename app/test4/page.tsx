@@ -219,18 +219,18 @@ export default function TreeQuiz() {
     if (!user?.id) return
 
     try {
-      const res = await fetch('http://localhost:3001/complete-module1', {
+      const res = await fetch('http://localhost:3001/complete-module4', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ studentId: user.id, score }),
       })
 
       if (res.ok) {
-        setProgress('Module 1')
+        setProgress('Module 4')
         setShowCongrats(true)
       }
     } catch (err) {
-      console.error('Module 1 request failed:', err)
+      console.error('Module 4 request failed:', err)
     }
   }
 
@@ -319,7 +319,7 @@ export default function TreeQuiz() {
                 onClick={handleQuizComplete}
                 className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition"
               >
-                Complete Module 1
+                Complete Module 4
               </button>
             )}
           </div>
@@ -340,11 +340,11 @@ export default function TreeQuiz() {
                 textAlign: 'center',
               }}
             >
-              <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 1!</p>
+              <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 4!</p>
               <button
                 onClick={() => {
                   setShowCongrats(false)
-                  router.push('/module2')
+                  router.push('/test5')
                 }}
                 style={{
                   backgroundColor: '#22c55e',

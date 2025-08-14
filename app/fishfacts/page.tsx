@@ -150,13 +150,64 @@ export default function FishFactsPage() {
             <div className="bg-yellow-200 text-yellow-900 text-lg font-semibold text-center p-4 rounded-xl shadow border border-yellow-400">
               {currentFish.callout}
             </div>
+
+            <div className="mt-10">
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-400/50 to-transparent mb-6" />
+
+              <h3 className="text-3xl font-bold text-white mb-2">Comparing the Fish</h3>
+              <p className="text-blue-200 mb-6">
+                How Salmon, Whitefish, and Lake Trout differ in habitat, diet, roles, and behavior.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Salmon */}
+                <div className="bg-blue-800/80 rounded-xl p-6 shadow-md border-l-4 border-yellow-400">
+                  <h4 className="text-2xl font-bold text-yellow-200 mb-4">Salmon</h4>
+                  <ul className="text-blue-100 text-left space-y-2">
+                    <li>• Habitat: Born in rivers, mature in ocean, return to spawn</li>
+                    <li>• Diet: Insects & plankton (young); small fish & inverts (adult)</li>
+                    <li>• Behavior: Upstream migration & waterfall jumping</li>
+                    <li>• Role: Feeds bears & eagles; brings nutrients to forests</li>
+                    <li>• Lifespan: Many species die after spawning</li>
+                    <li>• Unique: Home-river navigation using powerful smell</li>
+                  </ul>
+                </div>
+
+                {/* Whitefish */}
+                <div className="bg-blue-800/80 rounded-xl p-6 shadow-md border-l-4 border-yellow-400">
+                  <h4 className="text-2xl font-bold text-yellow-200 mb-4">Whitefish</h4>
+                  <ul className="text-blue-100 text-left space-y-2">
+                    <li>• Habitat: Cold, deep lakes; often near the bottom</li>
+                    <li>• Diet: Plankton, aquatic insects, small invertebrates</li>
+                    <li>• Behavior: Efficient, steady swimmers; active under ice</li>
+                    <li>• Role: Key prey for larger fish, birds, and people</li>
+                    <li>• Lifespan: Moderate; varies with lake conditions</li>
+                    <li>• Unique: Mild taste; common in northern fisheries</li>
+                  </ul>
+                </div>
+
+                {/* Lake Trout */}
+                <div className="bg-blue-800/80 rounded-xl p-6 shadow-md border-l-4 border-yellow-400">
+                  <h4 className="text-2xl font-bold text-yellow-200 mb-4">Lake Trout</h4>
+                  <ul className="text-blue-100 text-left space-y-2">
+                    <li>• Habitat: Deep, cold, clean northern lakes</li>
+                    <li>• Diet: Fish and larger aquatic prey; top predator</li>
+                    <li>• Behavior: Ambush hunter with sudden bursts of speed</li>
+                    <li>• Role: Apex predator balancing lake food webs</li>
+                    <li>• Lifespan: Slow-growing; can reach 40+ years</li>
+                    <li>• Unique: Can grow very large in cold, stable lakes</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
 
+
           <button
-            onClick={() => router.push('/comparefish')}
+            onClick={() => router.push('/gofish')}
             className="bg-blue-700 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded shadow mt-8"
           >
-            Compare Fish
+            Play Go Fish!
           </button>
         </div>
       </main>
