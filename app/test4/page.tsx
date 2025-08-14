@@ -344,7 +344,7 @@ export default function TreeQuiz() {
               <button
                 onClick={() => {
                   setShowCongrats(false)
-                  router.push('/certificate')
+                  router.push('/test5')
                 }}
                 style={{
                   backgroundColor: '#22c55e',

@@ -107,7 +107,7 @@ export const fullQuestionPool = [
     choices: ['Canada Goose', 'Common Loon', 'Sandhill Crane', 'American Dipper'],
     answer: 'Common Loon',
   },
-    {
+  {
     question: 'Which intelligent forest bird can mimic human speech and remember faces?',
     choices: ['Steller’s Jay', 'Raven', 'Ruby-crowned Kinglet', 'Great Horned Owl'],
     answer: 'Raven',
