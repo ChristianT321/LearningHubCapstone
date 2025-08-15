@@ -19,7 +19,7 @@ let highScore = 0;
 let gameOver = false;
 let gamePaused = false;  // can pause the game loop (e.g., during death or user pause)
 let invulnFrames = 0;
-let debugNoDeath = true;
+let debugNoDeath = false;
 
 window.onerror = (msg, src, line, col, err) => {
   console.error('UNCAUGHT ERROR', { msg, src, line, col, err });
