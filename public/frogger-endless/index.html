@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Frogger Endless</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000; /* Black background to resemble an arcade cabinet */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Center the canvas vertically */
+      overflow: hidden;  /* In case the canvas is larger than viewport, hide scroll */
+    }
+    canvas {
+      border: 2px solid #fff; /* Optional: white border for a retro look */
+      background: #000;       /* Black background behind the game scene */
+      image-rendering: pixelated; /* Crisp rendering for pixel art */
+    }
+    #scoreDisplay {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font: bold 20px sans-serif;
+      user-select: none;
+      z-index: 1; /* Make sure it overlays the canvas */
+    }
+  </style>
+</head>
+<body>
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" width="480" height="640" tabindex="0"></canvas>
+
+  <!-- Score and High Score Display -->
+  <div id="scoreDisplay">Score: 0 &nbsp; High: 0</div>
+
+  <!-- Game logic script -->
+  <script src="/frogger-endless/game.js"></script>
+</body>
+</html>
