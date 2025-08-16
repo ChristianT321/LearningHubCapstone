@@ -20,6 +20,7 @@ let gameOver = false;
 let gamePaused = false;  // can pause the game loop (e.g., during death or user pause)
 let invulnFrames = 0;
 let debugNoDeath = false;
+let animationFrameId;
 
 window.onerror = (msg, src, line, col, err) => {
   console.error('UNCAUGHT ERROR', { msg, src, line, col, err });
@@ -157,8 +158,12 @@ function markError(tag, src) {
 });
 
 //// GAME INITIALIZATION ////
-
 function startGame() {
+  // Cancel any existing game loop to prevent stacking
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+
   // Reset game state for a new run
   score = 0;
   gameOver = false;
@@ -170,8 +175,16 @@ function startGame() {
   frog.facing = 'up';
   frog.jumping = false;
   frog.jumpFrameIndex = 0;
+
+  // CRITICAL: Reset all speed and difficulty variables to their original values
+  baseSpeed = 2;
+  speedIncrement = 0.05;
+  spawnChance = 0.02;
+  invulnFrames = 0;
+
   // Position frog at bottom-center of the canvas (starting lane 0)
   frog.x = (CANVAS_WIDTH / 2) - (frog.width / 2);
+
   // Update score display
   document.getElementById('scoreDisplay').innerText = `Score: 0    High: ${highScore}`;
 
@@ -184,6 +197,7 @@ function startGame() {
   let index = 0;
   createLane(index, laneTypes.SAFE);  // bottom starting lane is a safe grass lane
   index++;
+
   // Add lanes until screen (plus a small buffer above) is filled
   const lanesNeeded = Math.ceil(CANVAS_HEIGHT / LANE_HEIGHT) + 2;
   while (lanes.length < lanesNeeded) {
@@ -195,17 +209,18 @@ function startGame() {
       } else if (nextSectionType === laneTypes.WATER) {
         lanesInSectionRemaining = getRandomInt(MIN_WATER_LANES, MAX_WATER_LANES);
       }
-      // (Lanes of that section will be created in subsequent loop iterations)
     }
+
     if (lanesInSectionRemaining > 0) {
       // Create a lane of the current hazard section type
       createLane(index, nextSectionType);
       lanesInSectionRemaining--;
       index++;
       if (lanesInSectionRemaining === 0) {
-        // Finished a section; alternate the next section type and expect a safe lane next
-        nextSectionType = (nextSectionType === laneTypes.ROAD) ? laneTypes.WATER : laneTypes.ROAD;
-        // (The next iteration will handle inserting the safe lane)
+        // Finished a section; alternate the next section type
+        nextSectionType = (nextSectionType === laneTypes.ROAD)
+          ? laneTypes.WATER
+          : laneTypes.ROAD;
       }
     } else {
       // Section boundary or no section started: insert a safe grass lane
@@ -214,9 +229,10 @@ function startGame() {
     }
   }
 
-  // Start the game loop
-  requestAnimationFrame(gameLoop);
+  // Start a single fresh game loop
+  animationFrameId = requestAnimationFrame(gameLoop);
 }
+
 
 function drawObjects() {
   for (let lane of lanes) {
@@ -330,58 +346,47 @@ function createLane(index, type) {
 
 //// GAME LOOP ////
 
+function handleGameOverDisplay() {
+  // Dim the screen
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  // “Game Over”
+  ctx.fillStyle = 'white';
+  ctx.font = '48px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Game Over', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 20);
+
+  // “Press R to Restart”
+  ctx.font = '24px sans-serif';
+  ctx.fillText('Press R to Restart', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
+}
+
 function gameLoop() {
-  // If game is paused, don't advance the frame, but keep RAF running so we can unpause cleanly
   if (gamePaused) {
-    requestAnimationFrame(gameLoop);
+    animationFrameId = requestAnimationFrame(gameLoop);
     return;
   }
 
-  try {
-    // Update positions of cars/logs and spawn new hazards
-    updateObjects();
+  // Update game objects, handle collisions, manage lanes, draw, etc.
+  updateObjects();
+  checkCollisions();
+  manageLanes();
 
-    // Check for collisions or losing conditions
-    checkCollisions();
-
-    // Remove lanes off-screen and add new lanes at top
-    manageLanes();
-
-    // If the frog died during this update, handle game over sequence
-    if (frog.dead && !debugNoDeath) {
-      gameOver = true;
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('froggerHighScore', highScore.toString());
-      }
-      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      drawBackground();
-      drawObjects();
-      ctx.fillStyle = 'yellow';
-      ctx.font = '24px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('GAME OVER', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 10);
-      ctx.fillText('Press R to Restart', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 20);
-      document.getElementById('scoreDisplay').innerText =
-        `Score: ${score}    High: ${highScore}    - GAME OVER! Press R to restart`;
-      // still request next frame so we can see if something else breaks
-      requestAnimationFrame(gameLoop);
-      return;
-    }
-
-    // Normal draw
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    drawBackground();
-    drawObjects();
-    drawFrog();
-    drawDebug(); // <- keep this visible
-
-  } catch (e) {
-    console.error('gameLoop crashed!', e);
+  if (frog.dead && !debugNoDeath) {
+    handleGameOverDisplay();
+    animationFrameId = requestAnimationFrame(gameLoop);
+    return;
   }
 
-  // NEVER stop while debugging
-  requestAnimationFrame(gameLoop);
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  drawBackground();
+  drawObjects();
+  drawFrog();
+  drawDebug();
+
+  // Queue the next frame and save its ID
+  animationFrameId = requestAnimationFrame(gameLoop);
 }
 
 
@@ -451,6 +456,7 @@ function checkCollisions() {
   console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
 } else {
   frog.dead = true;
+  gameOver = true;
 }
       }
     }
@@ -475,6 +481,7 @@ function checkCollisions() {
   console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
 } else {
   frog.dead = true;
+  gameOver = true;
 }
         return;
       }
@@ -494,6 +501,7 @@ function checkCollisions() {
   console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
 } else {
   frog.dead = true;
+  gameOver = true;
 }
         return;
       }
@@ -506,6 +514,7 @@ function checkCollisions() {
           console.log('Would die here', { reason: 'carried off screen', lane: frogLane.index, frogX: frog.x });
         } else {
           frog.dead = true;
+          gameOver = true;
         }
         return;
       }
@@ -577,12 +586,21 @@ function getLaneScreenY(laneIndex) {
 //// SPAWNING HELPERS ////
 
 function spawnCar(lane) {
-  // Create a new car at the edge of the lane moving in the lane’s direction
   const goingRight = (lane.dir === 1);
-  const carWidth = 32;
+  const carWidth = 64;
   const carSpeed = lane.speed * lane.dir;
   const spawnX = goingRight ? -carWidth : CANVAS_WIDTH;
-  // Choose a random car sprite for variety
+  const minGap = 80; // minimum pixels between new car and nearest car edge
+
+  let canSpawn = true;
+  for (const car of lane.cars) {
+    // for rightward cars, check left edge of screen
+    if (goingRight && Math.abs(car.x - spawnX) < minGap) canSpawn = false;
+    // for leftward cars, check right edge of screen
+    if (!goingRight && Math.abs((car.x + car.width) - spawnX) < minGap) canSpawn = false;
+  }
+  if (!canSpawn) return;
+
   const spriteIndex = Math.floor(Math.random() * carImages.length);
   const carSprite = carImages[spriteIndex];
   lane.cars.push({
@@ -594,19 +612,20 @@ function spawnCar(lane) {
 }
 
 function spawnPlatform(lane) {
-  // Create a new moving platform (log or crocodile) for a water lane
   const movingRight = (lane.dir === 1);
-  let platformSprite;
-  let platformWidth;
-  if (Math.random() < 0.5) {
-    platformSprite = imgLog;
-    platformWidth = 64;
-  } else {
-    platformSprite = imgCroc;
-    platformWidth = 64;
-  }
+  const platformWidth = 64;
   const platformSpeed = lane.speed * lane.dir;
   const spawnX = movingRight ? -platformWidth : CANVAS_WIDTH;
+  const minGap = 80; // keep logs/crocs spaced apart
+
+  let canSpawn = true;
+  for (const pl of lane.platforms) {
+    if (movingRight && Math.abs(pl.x - spawnX) < minGap) canSpawn = false;
+    if (!movingRight && Math.abs((pl.x + pl.width) - spawnX) < minGap) canSpawn = false;
+  }
+  if (!canSpawn) return;
+
+  const platformSprite = Math.random() < 0.5 ? imgLog : imgCroc;
   lane.platforms.push({
     x: spawnX,
     width: platformWidth,
