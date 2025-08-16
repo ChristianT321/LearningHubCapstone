@@ -96,19 +96,23 @@ const imgLog     = new Image();
 const imgCroc    = new Image();
 const imgLilypad = new Image();
 const imgGrass   = new Image();
-const imgRoad    = new Image();
+const imgRoad1 = new Image();
+const imgRoad2 = new Image();
 const imgWater   = new Image();
+const imgTree = new Image();
 imgLog.src     = '/frogger-endless/log.png';
 imgCroc.src    = '/frogger-endless/croc.png';
 imgLilypad.src = '/frogger-endless/lilypad.png';
 imgGrass.src   = '/frogger-endless/tile_grass.png';
-imgRoad.src    = '/frogger-endless/tile_road.png';
+imgRoad1.src = '/frogger-endless/tile_road1.png';
+imgRoad2.src = '/frogger-endless/tile_road2.png';
 imgWater.src   = '/frogger-endless/tile_water.png';
+imgTree.src = '/frogger-endless/tile_tree.png';
 
 const allImgs = [
   ...frogFrames,
   ...carImages,
-  imgLog, imgCroc, imgLilypad, imgGrass, imgRoad, imgWater
+  imgLog, imgCroc, imgLilypad, imgGrass, imgRoad1, imgRoad2, imgWater, imgTree
 ];
 
 let assetsLoaded = 0;
@@ -150,8 +154,10 @@ function markError(tag, src) {
   ['croc', imgCroc],
   ['lilypad', imgLilypad],
   ['grass', imgGrass],
-  ['road', imgRoad],
-  ['water', imgWater]
+  ['road1',  imgRoad1],      // new
+  ['road2',  imgRoad2], 
+  ['water', imgWater],
+  ['tree', imgTree],
 ].forEach(([tag, img]) => {
   img.onload = () => markLoaded(tag);
   img.onerror = () => markError(tag, img.src);
@@ -239,6 +245,7 @@ function drawObjects() {
     const y = Math.floor(getLaneScreenY(lane.index));
 
     if (lane.type === laneTypes.ROAD) {
+      // Draw cars, flipped when moving right
       for (let car of lane.cars) {
         const cx = Math.floor(car.x);
         if (lane.dir === 1) {
@@ -250,16 +257,31 @@ function drawObjects() {
           ctx.drawImage(car.sprite, cx, y, car.width, LANE_HEIGHT);
         }
       }
+
     } else if (lane.type === laneTypes.WATER) {
       if (lane.isLilyPadLane) {
+        // Stationary lily pads
         for (let pad of lane.platforms) {
           const px = Math.floor(pad.x);
           ctx.drawImage(pad.sprite, px, y, pad.width, LANE_HEIGHT);
         }
       } else {
+        // Moving logs and crocs
         for (let pl of lane.platforms) {
           const px = Math.floor(pl.x);
-          ctx.drawImage(pl.sprite, px, y, pl.width, LANE_HEIGHT);
+          // Only crocs get extra width (e.g., 150% of standard)
+          const drawWidth = (pl.sprite === imgCroc) ? pl.width * 1.5 : pl.width;
+
+          if (lane.dir === 1) {
+            // Moving right: flip sprite horizontally
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(pl.sprite, -px - drawWidth, y, drawWidth, LANE_HEIGHT);
+            ctx.restore();
+          } else {
+            // Moving left: draw normally
+            ctx.drawImage(pl.sprite, px, y, drawWidth, LANE_HEIGHT);
+          }
         }
       }
     }
@@ -281,35 +303,47 @@ function createLane(index, type) {
     speed: 0,
     cars: [],
     platforms: [],
-    isLilyPadLane: false
+    isLilyPadLane: false,     // comma added
+    // NEW: mark the first lane of each road section
+    isFirstRoadLane: false
   };
 
   if (type === laneTypes.SAFE) {
     // Safe lane (grass) — static, no hazards
     lane.dir = 0;
     lane.speed = 0;
-    // No moving objects in safe lanes
+
   } else if (type === laneTypes.ROAD) {
     // Road lane — contains moving cars
     const prevLane = lanes.length ? lanes[lanes.length - 1] : null;
+
+    // Determine if this is the first lane in a new road section
+    lane.isFirstRoadLane = !(prevLane && prevLane.type === laneTypes.ROAD);
+
     // Alternate direction relative to previous road lane for variety
-    lane.dir = (prevLane && prevLane.type === laneTypes.ROAD) ? prevLane.dir * -1 
-             : (Math.random() < 0.5 ? 1 : -1);
+    lane.dir = (prevLane && prevLane.type === laneTypes.ROAD)
+      ? prevLane.dir * -1
+      : (Math.random() < 0.5 ? 1 : -1);
+
     lane.speed = baseSpeed + score * speedIncrement;
     lane.cars = [];  // cars will spawn dynamically
+
   } else if (type === laneTypes.WATER) {
     // Water lane — contains logs/crocs (moving platforms) or lily pads
     let makeLilyPadLane = Math.random() < lilyPadProbability;
     const prevLane = lanes.length ? lanes[lanes.length - 1] : null;
+
     // Avoid two lily pad lanes back-to-back for fairness
     if (prevLane && prevLane.type === laneTypes.WATER && prevLane.isLilyPadLane) {
       makeLilyPadLane = false;
     }
     lane.isLilyPadLane = makeLilyPadLane;
+
     if (makeLilyPadLane) {
       // Lily pad lane (stationary safe platforms on water)
       lane.dir = 0;
       lane.speed = 0;
+
       const padCount = getRandomInt(lilyPadCountRange[0], lilyPadCountRange[1]);
       const occupiedCols = [];
       for (let p = 0; p < padCount; p++) {
@@ -326,9 +360,9 @@ function createLane(index, type) {
           speed: 0
         });
       }
+
     } else {
       // Moving water lane (logs and crocs)
-      const prevLane = lanes.length ? lanes[lanes.length - 1] : null;
       // Alternate direction relative to previous water lane (treat lily pad lane as static)
       if (prevLane && prevLane.type === laneTypes.WATER) {
         const prevDir = prevLane.dir !== 0 ? prevLane.dir : 1;
@@ -336,6 +370,7 @@ function createLane(index, type) {
       } else {
         lane.dir = Math.random() < 0.5 ? 1 : -1;
       }
+
       lane.speed = baseSpeed + score * speedIncrement;
       lane.platforms = [];  // logs/crocs will spawn dynamically
     }
@@ -448,16 +483,16 @@ function checkCollisions() {
   const frogLane = lanes.find(l => l.index === frog.laneIndex);
   if (!frogLane) return;
 
+  // 1) ROAD collisions
   if (frogLane.type === laneTypes.ROAD) {
-    // Hit a car
     for (let car of frogLane.cars) {
       if (frog.x < car.x + car.width && frog.x + frog.width > car.x) {
         if (SKIP_DEATH) {
-  console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
-} else {
-  frog.dead = true;
-  gameOver = true;
-}
+          console.log('Would die here', { reason: 'hit car', lane: frogLane.index, frogX: frog.x });
+        } else {
+          frog.dead = true;
+          gameOver = true;
+        }
       }
     }
   }
@@ -466,51 +501,59 @@ function checkCollisions() {
   frog.onPlatform = false;
   frog.vx = 0;
 
+  // 2) WATER collisions
   if (frogLane.type === laneTypes.WATER) {
+    // Helper: horizontal overlap in pixels, using drawWidth if available
+    function getOverlapWidth(obj) {
+      const objWidth = obj.drawWidth || obj.width;
+      const left  = Math.max(frog.x,           obj.x);
+      const right = Math.min(frog.x + frog.width, obj.x + objWidth);
+      return Math.max(0, right - left);
+    }
+    const minOverlap = frog.width * 0.3;  // 30% threshold
+
     if (frogLane.isLilyPadLane) {
-      // Must be on a lily pad
+      // Check lily pads
       let safe = false;
       for (let pad of frogLane.platforms) {
-        if (frog.x < pad.x + pad.width && frog.x + frog.width > pad.x) {
+        if (getOverlapWidth(pad) >= minOverlap) {
           safe = true;
           break;
         }
       }
       if (!safe) {
         if (SKIP_DEATH) {
-  console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
-} else {
-  frog.dead = true;
-  gameOver = true;
-}
+          console.log('Would die here', { reason: 'water (no pad)', lane: frogLane.index, frogX: frog.x });
+        } else {
+          frog.dead = true;
+          gameOver = true;
+        }
         return;
       }
     } else {
-      // Must be on a moving platform
-      let onPlatform = false;
+      // Check moving platforms (logs/crocs)
+      let onPlat = false;
       for (let pl of frogLane.platforms) {
-        if (frog.x < pl.x + pl.width && frog.x + frog.width > pl.x) {
-          onPlatform = true;
+        if (getOverlapWidth(pl) >= minOverlap) {
+          onPlat = true;
           frog.onPlatform = true;
-          frog.vx = pl.speed;  // carry frog with the platform
+          frog.vx = pl.speed;
           break;
         }
       }
-      if (!onPlatform) {
+      if (!onPlat) {
         if (SKIP_DEATH) {
-  console.log('Would die here', { reason: '...', lane: frogLane.index, frogX: frog.x });
-} else {
-  frog.dead = true;
-  gameOver = true;
-}
+          console.log('Would die here', { reason: 'water (no platform)', lane: frogLane.index, frogX: frog.x });
+        } else {
+          frog.dead = true;
+          gameOver = true;
+        }
         return;
       }
-    }
 
-    // Carried off screen
-    if (frog.onPlatform) {
-      if (frog.x < -frog.width || frog.x > CANVAS_WIDTH) {
-        if (debugNoDeath) {
+      // Carried off-screen check
+      if (frog.onPlatform && (frog.x < -frog.width || frog.x > CANVAS_WIDTH)) {
+        if (SKIP_DEATH) {
           console.log('Would die here', { reason: 'carried off screen', lane: frogLane.index, frogX: frog.x });
         } else {
           frog.dead = true;
@@ -519,9 +562,10 @@ function checkCollisions() {
         return;
       }
     }
+
+    // If here, frog is safely on a pad or platform
   }
 }
-
 
 function manageLanes() {
   const VISIBLE_AHEAD  = Math.ceil(CANVAS_HEIGHT / LANE_HEIGHT / 2) + 2;
@@ -612,49 +656,84 @@ function spawnCar(lane) {
 }
 
 function spawnPlatform(lane) {
-  const movingRight = (lane.dir === 1);
-  const platformWidth = 64;
-  const platformSpeed = lane.speed * lane.dir;
-  const spawnX = movingRight ? -platformWidth : CANVAS_WIDTH;
-  const minGap = 80; // keep logs/crocs spaced apart
+  const movingRight = lane.dir === 1;
+  const baseWidth   = 64;
+  const isCroc      = Math.random() < 0.5;
+  const drawWidth   = isCroc ? baseWidth * 1.5 : baseWidth;
+  const sprite      = isCroc ? imgCroc : imgLog;
+  const speed       = lane.speed * lane.dir;
+  // Spawn just off-screen
+  const spawnX      = movingRight ? -drawWidth : CANVAS_WIDTH;
+  // Define minimum clearance in pixels
+  const minClearance = drawWidth + 20;
 
-  let canSpawn = true;
+  // Check each existing platform for spacing
   for (const pl of lane.platforms) {
-    if (movingRight && Math.abs(pl.x - spawnX) < minGap) canSpawn = false;
-    if (!movingRight && Math.abs((pl.x + pl.width) - spawnX) < minGap) canSpawn = false;
-  }
-  if (!canSpawn) return;
+    const existingLeft   = pl.x;
+    const existingRight  = pl.x + (pl.drawWidth || baseWidth);
+    const newLeftEdge    = movingRight ? spawnX : spawnX;      // always spawn at spawnX
+    const newRightEdge   = movingRight ? spawnX + drawWidth
+                                       : spawnX + drawWidth;
 
-  const platformSprite = Math.random() < 0.5 ? imgLog : imgCroc;
+    // Compute the gap between edges
+    let gap;
+    if (movingRight) {
+      // distance from new obstacle’s right edge to nearest existing platform’s left edge
+      gap = existingLeft - newRightEdge;
+    } else {
+      // distance from existing platform’s right edge to new obstacle’s left edge
+      gap = newLeftEdge - existingRight;
+    }
+    // If any gap is smaller than minimum clearance, cancel spawn
+    if (gap < minClearance) {
+      return;
+    }
+  }
+
+  // Passed all gap checks—spawn the platform
   lane.platforms.push({
     x: spawnX,
-    width: platformWidth,
-    sprite: platformSprite,
-    speed: platformSpeed
+    width: baseWidth,
+    drawWidth: drawWidth,
+    sprite: sprite,
+    speed: speed
   });
 }
 
 //// RENDERING FUNCTIONS ////
 
 function drawBackground() {
-  // Draw background tiles for each lane (grass, road, water)
+  // Draw all active lanes
   for (let lane of lanes) {
     const y = Math.floor(getLaneScreenY(lane.index));
     if (lane.type === laneTypes.SAFE) {
-      // Grass lane – fill with grass tiles (32x32 each)
       for (let x = 0; x < CANVAS_WIDTH; x += 32) {
         ctx.drawImage(imgGrass, x, y, 32, LANE_HEIGHT);
       }
     } else if (lane.type === laneTypes.ROAD) {
-      // Road lane – fill with road tiles (64x32 each including lane markings)
-      for (let x = 0; x < CANVAS_WIDTH; x += 64) {
-        ctx.drawImage(imgRoad, x, y, 64, LANE_HEIGHT);
+      const tileImg = lane.isFirstRoadLane ? imgRoad1 : imgRoad2;
+      const tileWidth = 64;
+      for (let x = 0; x < CANVAS_WIDTH; x += tileWidth) {
+        ctx.drawImage(tileImg, x, y, tileWidth, LANE_HEIGHT);
       }
     } else if (lane.type === laneTypes.WATER) {
-      // Water lane – fill with water tiles (32x32 each)
       for (let x = 0; x < CANVAS_WIDTH; x += 32) {
         ctx.drawImage(imgWater, x, y, 32, LANE_HEIGHT);
       }
+    }
+  }
+
+  // Find the Y coordinate of the lowest (nearest to bottom) lane
+  let maxLaneY = -Infinity;
+  for (let lane of lanes) {
+    const y = Math.floor(getLaneScreenY(lane.index));
+    if (y > maxLaneY) maxLaneY = y;
+  }
+
+  // Draw tree tiles below this lane to the bottom of the canvas
+  for (let y = maxLaneY + LANE_HEIGHT; y < CANVAS_HEIGHT; y += LANE_HEIGHT) {
+    for (let x = 0; x < CANVAS_WIDTH; x += 32) {
+      ctx.drawImage(imgTree, x, y, 32, LANE_HEIGHT);
     }
   }
 }
