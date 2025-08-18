@@ -7,6 +7,7 @@ import { FaPrint, FaFilePdf, FaCertificate } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import Link from 'next/link'
 
 interface Student {
   firstName: string
@@ -218,7 +219,14 @@ export default function CertificatePage() {
             >
               <FaFilePdf /> Download PDF
             </motion.button>
+            <Link
+              href="/reptiles"
+              className="inline-block px-6 py-3 font-bold rounded-lg text-white shadow-lg bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900"
+            >
+              Learn about Reptiles?
+            </Link>
           </motion.div>
+          
         )}
       </div>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface Teacher {
   id?: number
@@ -189,10 +190,19 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-6 text-white text-lg font-medium">
-          {isTeacher ? "Are you a student?" : "Are you a teacher?"}{' '}
+          {isTeacher ? "Are you a student?" : "Are you a new teacher?"}{' '}
           <button onClick={toggleUserType} className="underline font-bold">
             {isTeacher ? "Student Login" : "Teacher Signup"}
           </button>
+        </div>
+        <div className="mt-8 text-white text-lg font-medium">
+          Returning Teacher?{' '}
+          <Link
+            href="/teacher-portal"
+            className="underline font-bold"
+          >
+            View Class & Scores
+          </Link>
         </div>
       </div>
     </main>

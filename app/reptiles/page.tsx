@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 declare global {
   interface Window {
@@ -14,6 +15,7 @@ export default function ReptileGamePage() {
   const [isGameOver, setIsGameOver] = useState(false)
   const [studentId, setStudentId] = useState<number | null>(null)
   const [gameKey, setGameKey] = useState(0)
+  const router = useRouter()
 
   useEffect(() => {
     const stored = localStorage.getItem('currentUser')
@@ -255,6 +257,14 @@ export default function ReptileGamePage() {
         }`}
       >
         Play Again
+      </button>
+
+      {/* New Button */}
+      <button
+        onClick={() => router.push('/reptilefacts')}
+        className="mt-4 px-6 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+      >
+        Learn about Reptiles?
       </button>
     </div>
   )

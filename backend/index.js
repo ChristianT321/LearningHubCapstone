@@ -140,17 +140,17 @@ app.post('/students/bulk', async (req, res) => {
 
       // Insert into progress_tracker
       await client.query(
-        `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete)
-         VALUES ($1, false, false, false, false)`,
+        `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete, module5_complete)
+        VALUES ($1, false, false, false, false, false)`,
         [studentId]
       );
 
       // Insert into test_results
       await client.query(
-        `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score)
-         VALUES ($1, 0, 0, 0, 0)`,
+        `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score, test5_score)
+        VALUES ($1, 0, 0, 0, 0, 0)`,
         [studentId]
-      );
+      );      
 
       insertedStudents.push(newStudent);
     }
@@ -187,18 +187,17 @@ app.post('/student', async (req, res) => {
 
     // 2. Insert into test_results table
     await pool.query(
-      `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score)
-       VALUES ($1, 0, 0, 0, 0)`,
+      `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score, test5_score)
+      VALUES ($1, 0, 0, 0, 0, 0)`,
       [studentId]
-    );
+    );  
 
     // 3. Insert into progress_tracker table
     await pool.query(
-      `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete)
-       VALUES ($1, false, false, false, false)`,
+      `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete, module5_complete)
+      VALUES ($1, false, false, false, false, false)`,
       [studentId]
     );
-
     res.status(201).json({ message: 'Student created successfully', studentId });
 
   } catch (err) {
@@ -442,6 +441,31 @@ app.post('/complete-module4', async (req, res) => {
   }
 });
 
+app.post('/complete-module5', async (req, res) => {
+  const { studentId, score } = req.body;
+
+  if (!studentId || score === undefined) {
+    return res.status(400).json({ error: 'Missing studentId or score' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE test_results SET test5_score = $1 WHERE student_id = $2',
+      [score, studentId]
+    );
+
+    await pool.query(
+      'UPDATE progress_tracker SET module5_complete = true WHERE student_id = $1',
+      [studentId]
+    );
+
+    res.status(200).json({ message: 'Module 5 complete and test score saved' });
+  } catch (err) {
+    console.error('Error completing module 5:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/progress/:studentId', async (req, res) => {
   const { studentId } = req.params;
   try {
@@ -455,6 +479,72 @@ app.get('/progress/:studentId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.post('/teacher/login', async (req, res) => {
+  const { email, classCode } = req.body
+  if (!email || !classCode) return res.status(400).json({ error: 'Missing email or classCode' })
+
+  try {
+    const { rows } = await pool.query(
+      `SELECT id, email, class_code
+       FROM teachers
+       WHERE email = $1 AND class_code = $2
+       LIMIT 1`,
+      [email, classCode]
+    )
+    if (rows.length === 0) return res.status(401).json({ error: 'Invalid teacher email or class code' })
+    res.json(rows[0])
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
+app.get('/teacher/class/:classCode/roster', async (req, res) => {
+  const { classCode } = req.params
+  try {
+    const { rows } = await pool.query(
+      `
+      SELECT
+        s.id,
+        s.first_name,
+        s.last_name,
+        s.class_code,
+        tr.test1_score,
+        tr.test2_score,
+        tr.test3_score,
+        tr.test4_score,
+        tr.test5_score
+      FROM students s
+      LEFT JOIN test_results tr ON tr.student_id = s.id
+      WHERE s.class_code = $1
+      ORDER BY s.last_name, s.first_name;
+      `,
+      [classCode]
+    )
+    res.json(rows)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
+app.get('/test_results/:studentId', async (req, res) => {
+  const { studentId } = req.params
+  try {
+    const { rows } = await pool.query(
+      `SELECT student_id, test1_score, test2_score, test3_score, test4_score, test5_score
+       FROM test_results
+       WHERE student_id = $1
+       LIMIT 1`,
+      [studentId]
+    )
+    res.json(rows[0] || { student_id: Number(studentId) })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
