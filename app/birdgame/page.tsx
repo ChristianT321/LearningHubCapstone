@@ -10,6 +10,9 @@ type Bird = {
   icon: string;
   level: 1 | 2 | 3 | 4;
   bgColor: string;
+  description: string;  // Added
+  habitat: string;      // Added
+  behavior: string;     // Added
 };
 
 type Feather = {
@@ -28,34 +31,70 @@ export default function BirdCardGamePage() {
       {
         id: "chickadee",
         name: "Chestnut-backed Chickadee",
-        image: "/ChestnutChickadee.webp",
+        image: "/Chestnut Chickadee2.webp",
         icon: "🍃",
-        level: 1,
+        level: 2,
         bgColor: "bg-green-300",
+        description: "A small, energetic songbird with distinctive chestnut coloring on its back and sides.",
+        habitat: "Coniferous forest",
+        behavior: "Acrobatic Forager",
       },
       {
         id: "stellerjay",
         name: "Steller's Jay",
-        image: "/StellersJay.jpg",
+        image: "/Steller's Jay.jpg",
         icon: "🌲",
-        level: 2,
-        bgColor: "bg-lime-300",
-      },
-      {
-        id: "spottedowl",
-        name: "Northern Spotted Owl",
-        image: "/Owl.jpg",
-        icon: "🌙",
         level: 3,
-        bgColor: "bg-purple-300",
+        bgColor: "bg-lime-300",
+        description: "A bold, intelligent corvid with striking blue and black plumage found in western forests.",
+        habitat: "Mountain forest",
+        behavior: "Opportunistic Omnivore",
       },
       {
         id: "murrelet",
         name: "Marbled Murrelet",
-        image: "/MarbledMurrelet.webp",
+        image: "/marbled murrelet.webp",
         icon: "🌊",
-        level: 4, // bumped to 4 so we have 1,2,3,4
+        level: 3, 
         bgColor: "bg-blue-300",
+        description: "A mysterious seabird that nests in old-growth coastal forests but feeds in marine waters.",
+        habitat: "Coastal waters",
+        behavior: "Deep Diver",
+      },
+      {
+        id: "osprey",
+        name: "Osprey",
+        image: "/osprey-hunting.jpg",
+        icon: "🐟",               // wave for its fish-hunting over water
+        level: 3,
+        bgColor: "bg-teal-300",  // bright cyan for coastal waters
+        description:
+          "A specialist fish-eater, plunging talons-first into water then lifting prey skyward with unmatched skill.",
+        habitat: "Coastal Waters",
+        behavior: "Tide Diver",
+      },
+      {
+        id: "spottedowl",
+        name: "Northern Spotted Owl",
+        image: "/spottedowl3.avif",
+        icon: "🌙",
+        level: 4,
+        bgColor: "bg-lime-950",
+        description: "A shy and elusive rainforest resident, this owl remains in dense old-growth forests year-round, roosting in shadows and hunting quietly at night.",
+        habitat: "Old-growth forest",
+        behavior: "Nocturnal Hunter",
+      },
+      {
+        id: "baldeagle",
+        name: "Bald Eagle",
+        image: "/bald-eagle.jpg",
+        icon: "🗻",               // mountain for high-soaring habitat
+        level: 4,
+        bgColor: "bg-slate-700", // stormy-sky slate for a powerful, majestic feel
+        description:
+          "America’s iconic raptor—powerful wings span wide as it soars over lakes and forests, hunting with piercing eyesight.",
+        habitat: "Cliffside Peaks",
+        behavior: "Sky Sovereign",
       },
     ],
     []
@@ -270,13 +309,16 @@ export default function BirdCardGamePage() {
         </div>
         {/* Front */}
         <div
-          className={`absolute w-full h-full backface-hidden rotate-y-180 ${bird.bgColor} border-[3px] border-yellow-500 rounded-[10px] p-3 flex flex-col justify-between`}
+          className={`absolute w-full h-full backface-hidden rotate-y-180 ${bird.bgColor} border-[3px] border-yellow-500 rounded-[10px] p-3 flex flex-col`}
         >
-          <div className="text-[18px] font-bold flex justify-between items-center text-black">
+          {/* Header with name and icon */}
+          <div className="text-[18px] font-bold flex justify-between items-center text-black mb-2">
             <span className="leading-tight">{bird.name}</span>
             <span>{bird.icon}</span>
           </div>
-          <div className="border-[3px] border-black bg-white my-2">
+          
+          {/* Image section */}
+          <div className="border-[3px] border-black bg-white mb-2 flex-shrink-0">
             <Image
               src={bird.image}
               alt={bird.name}
@@ -285,8 +327,27 @@ export default function BirdCardGamePage() {
               className="object-cover w-full h-[130px]"
             />
           </div>
-          <div className="text-[14px] text-black bg-white/40 border-[1px] border-black p-2 rounded-sm">
+
+          {/* Level box */}
+          <div className="text-[14px] text-black bg-white/30 border-[1px] border-black p-2 rounded-sm mb-2 text-center font-semibold">
             Level: {bird.level}
+          </div>
+
+          {/* Description section */}
+          <div className="text-[12px] text-black bg-white/90 border-[1px] border-black p-2 rounded-sm mb-2 flex-grow">
+            {bird.description}
+          </div>
+
+          {/* Habitat and Behavior section */}
+          <div className="flex justify-between text-[11px] text-black">
+            <div className="flex-1">
+              <div className="font-bold">Habitat:</div>
+              <div>{bird.habitat}</div>
+            </div>
+            <div className="flex-1 text-right">
+              <div className="font-bold">Behavior:</div>
+              <div>{bird.behavior}</div>
+            </div>
           </div>
         </div>
       </div>
