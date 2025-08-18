@@ -2,6 +2,21 @@
 
 import { useState } from 'react';
 
+type StudentRow = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  classCode: string;
+};
+
+type TestResultsRow = {
+  student_id: number;
+  test1_score?: number | null;
+  test2_score?: number | null;
+  test3_score?: number | null;
+  test4_score?: number | null;
+};
+
 type RosterRow = {
   id: number;
   first_name: string;
@@ -35,29 +50,34 @@ export default function TeacherPortalPage() {
     return resp.json();
   };
 
-  const fetchRosterFallback = async (cc: string): Promise<RosterRow[]> => {
-    const students: Array<Omit<RosterRow, 'test1_score'|'test2_score'|'test3_score'|'test4_score'>> =
-      await fetchJSON(`${apiBase}/students?classCode=${encodeURIComponent(cc)}`);
+    const fetchRosterFallback = async (cc: string): Promise<RosterRow[]> => {
+    // Matches your backend: GET /students/:classCode -> { id, firstName, lastName, classCode }
+    const students: StudentRow[] = await fetchJSON(`${apiBase}/students/${encodeURIComponent(cc)}`);
 
-    const out: RosterRow[] = [];
+    const rows: RosterRow[] = [];
     for (const s of students) {
-      let scores: Partial<RosterRow> | null = null;
-      try {
+        let scores: TestResultsRow | null = null;
+        try {
+        // Matches your backend: GET /test_results/:studentId -> snake_case fields
         scores = await fetchJSON(`${apiBase}/test_results/${s.id}`);
-      } catch {}
-      out.push({
+        } catch {
+        // okay, leave scores as nulls
+        }
+
+        rows.push({
         id: s.id,
-        first_name: s.first_name,
-        last_name: s.last_name,
-        class_code: s.class_code,
-        test1_score: (scores as any)?.test1_score ?? null,
-        test2_score: (scores as any)?.test2_score ?? null,
-        test3_score: (scores as any)?.test3_score ?? null,
-        test4_score: (scores as any)?.test4_score ?? null,
-      });
+        first_name: s.firstName,
+        last_name: s.lastName,
+        class_code: s.classCode,
+        test1_score: scores?.test1_score ?? null,
+        test2_score: scores?.test2_score ?? null,
+        test3_score: scores?.test3_score ?? null,
+        test4_score: scores?.test4_score ?? null,
+        });
     }
-    return out;
-  };
+    return rows;
+    };
+
 
   const handleLoginAndLoad = async () => {
     setError(null);
@@ -144,36 +164,33 @@ export default function TeacherPortalPage() {
 
         {roster && (
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm border">
-              <thead className="bg-gray-100">
+            <table className="min-w-full border border-black text-base">
+                <thead className="bg-gray-800 text-white text-lg">
                 <tr>
-                  <th className="px-3 py-2 border">Student</th>
-                  <th className="px-3 py-2 border">Test 1</th>
-                  <th className="px-3 py-2 border">Test 2</th>
-                  <th className="px-3 py-2 border">Test 3</th>
-                  <th className="px-3 py-2 border">Test 4</th>
-                  <th className="px-3 py-2 border">Total</th>
-                  <th className="px-3 py-2 border">Average</th>
+                    <th className="px-4 py-3 border border-black">Student</th>
+                    <th className="px-4 py-3 border border-black">Test 1</th>
+                    <th className="px-4 py-3 border border-black">Test 2</th>
+                    <th className="px-4 py-3 border border-black">Test 3</th>
+                    <th className="px-4 py-3 border border-black">Test 4</th>
+                    <th className="px-4 py-3 border border-black">Average</th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 {roster.map((r) => (
-                  <tr key={r.id} className="odd:bg-white even:bg-gray-50">
-                    <td className="px-3 py-2 border font-medium">
-                      {r.first_name} {r.last_name}
+                    <tr key={r.id} className="odd:bg-white even:bg-gray-100 text-black font-medium">
+                    <td className="px-4 py-2 border border-black">
+                        {r.first_name} {r.last_name}
                     </td>
-                    <td className="px-3 py-2 border text-center">{r.test1_score ?? '—'}</td>
-                    <td className="px-3 py-2 border text-center">{r.test2_score ?? '—'}</td>
-                    <td className="px-3 py-2 border text-center">{r.test3_score ?? '—'}</td>
-                    <td className="px-3 py-2 border text-center">{r.test4_score ?? '—'}</td>
-                    <td className="px-3 py-2 border text-center">{total(r)}</td>
-                    <td className="px-3 py-2 border text-center">{average(r)}</td>
-                  </tr>
+                    <td className="px-4 py-2 border border-black text-center">{r.test1_score ?? '—'}</td>
+                    <td className="px-4 py-2 border border-black text-center">{r.test2_score ?? '—'}</td>
+                    <td className="px-4 py-2 border border-black text-center">{r.test3_score ?? '—'}</td>
+                    <td className="px-4 py-2 border border-black text-center">{r.test4_score ?? '—'}</td>
+                    <td className="px-4 py-2 border border-black text-center">{average(r)}</td>
+                    </tr>
                 ))}
-              </tbody>
+                </tbody>
             </table>
-            <p className="text-xs text-gray-500 mt-2">— means no score saved yet.</p>
-          </div>
+            </div>
         )}
       </div>
     </main>
