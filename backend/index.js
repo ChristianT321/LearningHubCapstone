@@ -454,6 +454,71 @@ app.get('/progress/:studentId', async (req, res) => {
   }
 });
 
+app.post('/teacher/login', async (req, res) => {
+  const { email, classCode } = req.body
+  if (!email || !classCode) return res.status(400).json({ error: 'Missing email or classCode' })
+
+  try {
+    const { rows } = await pool.query(
+      `SELECT id, email, class_code
+       FROM teachers
+       WHERE email = $1 AND class_code = $2
+       LIMIT 1`,
+      [email, classCode]
+    )
+    if (rows.length === 0) return res.status(401).json({ error: 'Invalid teacher email or class code' })
+    res.json(rows[0])
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
+app.get('/teacher/class/:classCode/roster', async (req, res) => {
+  const { classCode } = req.params
+  try {
+    const { rows } = await pool.query(
+      `
+      SELECT
+        s.id,
+        s.first_name,
+        s.last_name,
+        s.class_code,
+        tr.test1_score,
+        tr.test2_score,
+        tr.test3_score,
+        tr.test4_score
+      FROM students s
+      LEFT JOIN test_results tr ON tr.student_id = s.id
+      WHERE s.class_code = $1
+      ORDER BY s.last_name, s.first_name;
+      `,
+      [classCode]
+    )
+    res.json(rows)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
+app.get('/test_results/:studentId', async (req, res) => {
+  const { studentId } = req.params
+  try {
+    const { rows } = await pool.query(
+      `SELECT student_id, test1_score, test2_score, test3_score, test4_score
+       FROM test_results
+       WHERE student_id = $1
+       LIMIT 1`,
+      [studentId]
+    )
+    res.json(rows[0] || { student_id: Number(studentId) })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
 })
