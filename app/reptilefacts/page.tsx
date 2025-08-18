@@ -465,7 +465,7 @@ export default function ReptilesAmphibiansSplitPage() {
 
         {/* continue */}
         <motion.button
-          onClick={() => router.push('/reptileamphibianfacts')}
+          onClick={() => router.push('/test6')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="text-white font-bold px-6 py-3 mt-2"

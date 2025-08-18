@@ -27,6 +27,7 @@ type RosterRow = {
   test2_score?: number | null;
   test3_score?: number | null;
   test4_score?: number | null;
+  test5_score?: number | null;
 };
 
 export default function TeacherPortalPage() {
@@ -176,6 +177,7 @@ export default function TeacherPortalPage() {
                     <th className="px-4 py-3 border border-black">Test 2</th>
                     <th className="px-4 py-3 border border-black">Test 3</th>
                     <th className="px-4 py-3 border border-black">Test 4</th>
+                    <th className="px-4 py-3 border border-black">Test 5</th>
                     <th className="px-4 py-3 border border-black">Average</th>
                 </tr>
                 </thead>
@@ -189,6 +191,7 @@ export default function TeacherPortalPage() {
                     <td className="px-4 py-2 border border-black text-center">{r.test2_score ?? '—'}</td>
                     <td className="px-4 py-2 border border-black text-center">{r.test3_score ?? '—'}</td>
                     <td className="px-4 py-2 border border-black text-center">{r.test4_score ?? '—'}</td>
+                    <td className="px-4 py-2 border border-black text-center">{r.test5_score ?? '—'}</td>
                     <td className="px-4 py-2 border border-black text-center">{average(r)}</td>
                     </tr>
                 ))}
@@ -201,8 +204,7 @@ export default function TeacherPortalPage() {
       <div className="mt-4">
         <Link
             href="/"
-            className="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded shadow "
-        >
+            className="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded shadow ">
             ← Back to Home
         </Link>
         </div>
