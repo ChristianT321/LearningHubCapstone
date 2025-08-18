@@ -190,17 +190,18 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-6 text-white text-lg font-medium">
-          {isTeacher ? "Are you a student?" : "Are you a teacher?"}{' '}
+          {isTeacher ? "Are you a student?" : "Are you a new teacher?"}{' '}
           <button onClick={toggleUserType} className="underline font-bold">
             {isTeacher ? "Student Login" : "Teacher Signup"}
           </button>
         </div>
-        <div className="mt-6 text-white text-lg font-medium">
+        <div className="mt-8 text-white text-lg font-medium">
+          Returning Teacher?{' '}
           <Link
             href="/teacher-portal"
-            className="text-white text-lg underline font-bold"
+            className="underline font-bold"
           >
-            Returning Teacher? View Class & Scores
+            View Class & Scores
           </Link>
         </div>
       </div>
