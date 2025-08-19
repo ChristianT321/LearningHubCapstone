@@ -132,7 +132,6 @@ export default function TidePage() {
   };
 
   const formatTime = (hhmm: string) => {
-    // Assumes input is "16:26" or "1626"
     if (hhmm.includes(':')) return hhmm;
     return hhmm.slice(0, 2) + ':' + hhmm.slice(2);
   };
@@ -149,39 +148,43 @@ export default function TidePage() {
           alt="Background"
           fill
           className="object-cover"
+          priority
         />
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-6xl px-4">
         {/* Header */}
-        <div className="flex items-center justify-between w-full mb-6">
+        <div className="flex items-center justify-center w-full mb-6 relative">
           <motion.button
-            onClick={() => router.back()}
+            onClick={() => router.push('/gofish')}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 shadow"
+            className="flex items-center justify-center gap-2 px-6 py-3 text-white rounded-xl bg-gradient-to-r from-blue-500/70 to-blue-700/70 shadow-lg hover:shadow-xl transition-all backdrop-blur-sm absolute left-0"
           >
-            <FaArrowLeft /> Back
+            <FaArrowLeft className="text-lg" /> 
+            <span className="font-semibold">Back</span>
           </motion.button>
-          <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
-            TIDE PREDICTIONS
+          
+          <h1 className="text-4xl font-extrabold text-white drop-shadow-lg bg-blue-900/40 px-8 py-3 rounded-xl border border-blue-600/60 mx-auto backdrop-blur-sm">
+            DAILY TIDE PREDICTIONS & HISTORY
           </h1>
+          
           <motion.button
             onClick={handleRefresh}
-            whileHover={{ rotate: 360 }}
+            whileHover={{ rotate: 360, scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             disabled={loading}
-            className={`p-2 text-white rounded-full bg-black bg-opacity-40 border border-white ${
+            className={`p-3 text-white rounded-full bg-black/30 border-2 border-blue-400/60 shadow-md ${
               loading ? 'animate-spin' : ''
-            }`}
+            } backdrop-blur-sm absolute right-0`}
           >
-            <FaSyncAlt />
+            <FaSyncAlt className="text-xl" />
           </motion.button>
         </div>
 
         {/* Station & Date */}
         <div className="flex flex-col md:flex-row gap-4 w-full max-w-3xl items-center justify-center">
-          <div className="px-4 py-2 rounded-lg bg-blue-900 bg-opacity-80 text-white border border-blue-700">
+          <div className="px-6 py-3 rounded-xl bg-blue-900/40 text-white border-2 border-blue-600/60 font-medium shadow-md backdrop-blur-sm">
             Hartley Bay (Station #09130)
           </div>
           <input
@@ -189,89 +192,96 @@ export default function TidePage() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             max={new Date().toISOString().split('T')[0]}
-            className="px-4 py-2 rounded-lg bg-blue-900 bg-opacity-80 text-white border border-blue-700"
+            className="px-6 py-3 rounded-xl bg-blue-900/40 text-white border-2 border-blue-600/60 font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400/60 backdrop-blur-sm"
           />
         </div>
 
         {/* Content */}
-        <div className="w-full max-w-4xl bg-blue-900 bg-opacity-70 rounded-xl p-6 border border-blue-700 shadow-lg">
+        <div className="w-full max-w-4xl bg-blue-900/40 rounded-2xl p-6 border-2 border-blue-600/60 shadow-xl backdrop-blur-sm">
           {loading ? (
             <div className="flex flex-col items-center py-12 animate-pulse">
               <FaWater className="text-5xl text-blue-300 mb-4" />
-              <p className="text-white text-lg">Loading tide data...</p>
+              <p className="text-white text-lg font-medium">Loading tide data...</p>
             </div>
           ) : error ? (
-            <div className="bg-red-900 bg-opacity-70 rounded-lg p-4 text-white">
-              <div className="flex items-center gap-2 mb-2">
-                <FaExclamationTriangle className="text-xl" />
-                <p className="font-bold">Error loading tide data</p>
+            <div className="bg-red-900/40 rounded-xl p-6 text-white border-2 border-red-600/60 backdrop-blur-sm">
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <FaExclamationTriangle className="text-2xl" />
+                <p className="font-bold text-xl">Error loading tide data</p>
               </div>
-              <p className="mb-4">{error}</p>
-              <div className="flex justify-center gap-4">
-                <button
+              <p className="mb-5 text-lg">{error}</p>
+              <div className="flex justify-center gap-6">
+                <motion.button
                   onClick={fetchTideData}
-                  className="px-4 py-2 bg-yellow-400 text-blue-900 rounded font-bold flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 bg-yellow-400/80 text-blue-900 rounded-xl font-bold flex items-center gap-2 shadow-md backdrop-blur-sm"
                 >
                   <FaSyncAlt /> Try Again
-                </button>
-                <button
-                  onClick={() =>
-                    setDate(new Date().toISOString().split('T')[0])
-                  }
-                  className="px-4 py-2 bg-blue-400 text-white rounded font-bold"
+                </motion.button>
+                <motion.button
+                  onClick={() => setDate(new Date().toISOString().split('T')[0])}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 bg-blue-500/80 text-white rounded-xl font-bold shadow-md backdrop-blur-sm"
                 >
                   Use Today
-                </button>
+                </motion.button>
               </div>
             </div>
           ) : tideData ? (
             <>
               {/* High/Low Extremes summary */}
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <FaWater className="text-3xl text-blue-300" />
-                <h2 className="text-2xl font-bold text-white">
-                  Tide Predictions for{' '}
+              <div className="flex flex-col items-center justify-center mb-8">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <FaWater className="text-4xl text-blue-300" />
+                  <h2 className="text-3xl font-bold text-white">
+                    Tides For
+                  </h2>
+                </div>
+                <p className="text-blue-200 text-lg mb-2">
                   {new Date(date).toLocaleDateString('en-CA', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                   })}
-                </h2>
+                </p>
               </div>
+              
               {tideData.predictions.length === 0 ? (
-                <p className="text-white mb-4">
+                <p className="text-white mb-6 text-lg">
                   No High or Low tide extremes detected for this day.
                 </p>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="flex flex-wrap justify-center gap-5 mb-10">
                   {tideData.predictions.map((p, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      className={`p-4 rounded-lg ${
-                        p.type === 'H' ? 'bg-blue-800' : 'bg-blue-700'
-                      } border ${
-                        p.type === 'H' ? 'border-blue-500' : 'border-blue-400'
-                      }`}
+                      className={`p-5 rounded-xl backdrop-blur-sm ${
+                        p.type === 'H' ? 'bg-blue-800/40' : 'bg-blue-700/40'
+                      } border-2 ${
+                        p.type === 'H' ? 'border-blue-500/60' : 'border-blue-400/60'
+                      } shadow-md hover:shadow-lg transition-shadow`}
                     >
                       <div className="flex flex-col items-center">
-                        <div className="text-2xl font-bold text-white mb-1">
+                        <div className="text-3xl font-bold text-white mb-2">
                           {formatTime(p.t)}
                         </div>
                         <div
-                          className={`text-lg font-semibold ${
+                          className={`text-xl font-semibold ${
                             p.type === 'H'
                               ? 'text-yellow-300'
                               : 'text-blue-200'
-                          }`}
+                          } mb-1`}
                         >
                           {p.type === 'H' ? 'HIGH' : 'LOW'} Tide
                         </div>
-                        <div className="text-xl font-bold text-white mt-2">
-                          {p.v} m
+                        <div className="text-2xl font-bold text-white mt-3">
+                          {p.v} <span className="text-lg">meters</span>
                         </div>
                       </div>
                     </motion.div>
@@ -279,56 +289,77 @@ export default function TidePage() {
                 </div>
               )}
 
-              {/* Placeholder for each tide chart */}
-              <div className="mt-8 bg-blue-950 bg-opacity-80 rounded-lg p-4">
-  <h3 className="text-xl font-bold text-yellow-300 mb-2 flex items-center justify-center gap-2">
-    <FaChartLine /> Tide Chart
-  </h3>
-  <div className="h-64 bg-blue-900 rounded flex items-center justify-center text-white">
-    {tideData?.allPoints && tideData.allPoints.length > 0 ? (
-      <ResponsiveContainer width="100%" height="100%">
-  <LineChart
-    data={tideData.allPoints.map(pt => ({
-      time: pt.time, // use raw ISO string for X axis
-      value: pt.value
-    }))}
-    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-  >
-    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-    <XAxis
-      dataKey="time"
-      tickFormatter={s => new Date(s).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-      tick={{ fill: "#fff" }}
-      minTickGap={20}
-    />
-    <YAxis domain={['auto', 'auto']} tick={{ fill: "#fff" }} />
-    <Tooltip
-      labelFormatter={s => new Date(s).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-    />
-    <Line type="monotone" dataKey="value" stroke="#facc15" strokeWidth={2} dot={false} />
-  </LineChart>
-</ResponsiveContainer>
-    ) : (
-      <p>Tide height visualization coming soon</p>
-    )}
-  </div>
-</div>
+              {/* Tide Chart */}
+              <div className="mt-10 bg-blue-950/40 rounded-xl p-5 border-2 border-blue-700/60 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center justify-center gap-3">
+                  <FaChartLine /> Tide Chart
+                </h3>
+                <div className="h-80 bg-blue-900/40 rounded-lg flex items-center justify-center text-white border border-blue-700/60 backdrop-blur-sm">
+                  {tideData?.allPoints && tideData.allPoints.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={tideData.allPoints.map(pt => ({
+                          time: pt.time,
+                          value: pt.value
+                        }))}
+                        margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                        <XAxis
+                          dataKey="time"
+                          tickFormatter={s => new Date(s).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          tick={{ fill: "#fff" }}
+                          minTickGap={20}
+                        />
+                        <YAxis 
+                          domain={['auto', 'auto']} 
+                          tick={{ fill: "#fff" }} 
+                          label={{ value: 'Meters', angle: -90, position: 'insideLeft', fill: '#fff' }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1e3a8a',
+                            borderColor: '#3b82f6',
+                            borderRadius: '0.5rem',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                          }}
+                          labelFormatter={s => new Date(s).toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            hour12: true 
+                          })}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="value" 
+                          stroke="#facc15" 
+                          strokeWidth={3} 
+                          dot={false} 
+                          activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <p className="text-lg">Tide height visualization coming soon</p>
+                  )}
+                </div>
+              </div>
             </>
           ) : null}
         </div>
 
         {/* Quiz Button */}
         <motion.div
-          className="mt-8 w-full max-w-md"
+          className="mt-10 w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
           <Link href="/test2" passHref>
             <motion.button
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.03, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)" }}
               whileTap={{ scale: 0.97 }}
-              className="w-full px-6 py-4 text-white text-xl font-bold rounded-xl shadow-lg bg-gradient-to-r from-green-500 to-green-700"
+              className="w-full px-8 py-4 text-white text-xl font-bold rounded-xl shadow-xl bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 transition-all"
             >
               Take the Aquatic Animal Quiz
             </motion.button>
@@ -336,9 +367,9 @@ export default function TidePage() {
         </motion.div>
 
         {/* Footer */}
-        <div className="text-blue-200 text-sm mt-6">
-          <p>Tide data provided by Fisheries and Oceans Canada</p>
-          <p className="text-xs mt-1">
+        <div className="text-blue-200 text-sm mt-8 bg-blue-900/40 px-6 py-3 rounded-xl border border-blue-700/60 backdrop-blur-sm">
+          <p className="font-medium">Tide data provided by Fisheries and Oceans Canada</p>
+          <p className="text-xs mt-1 opacity-80">
             Data from Integrated Water Level System (IWLS)
           </p>
         </div>
