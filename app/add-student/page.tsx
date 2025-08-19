@@ -17,6 +17,20 @@ type SpreadsheetStudentRow = {
   [key: string]: unknown
 }
 
+// ---- Helpers to keep inputs controlled forever ----
+function normalizeStudent(raw: any): Student {
+  // Accepts snake_case or camelCase and ensures strings
+  const firstName = (raw?.firstName ?? raw?.first_name ?? '').toString()
+  const lastName  = (raw?.lastName  ?? raw?.last_name  ?? '').toString()
+  const classCode = (raw?.classCode ?? raw?.class_code ?? '').toString()
+  const id = raw?.id
+  return { id, firstName, lastName, classCode }
+}
+
+function normalizeArray(arr: any[]): Student[] {
+  return Array.isArray(arr) ? arr.map(normalizeStudent) : []
+}
+
 export default function AddStudentPage() {
   const router = useRouter()
   const [students, setStudents] = useState<Student[]>([])
@@ -35,7 +49,6 @@ export default function AddStudentPage() {
           return
         }
         const teacher = JSON.parse(teacherRaw)
-        
         const code = teacher.classCode || teacher.class_code
         
         if (!teacher?.isTeacher || !code) {
@@ -49,7 +62,7 @@ export default function AddStudentPage() {
           throw new Error('Failed to fetch students')
         }
         const studentsFromBackend = await response.json()
-        setStudents(studentsFromBackend)
+        setStudents(normalizeArray(studentsFromBackend))
       } catch (err) {
         console.error('Error loading students:', err)
         router.push('/')
@@ -69,6 +82,7 @@ export default function AddStudentPage() {
   }
 
   const handleAddStudent = () => {
+    // Always add controlled, non-undefined strings
     setStudents(prev => [...prev, { firstName: '', lastName: '', classCode }])
   }
 
@@ -80,7 +94,7 @@ export default function AddStudentPage() {
     }
 
     try {
-      let updatedStudent
+      let updatedStudent: Student
       if (students[index].id) {
         const response = await fetch(`http://localhost:3001/student/${students[index].id}`, {
           method: 'PUT',
@@ -88,7 +102,7 @@ export default function AddStudentPage() {
           body: JSON.stringify(studentData),
         })
         if (!response.ok) throw new Error('Failed to update student')
-        updatedStudent = await response.json()
+        updatedStudent = normalizeStudent(await response.json())
       } else {
         const response = await fetch('http://localhost:3001/student', {
           method: 'POST',
@@ -96,7 +110,7 @@ export default function AddStudentPage() {
           body: JSON.stringify(studentData),
         })
         if (!response.ok) throw new Error('Failed to create student')
-        updatedStudent = await response.json()
+        updatedStudent = normalizeStudent(await response.json())
       }
 
       const updatedStudents = [...students]
@@ -117,34 +131,35 @@ export default function AddStudentPage() {
 
     try {
       const studentsToSave = students.map(student => ({
-        firstName: student.firstName.trim(),
-        lastName: student.lastName.trim(),
+        firstName: (student.firstName ?? '').trim(),
+        lastName: (student.lastName ?? '').trim(),
         classCode: student.classCode,
         id: student.id
-      }));
+      }))
 
       const response = await fetch('http://localhost:3001/students/bulk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ students: studentsToSave }),
-      });
+      })
       
-      if (!response.ok) throw new Error('Bulk save failed');
+      if (!response.ok) throw new Error('Bulk save failed')
       
-      const savedStudents = await response.json();
-      setStudents(savedStudents);
-      setNewStudentsCount(savedStudents.length);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      const savedStudents = await response.json()
+      const normalized = normalizeArray(savedStudents)
+      setStudents(normalized)
+      setNewStudentsCount(normalized.length)
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 3000)
 
-      savedStudents.forEach((student: Student, index: number) => {
-        showSaveFeedback(index);
-      });
+      normalized.forEach((_student, index: number) => {
+        showSaveFeedback(index)
+      })
     } catch (err) {
-      console.error('Error saving all students:', err);
-      alert('Failed to save all students');
+      console.error('Error saving all students:', err)
+      alert('Failed to save all students')
     }
-  };
+  }
 
   const handleDeleteStudent = async (index: number) => {
     const student = students[index]
@@ -156,7 +171,7 @@ export default function AddStudentPage() {
         if (!response.ok) throw new Error('Failed to delete student')
       }
       
-      const updatedStudents = students.filter((student: Student, i: number) => i !== index)
+      const updatedStudents = students.filter((_s, i) => i !== index)
       setStudents(updatedStudents)
     } catch (err) {
       console.error('Error deleting student:', err)
@@ -222,7 +237,7 @@ export default function AddStudentPage() {
         if (!response.ok) throw new Error('Bulk upload failed')
         
         const insertedStudents = await response.json()
-        setStudents(prev => [...prev, ...insertedStudents])
+        setStudents(prev => [...prev, ...normalizeArray(insertedStudents)])
         setNewStudentsCount(insertedStudents.length)
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 3000)
@@ -383,7 +398,7 @@ export default function AddStudentPage() {
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-screen-xl w-full pb-20">
         {students.map((student, i) => (
           <div
-            key={`student-${student.id || i}`}
+            key={`student-${student.id ?? `temp-${i}`}`}
             className="bg-green-950 bg-opacity-80 border-4 border-black text-white text-center p-6 rounded shadow-xl relative"
           >
             {recentlySaved.includes(i) && (
@@ -409,10 +424,10 @@ export default function AddStudentPage() {
             <input
               type="text"
               placeholder="First name"
-              value={student.firstName}
+              value={student.firstName ?? ''}  // guard
               onChange={e => {
                 const updated = [...students]
-                updated[i] = { ...updated[i], firstName: e.target.value }
+                updated[i] = { ...updated[i], firstName: e.target.value ?? '' }
                 setStudents(updated)
               }}
               className="w-full mb-3 p-2 rounded text-black bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
@@ -421,10 +436,10 @@ export default function AddStudentPage() {
             <input
               type="text"
               placeholder="Last name"
-              value={student.lastName}
+              value={student.lastName ?? ''}  // guard
               onChange={e => {
                 const updated = [...students]
-                updated[i] = { ...updated[i], lastName: e.target.value }
+                updated[i] = { ...updated[i], lastName: e.target.value ?? '' }
                 setStudents(updated)
               }}
               className="w-full mb-4 p-2 rounded text-black bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
@@ -433,7 +448,7 @@ export default function AddStudentPage() {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() =>
-                  handleSaveStudent(i, student.firstName, student.lastName)
+                  handleSaveStudent(i, student.firstName ?? '', student.lastName ?? '')
                 }
                 className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition flex items-center gap-1"
                 aria-label={`Save Student ${i + 1}`}
