@@ -55,7 +55,7 @@ const hotspots: Hotspot[] = [
 ]
 
 const footerLinks = [
-  { link: 'https://www.youtube.com/watch?v=7ziMmDmCFbI', label: 'Videos' },
+  { link: 'https://www.youtube.com/watch?v=jd3mNFcniHU', label: 'Videos' },
   { link: 'https://pacificwild.org/from-land-to-sea-great-bear-rainforest-story-map/', label: 'Learn' },
 ];
 
@@ -140,24 +140,26 @@ export default function HomePage() {
   ));
 
   const footerItems = footerLinks.map((link) => (
-    <motion.button
-      key={link.label}
-      onClick={() => window.open(link.link, '_blank')}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="flex items-center gap-2 px-4 py-2 text-white text-lg font-bold transition-all duration-300"
-      style={{
-        borderRadius: '12px',
-        border: '2px solid transparent',
-        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
-        backgroundOrigin: 'border-box',
-        backgroundClip: 'padding-box, border-box',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      }}
-    >
-      {link.label}
-    </motion.button>
-  ));
+  <motion.a
+    key={link.label}
+    href={link.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    className="flex items-center gap-2 px-4 py-2 text-white text-lg font-bold transition-all duration-300"
+    style={{
+      borderRadius: '12px',
+      border: '2px solid transparent',
+      backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(to right, #f59e0b, #d97706, #b45309)',
+      backgroundOrigin: 'border-box',
+      backgroundClip: 'padding-box, border-box',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    }}
+  >
+    {link.label}
+  </motion.a>
+));
 
   const handleSignOut = () => {
     localStorage.removeItem('currentUser')
@@ -430,7 +432,7 @@ export default function HomePage() {
             }}
           >
             Get ready to explore one of the coolest places on Earth! This website is made just for kids like you to learn all about the animals, trees, people, and secrets of the Great Bear Rainforest. 
-            You'll play fun games, take quizzes, earn badges, and unlock new levels as you learn. Start your adventure and see how much you can discover!
+            You will play fun games, take quizzes, earn badges, and unlock new levels as you learn. Start your adventure and see how much you can discover!
           </motion.p>
 
           <div className="flex gap-6 mb-12">
