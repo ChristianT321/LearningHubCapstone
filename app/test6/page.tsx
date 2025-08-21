@@ -209,8 +209,8 @@ export default function ReptileAmphibianQuiz() {
               <p className="text-lg font-semibold mb-3 text-green-600">🎉 Congrats! You completed Module 5!</p>
               <button
                 onClick={() => {
-                  setShowCongrats(false)
-                  router.push(NEXT_ROUTE)
+                  setShowCongrats(true)
+                  router.push('/certificate')
                 }}
                 style={{
                   backgroundColor: '#22c55e',
