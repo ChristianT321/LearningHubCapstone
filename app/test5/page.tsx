@@ -270,7 +270,7 @@ export default function QuizClient() {
 
           {allAnswered && passed && (
             <button
-              onClick={() => router.push('/reptiles')}
+              onClick={() => router.push('/reptilefacts')}
               className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition mt-4"
             >
               Continue

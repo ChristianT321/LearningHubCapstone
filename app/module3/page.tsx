@@ -63,22 +63,22 @@ export default function HomePage() {
 
   const slides = [
     {
-      image: '/Bald eagle.jpg',
+      image: '/bald eagle hunting.jpg',
       alt: 'Bald Eagle diving',
       desc: 'Bald eagles can spot fish from hundreds of feet in the air'
     },
     {
-      image: '/ghowl.jpg',
+      image: '/Great horned owl hunting.jpg',
       alt: 'Great Horned Owl',
       desc: 'Owls hunt silently with specialized feathers'
     },
     {
-      image: '/Hummingbird.jpg',
+      image: '/Hummingbird hovering.jpg',
       alt: 'Rufous Hummingbird',
       desc: 'Hummingbirds migrate thousands of miles annually'
     },
     {
-      image: '/Duck.webp',
+      image: '/Harlequin duck feeding.jpg',
       alt: 'Duck',
       desc: 'Ducks have waterproof feathers'
     }

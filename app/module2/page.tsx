@@ -62,7 +62,7 @@ export default function HomePage() {
 
   const slides = [
     {
-      image: '/salmon.jpg',
+      image: '/salmonclose.jpg',
       alt: 'Salmon swimming upstream',
       desc: 'Salmon provide vital nutrients to the rainforest ecosystem'
     },
@@ -72,7 +72,7 @@ export default function HomePage() {
       desc: 'Humpback whales use bubble nets to trap fish'
     },
     {
-      image: '/sea otter.jpg',
+      image: '/Sea-Otter.jpg',
       alt: 'Sea otter',
       desc: 'Sea otters use rocks as tools to crack open shellfish'
     },

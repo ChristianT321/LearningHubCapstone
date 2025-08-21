@@ -43,7 +43,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'A sturdy walker more than a hopper. Migrates to shallow lakes/ponds to breed in spring.',
       slides: [
         { image: '/western_toad_1.jpg', alt: 'Western Toad', desc: 'Warty skin; light dorsal stripe is common.' },
-        { image: '/western_toad_2.webp', alt: 'Toad at pond', desc: 'Eggs in long gelatinous strings along the shore.' },
+        { image: '/toadseggs.jpg', alt: 'Toad eggs', desc: 'Eggs in long gelatinous strings along the shore.' },
       ],
       facts: [
         'Tadpoles often school in dense black swarms.',
@@ -185,22 +185,30 @@ export default function ReptilesAmphibiansSplitPage() {
   const [reptileIndex, setReptileIndex] = useState(0)
 
   // shared indicator
-  const renderDot = (onClick: any, selected: boolean, i: number, label: string) => (
-    <li
-      key={i}
-      role="button"
-      tabIndex={0}
-      aria-label={`${label} ${i + 1}`}
-      onClick={onClick}
-      onKeyDown={onClick}
-      className={`inline-block mx-1.5 ${selected ? 'opacity-100' : 'opacity-50'}`}
-      style={{
-        width: 12, height: 12, borderRadius: '50%',
-        background: selected ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.5)',
-        transition: 'all .3s', cursor: 'pointer'
-      }}
-    />
-  )
+  const renderDot = (
+  onClick: (e: React.MouseEvent | React.KeyboardEvent) => void,
+  selected: boolean,
+  i: number,
+  label: string
+) => (
+  <li
+    key={i}
+    role="button"
+    tabIndex={0}
+    aria-label={`${label} ${i + 1}`}
+    onClick={onClick}
+    onKeyDown={onClick}
+    className={`inline-block mx-1.5 ${selected ? 'opacity-100' : 'opacity-50'}`}
+    style={{
+      width: 12,
+      height: 12,
+      borderRadius: '50%',
+      background: selected ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.5)',
+      transition: 'all .3s',
+      cursor: 'pointer',
+    }}
+  />
+)
 
   // reusable section
   function Section({
@@ -471,7 +479,7 @@ export default function ReptilesAmphibiansSplitPage() {
 
         {/* continue */}
         <motion.button
-          onClick={() => router.push('/test6')}
+          onClick={() => router.push('/reptiles')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="text-white font-bold px-6 py-3 mt-2"
