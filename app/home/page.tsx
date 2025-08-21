@@ -486,7 +486,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+      </main>
       {/* Footer */}
       <motion.footer
         className="w-full"
@@ -518,7 +518,6 @@ export default function HomePage() {
           {footerItems}
         </Container>
       </motion.footer>
-    </main>
 </div>
   )
 }
