@@ -366,7 +366,7 @@ const seasonColors = currentGif === 1
             <button
               key={s}
               onClick={() => setSeason(s)}
-              className="px-4 py-2 bg-white/20 hover:bg-white/40 rounded transition"
+              className="px-4 py-2 bg-white/20 hover:bg-white/40 rounded transition mb-10"
             >
               {s.charAt(0).toUpperCase() + s.slice(1)}
             </button>

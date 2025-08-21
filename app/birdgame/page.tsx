@@ -2,7 +2,9 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+
+
 
 type Bird = {
   id: string;
@@ -25,10 +27,9 @@ type Feather = {
   // visual styling can be derived from the bird
 };
 
+
 export default function BirdCardGamePage() {
-  
   const router = useRouter();
-  
 
   /** ---------------------------
    *  MASTER BIRD POOL (1–4 levels)
@@ -311,7 +312,6 @@ const makeFeatherDeck = (birds: Bird[]): Feather[] => {
   }));
   return shuffle(base);
 };
-
 
   /** ---------------------------
    *  GAME STATE
@@ -760,7 +760,6 @@ return (
 >
   Continue
 </button>
-
     </div>
   </>
 );

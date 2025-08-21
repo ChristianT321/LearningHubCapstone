@@ -15,12 +15,21 @@ type TreeItem = {
 }
 //Will give error if type doesn't match declaration.
 const allItems: TreeItem[] = [
-  { name: 'Western red cedar', image: '/Western red cedar.jpg', type: 'Coniferous'},
-  { name: 'Douglas fir', image: '/Douglas fir.jpg', type: 'Coniferous'},
-  { name: 'Western hemlock', image: '/Western hemlock.jpg', type: 'Coniferous'},
-  { name: 'Douglas fir', image: '/Douglas fir leaf.jpg', type: 'Coniferous'},
-  { name: 'Western hemlock', image: '/Western hemlock leaf.jpg', type: 'Coniferous'},
-  { name: 'Western red cedar', image: '/Western red cedar leaf.jpg', type: 'Coniferous'},
+  // Coniferous trees
+  { name: 'Western red cedar', image: '/Western red cedar.jpg', type: 'Coniferous' },
+  { name: 'Douglas fir', image: '/Douglas fir.jpg', type: 'Coniferous' },
+  { name: 'Western hemlock', image: '/Western hemlock.jpg', type: 'Coniferous' },
+  { name: 'Douglas fir', image: '/Douglas fir leaf.jpg', type: 'Coniferous' },
+  { name: 'Western hemlock', image: '/Western hemlock leaf.jpg', type: 'Coniferous' },
+  { name: 'Western red cedar', image: '/Western red cedar leaf.jpg', type: 'Coniferous' },
+
+  // Deciduous trees
+  { name: 'Bigleaf maple', image: '/Bigleafmaple.jpg', type: 'Deciduous' },
+  { name: 'Bigleaf maple', image: '/mapleleaf.jpg', type: 'Deciduous' },
+  { name: 'Red alder', image: '/red_alder_trees.jpg', type: 'Deciduous' },
+  { name: 'Red alder', image: '/redalderleaf.jpg', type: 'Deciduous' },
+  { name: 'Black cottonwood', image: '/blackcottonwood.webp', type: 'Deciduous' },
+  { name: 'Black cottonwood', image: '/cottonwoodleaf.jpg', type: 'Deciduous' },
 ]
 //AUDIT NOTE: const is a key word in JS/TS.
 export default function NameThatTreeGame() {
