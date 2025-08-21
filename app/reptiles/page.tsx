@@ -31,13 +31,14 @@ export default function ReptileGamePage() {
 
     async function fetchHighscore() {
       try {
-        const res = await fetch(`http://localhost:3001/student/${studentId}/highscore`)
-        const data = await res.json()
-        if (res.ok) {
-          setHighscore(data.highscore ?? 0)
-        } else {
-          console.error('Highscore fetch failed:', data)
+        const res = await fetch(`http://localhost:3001/student/${studentId}/highscore/reptiles`)
+        const text = await res.text()
+        if (!res.ok) {
+          console.error('Highscore fetch failed:', text || res.statusText)
+          return
         }
+        const data = text ? JSON.parse(text) : {}
+        setHighscore(data.highscore ?? 0)
       } catch (err) {
         console.error('Failed to fetch highscore:', err)
       }
@@ -210,7 +211,7 @@ export default function ReptileGamePage() {
       ) {
         if (newScore <= highscoreAtStart) return
         try {
-          const res = await fetch('http://localhost:3001/student/highscore', {
+          const res = await fetch('http://localhost:3001/student/highscore/reptiles', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ studentId, highscore: newScore }),
