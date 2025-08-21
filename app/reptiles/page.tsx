@@ -30,13 +30,14 @@ export default function ReptileGamePage() {
 
     async function fetchHighscore() {
       try {
-        const res = await fetch(`http://localhost:3001/student/${studentId}/highscore`)
-        const data = await res.json()
-        if (res.ok) {
-          setHighscore(data.highscore ?? 0)
-        } else {
-          console.error('Highscore fetch failed:', data)
+        const res = await fetch(`http://localhost:3001/student/${studentId}/highscore/reptiles`)
+        const text = await res.text()
+        if (!res.ok) {
+          console.error('Highscore fetch failed:', text || res.statusText)
+          return
         }
+        const data = text ? JSON.parse(text) : {}
+        setHighscore(data.highscore ?? 0)
       } catch (err) {
         console.error('Failed to fetch highscore:', err)
       }
@@ -194,19 +195,20 @@ export default function ReptileGamePage() {
         if (newScore <= highscoreAtStart) return
 
         try {
-          const res = await fetch('http://localhost:3001/student/highscore', {
+          const res = await fetch('http://localhost:3001/student/highscore/reptiles', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ studentId, highscore: newScore }),
           })
 
-          const data = await res.json()
-          if (res.ok) {
-            console.log('Highscore updated:', data)
-            setHighscore(data.highscore)
-          } else {
-            console.error('Highscore save error:', data)
+          const text = await res.text()
+          if (!res.ok) {
+            console.error('Highscore save error:', text || res.statusText)
+            return
           }
+          const data = text ? JSON.parse(text) : {}
+          console.log('Highscore updated:', data)
+          setHighscore(data.highscore ?? newScore)
         } catch (err) {
           console.error('API error saving highscore:', err)
         }
@@ -259,7 +261,7 @@ export default function ReptileGamePage() {
         Play Again
       </button>
 
-      {/* New Button */}
+      {/* Learn more button */}
       <button
         onClick={() => router.push('/reptilefacts')}
         className="mt-4 px-6 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
