@@ -104,7 +104,6 @@ app.delete('/student/:id', async (req, res) => {
 
 app.post('/students/bulk', async (req, res) => {
   const rows = req.body.students;
-
   if (!Array.isArray(rows)) {
     return res.status(400).json({ error: 'Expected an array of students' });
   }
@@ -118,17 +117,17 @@ app.post('/students/bulk', async (req, res) => {
     const skippedInvalid = [];
 
     for (const r of rows) {
-      // normalize + validate
-      const firstName = (r.firstName ?? '').trim();
-      const lastName  = (r.lastName ?? '').trim();
-      const classCode = (r.classCode ?? '').trim();
+      // accept both casings
+      const firstName = (r.firstName ?? r.firstname ?? '').trim();
+      const lastName  = (r.lastName  ?? r.lastname  ?? '').trim();
+      const classCode = (r.classCode ?? r.classcode ?? '').trim();
 
       if (!firstName || !lastName || !classCode) {
         skippedInvalid.push({ firstName, lastName, classCode, reason: 'Missing fields' });
         continue;
       }
 
-      // Try to insert; DB blocks duplicates
+      // Try to insert; DB must have a unique constraint/index for ON CONFLICT to work
       const ins = await client.query(
         `
         INSERT INTO students (first_name, last_name, class_code)
@@ -140,7 +139,6 @@ app.post('/students/bulk', async (req, res) => {
       );
 
       if (ins.rowCount === 0) {
-        // Duplicate
         skippedDuplicates.push({ firstName, lastName, classCode });
         continue;
       }
@@ -148,7 +146,6 @@ app.post('/students/bulk', async (req, res) => {
       const newStudent = ins.rows[0];
       const studentId = newStudent.id;
 
-      // Related tables only for newly inserted students
       await client.query(
         `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete, module5_complete)
          VALUES ($1, false, false, false, false, false)`,
@@ -169,6 +166,11 @@ app.post('/students/bulk', async (req, res) => {
       created: insertedStudents,
       skippedDuplicates,
       skippedInvalid,
+      counts: {
+        created: insertedStudents.length,
+        duplicates: skippedDuplicates.length,
+        invalid: skippedInvalid.length,
+      },
     });
   } catch (err) {
     await client.query('ROLLBACK');
@@ -178,6 +180,7 @@ app.post('/students/bulk', async (req, res) => {
     client.release();
   }
 });
+
 
 app.post('/student', async (req, res) => {
   const firstName = (req.body.firstname ?? '').trim();
