@@ -219,6 +219,12 @@ export default function CertificatePage() {
             >
               <FaFilePdf /> Download PDF
             </motion.button>
+            <Link
+              href="/frogger-endless"
+              className="inline-block px-6 py-3 font-bold rounded-lg text-white shadow-lg bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900"
+            >
+              Play Frogger?
+            </Link>
           </motion.div>
           
         )}

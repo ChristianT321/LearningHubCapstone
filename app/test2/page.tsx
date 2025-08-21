@@ -96,7 +96,7 @@ export const fullQuestionPool = [
     answer: 'They survive where few other fish can',
   },
   {
-    question: 'What does their body look like?',
+    question: 'What does a whitefish body look like?',
     choices: ['Flat and wide', 'Spiky and long', 'Streamlined and sleek', 'Covered in fur'],
     answer: 'Streamlined and sleek',
   },
@@ -148,8 +148,8 @@ export const fullQuestionPool = [
     answer: '70 pounds',
   },
   {
-    question: 'Where can you find a trout hunting in a photo?',
-    choices: ['In a tree', 'Near the bottom', 'On land', 'In a nest'],
+    question: 'Where does a lake trout like to hunt?',
+    choices: ['In a tree', 'Near the bottom of the lake', 'On land', 'In a nest'],
     answer: 'Near the bottom',
   },
   {
