@@ -17,7 +17,7 @@ export default function GroundAnimalSeasonPage() {
 
   const slidesBlackBear = [
     {
-      image: '/01_Schwarzbär.jpg',
+      image: '/blackbear.jpg',
       alt: 'Black Bear Standing',
       desc: 'As the seasons change, black bears prepare for winter by foraging and building fat reserves.',
     },
