@@ -7,156 +7,156 @@ import Image from 'next/image'
 import { setProgress } from '@/utils/progress'
 
 export const fullQuestionPool = [
-  {
-    question: 'Which bird builds enormous nests in tall trees and returns to them every year?',
-    choices: ['Bald Eagle', 'Great Horned Owl', 'Osprey', 'Trumpeter Swan'],
-    answer: 'Bald Eagle',
+  { 
+    question: 'Which bird is the national symbol of the United States?', 
+    choices: ['Great Horned Owl', 'Bald Eagle', 'Mallard Duck', 'Raven'], 
+    answer: 'Bald Eagle' 
   },
-  {
-    question: 'Which bird can spot prey from over 3 kilometers away?',
-    choices: ['Mallard Duck', 'Peregrine Falcon', 'Bald Eagle', 'Marbled Murrelet'],
-    answer: 'Bald Eagle',
+  { 
+    question: 'Which bird has a white head and a yellow beak?', 
+    choices: ['Osprey', 'Bald Eagle', 'Pelican', 'Sandhill Crane'], 
+    answer: 'Bald Eagle' 
   },
-  {
-    question: 'Which bird flies silently at night and has a strong grip for catching prey?',
-    choices: ['Pacific Wren', 'Great Horned Owl', 'Canada Goose', 'Raven'],
-    answer: 'Great Horned Owl',
+  { 
+    question: 'Which bird is known for hooting at night?', 
+    choices: ['Trumpeter Swan', 'Great Horned Owl', 'Rufous Hummingbird', 'Canada Goose'], 
+    answer: 'Great Horned Owl' 
   },
-  {
-    question: 'Which bird reuses nests built by other animals and nests as early as January?',
-    choices: ['Osprey', 'Raven', 'Great Horned Owl', 'Goldfinch'],
-    answer: 'Great Horned Owl',
+  { 
+    question: 'Which owl has tufts that look like horns on its head?', 
+    choices: ['Great Horned Owl', 'Raven', 'Steller’s Jay', 'Chickadee'], 
+    answer: 'Great Horned Owl' 
   },
-  {
-    question: 'Which bird dives at over 300 km/h to catch other birds in mid-air?',
-    choices: ['Osprey', 'Peregrine Falcon', 'Steller’s Jay', 'Varied Thrush'],
-    answer: 'Peregrine Falcon',
+  { 
+    question: 'Which bird is the fastest in the world, diving at over 300 km/h?', 
+    choices: ['Peregrine Falcon', 'Osprey', 'Mallard Duck', 'Varied Thrush'], 
+    answer: 'Peregrine Falcon' 
   },
-  {
-    question: 'Which bird nests on cliffs or tall buildings without building a traditional nest?',
-    choices: ['Bald Eagle', 'American Dipper', 'Peregrine Falcon', 'Trumpeter Swan'],
-    answer: 'Peregrine Falcon',
+  { 
+    question: 'Which bird often nests on cliffs or tall buildings in cities?', 
+    choices: ['Great Blue Heron', 'Peregrine Falcon', 'Marbled Murrelet', 'Canada Goose'], 
+    answer: 'Peregrine Falcon' 
   },
-  {
-    question: 'Which bird eats mostly fish and has special toes for gripping slippery prey?',
-    choices: ['Great Blue Heron', 'Osprey', 'Harlequin Duck', 'Raven'],
-    answer: 'Osprey',
+  { 
+    question: 'Which bird eats mostly fish and dives into water to catch them?', 
+    choices: ['Raven', 'Osprey', 'Goldfinch', 'Harlequin Duck'], 
+    answer: 'Osprey' 
   },
-  {
-    question: 'Which bird dives feet-first into water and has oily feathers to stay dry?',
-    choices: ['Peregrine Falcon', 'Osprey', 'Marbled Murrelet', 'Loon'],
-    answer: 'Osprey',
+  { 
+    question: 'Which bird has a wingspan of nearly 2 meters and is often seen wading in water?', 
+    choices: ['Great Blue Heron', 'Mallard Duck', 'Common Loon', 'Rufous Hummingbird'], 
+    answer: 'Great Blue Heron' 
   },
-  {
-    question: 'Which bird has short wings and a long tail to help it twist through forests?',
-    choices: ['Great Blue Heron', 'Northern Goshawk', 'Canada Goose', 'Goldfinch'],
-    answer: 'Northern Goshawk',
+  { 
+    question: 'Which large white bird has a pouch under its bill to scoop fish?', 
+    choices: ['Trumpeter Swan', 'American White Pelican', 'Bald Eagle', 'Sandhill Crane'], 
+    answer: 'American White Pelican' 
   },
-  {
-    question: 'Which bird hunts squirrels and defends its nest with surprising aggression?',
-    choices: ['Steller’s Jay', 'Northern Goshawk', 'Bald Eagle', 'American Dipper'],
-    answer: 'Northern Goshawk',
-  }, 
-  {
-    question: 'Which duck has waterproof feathers and is one of the most common ducks in North America?',
-    choices: ['Mallard Duck', 'Harlequin Duck', 'Trumpeter Swan', 'American Goldfinch'],
-    answer: 'Mallard Duck',
+  { 
+    question: 'Which swan is the largest waterfowl in North America?', 
+    choices: ['Trumpeter Swan', 'Mallard Duck', 'Canada Goose', 'Harlequin Duck'], 
+    answer: 'Trumpeter Swan' 
   },
-  {
-    question: 'Which duck can swim just hours after hatching?',
-    choices: ['Canada Goose', 'Mallard Duck', 'American Dipper', 'Sandhill Crane'],
-    answer: 'Mallard Duck',
+  { 
+    question: 'Which duck is one of the most common in North America and has a green head?', 
+    choices: ['Mallard Duck', 'Harlequin Duck', 'Marbled Murrelet', 'Chickadee'], 
+    answer: 'Mallard Duck' 
   },
-  {
-    question: 'Which seabird nests in trees far from the ocean and was a mystery to scientists until the 1970s?',
-    choices: ['Common Loon', 'Marbled Murrelet', 'Mallard Duck', 'Harlequin Duck'],
-    answer: 'Marbled Murrelet',
+  { 
+    question: 'Which duck’s babies can swim just hours after hatching?', 
+    choices: ['Mallard Duck', 'Canada Goose', 'Loon', 'Pelican'], 
+    answer: 'Mallard Duck' 
   },
-  {
-    question: 'Which bird flies up to 80 kilometers inland just to nest on a single tree branch?',
-    choices: ['Bald Eagle', 'Osprey', 'Marbled Murrelet', 'Peregrine Falcon'],
-    answer: 'Marbled Murrelet',
+  { 
+    question: 'Which seabird nests in tall forest trees instead of cliffs?', 
+    choices: ['Marbled Murrelet', 'Peregrine Falcon', 'Trumpeter Swan', 'Heron'], 
+    answer: 'Marbled Murrelet' 
   },
-  {
-    question: 'Which tall bird is known for its trumpeting call and builds nests in wetlands?',
-    choices: ['Sandhill Crane', 'Great Blue Heron', 'Canada Goose', 'Common Loon'],
-    answer: 'Sandhill Crane',
+  { 
+    question: 'Which tall bird is known for its loud trumpeting call?', 
+    choices: ['Sandhill Crane', 'Raven', 'Pelican', 'Goldfinch'], 
+    answer: 'Sandhill Crane' 
   },
-  {
-    question: 'Which bird has a nearly 2-meter wingspan and swallows fish whole?',
-    choices: ['Great Blue Heron', 'Trumpeter Swan', 'American White Pelican', 'Peregrine Falcon'],
-    answer: 'Great Blue Heron',
+  { 
+    question: 'Which diving bird makes eerie calls on lakes?', 
+    choices: ['Common Loon', 'Mallard Duck', 'Harlequin Duck', 'Canada Goose'], 
+    answer: 'Common Loon' 
   },
-  {
-    question: 'Which large white bird catches fish while floating and uses its bill like a scoop?',
-    choices: ['Trumpeter Swan', 'Harlequin Duck', 'American White Pelican', 'Canada Goose'],
-    answer: 'American White Pelican',
+  { 
+    question: 'Which bird is all black and can mimic human speech?', 
+    choices: ['Raven', 'Chickadee', 'Osprey', 'Great Horned Owl'], 
+    answer: 'Raven' 
   },
-  {
-    question: 'Which swan mates for life and returns to the same wetland to build giant nests?',
-    choices: ['Mallard Duck', 'Trumpeter Swan', 'Canada Goose', 'Great Blue Heron'],
-    answer: 'Trumpeter Swan',
+  { 
+    question: 'Which bold blue bird often mimics hawks and steals food?', 
+    choices: ['Steller’s Jay', 'Goldfinch', 'Kinglet', 'Osprey'], 
+    answer: 'Steller’s Jay' 
   },
-  {
-    question: 'Which colorful duck dives in fast-moving rivers and builds nests under logs or rocks?',
-    choices: ['Harlequin Duck', 'Common Loon', 'American Goldfinch', 'Mallard Duck'],
-    answer: 'Harlequin Duck',
+  { 
+    question: 'Which orange and black bird sings a flute-like song in the forest?', 
+    choices: ['Varied Thrush', 'Rufous Hummingbird', 'Marbled Murrelet', 'Loon'], 
+    answer: 'Varied Thrush' 
   },
-  {
-    question: 'Which diving bird builds floating nests and struggles to walk on land?',
-    choices: ['Canada Goose', 'Common Loon', 'Sandhill Crane', 'American Dipper'],
-    answer: 'Common Loon',
+  { 
+    question: 'Which tiny brown bird has a very loud song?', 
+    choices: ['Pacific Wren', 'Chickadee', 'Kinglet', 'Harlequin Duck'], 
+    answer: 'Pacific Wren' 
   },
-  {
-    question: 'Which intelligent forest bird can mimic human speech and remember faces?',
-    choices: ['Steller’s Jay', 'Raven', 'Ruby-crowned Kinglet', 'Great Horned Owl'],
-    answer: 'Raven',
+  { 
+    question: 'Which tiny bird often hangs upside-down while feeding?', 
+    choices: ['Chickadee', 'Pelican', 'Great Blue Heron', 'Goose'], 
+    answer: 'Chickadee' 
   },
-  {
-    question: 'Which bold blue bird hides food and sometimes mimics hawk calls?',
-    choices: ['Steller’s Jay', 'Pacific Wren', 'Mallard Duck', 'Peregrine Falcon'],
-    answer: 'Steller’s Jay',
+  { 
+    question: 'Which small bird has a hidden red crown that shows when excited?', 
+    choices: ['Ruby-crowned Kinglet', 'Goldfinch', 'Rufous Hummingbird', 'Owl'], 
+    answer: 'Ruby-crowned Kinglet' 
   },
-  {
-    question: 'Which shy bird has a flute-like song and forages on the forest floor?',
-    choices: ['Varied Thrush', 'Chickadee', 'Goldfinch', 'Bald Eagle'],
-    answer: 'Varied Thrush',
+  { 
+    question: 'Which small yellow bird feeds mostly on seeds?', 
+    choices: ['American Goldfinch', 'Raven', 'Loon', 'Steller’s Jay'], 
+    answer: 'American Goldfinch' 
   },
-  {
-    question: 'Which tiny bird sings very loudly and builds dome-shaped nests in moss?',
-    choices: ['Pacific Wren', 'Ruby-crowned Kinglet', 'American Goldfinch', 'Steller’s Jay'],
-    answer: 'Pacific Wren',
+  { 
+    question: 'Which tiny bird can hover and even fly backwards?', 
+    choices: ['Rufous Hummingbird', 'Pacific Wren', 'Mallard Duck', 'Pelican'], 
+    answer: 'Rufous Hummingbird' 
   },
-  {
-    question: 'Which small forest bird stores food and hangs upside-down to feed?',
-    choices: ['Chickadee', 'Common Loon', 'Canada Goose', 'Belted Kingfisher'],
-    answer: 'Chickadee',
+  { 
+    question: 'Which bird digs tunnels in riverbanks to nest?', 
+    choices: ['Belted Kingfisher', 'Mallard Duck', 'Goose', 'Raven'], 
+    answer: 'Belted Kingfisher' 
   },
-  {
-    question: 'Which tiny bird builds nests from spider silk and can fly backwards?',
-    choices: ['Rufous Hummingbird', 'Pacific Wren', 'Ruby-crowned Kinglet', 'Steller’s Jay'],
-    answer: 'Rufous Hummingbird',
+  { 
+    question: 'Which bird has bright blue feathers and a crest on its head?', 
+    choices: ['Steller’s Jay', 'Heron', 'Chickadee', 'Marbled Murrelet'], 
+    answer: 'Steller’s Jay' 
   },
-  {
-    question: 'Which bird nests in tunnels along riverbanks and beats fish before eating?',
-    choices: ['Belted Kingfisher', 'Great Blue Heron', 'Varied Thrush', 'Raven'],
-    answer: 'Belted Kingfisher',
+  { 
+    question: 'Which bird is famous for migrating in a V-formation?', 
+    choices: ['Canada Goose', 'Bald Eagle', 'Mallard Duck', 'Loon'], 
+    answer: 'Canada Goose' 
   },
-  {
-    question: 'Which yellow bird feeds on seeds and builds tightly woven nests?',
-    choices: ['American Goldfinch', 'Steller’s Jay', 'Mallard Duck', 'Northern Goshawk'],
-    answer: 'American Goldfinch',
+  { 
+    question: 'Which small bird walks underwater in mountain streams?', 
+    choices: ['American Dipper', 'Pacific Wren', 'Harlequin Duck', 'Kinglet'], 
+    answer: 'American Dipper' 
   },
-  {
-    question: 'Which bird is very small, but sings a loud and complex song?',
-    choices: ['Ruby-crowned Kinglet', 'Rufous Hummingbird', 'Pacific Wren', 'Goldfinch'],
-    answer: 'Ruby-crowned Kinglet',
+  { 
+    question: 'Which bird often builds floating nests on lakes?', 
+    choices: ['Common Loon', 'Pelican', 'Swan', 'Goose'], 
+    answer: 'Common Loon' 
   },
-  {
-    question: 'Which bird has a red crown that only shows when it’s excited?',
-    choices: ['Ruby-crowned Kinglet', 'American Dipper', 'Belted Kingfisher', 'Raven'],
-    answer: 'Ruby-crowned Kinglet',
+  { 
+    question: 'Which duck is very colorful and lives in fast-moving rivers?', 
+    choices: ['Harlequin Duck', 'Mallard Duck', 'Pelican', 'Osprey'], 
+    answer: 'Harlequin Duck' 
   },
+  { 
+    question: 'Which bird is tiny but sings a very loud and complex song?', 
+    choices: ['Ruby-crowned Kinglet', 'Rufous Hummingbird', 'Pacific Wren', 'Goldfinch'], 
+    answer: 'Ruby-crowned Kinglet' 
+  }
 ]
 
 function getRandomQuestions(pool: typeof fullQuestionPool, exclude: number[] = [], count = 10) {
