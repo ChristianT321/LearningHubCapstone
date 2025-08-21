@@ -13,7 +13,7 @@ export default function GroundAnimalFactsPage() {
 
   const slidesBlackBear = [
     {
-      image: '/01_Schwarzbär.jpg',
+      image: '/blackbear.jpg',
       alt: 'Black Bear Standing',
       desc: 'Black bears are excellent climbers and often scale trees to escape danger or find food.',
     },

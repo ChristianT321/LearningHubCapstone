@@ -58,6 +58,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'A shy forest frog of cool, shaded wetlands with a reddish wash on the hind legs.',
       slides: [
         { image: '/red_legged_1.jpg', alt: 'Red-legged Frog', desc: 'Needs intact riparian forest and clean water.' },
+        { image: '/red_legged_2.jpg', alt: 'Red-legged Frog (second view)', desc: 'Reddish coloration visible on hind legs.' },
       ],
       facts: [
         'Breeds early; large jelly masses attached to sticks.',
@@ -90,6 +91,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'A nimble, climbing salamander using moist logs and even canopy microhabitats; active on rainy nights.',
       slides: [
         { image: '/wandering_1.jpg', alt: 'Wandering Salamander', desc: 'Prefers cool, damp old wood and mossy bark.' },
+        { image: '/wandering_2.jpg', alt: 'Wandering Salamander (second view)', desc: 'Often active along mossy logs at night.' },
       ],
       facts: [
         'Lungless—breathes through skin and mouth lining.',
@@ -104,6 +106,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'A larger mole salamander using forest ponds and marshy edges; larvae can overwinter.',
       slides: [
         { image: '/northwestern_1.jpg', alt: 'Northwestern Salamander', desc: 'Egg masses in jelly, wrapped around sticks.' },
+        { image: '/northwester_2.jpg', alt: 'Northwestern Salamander (second view)', desc: 'Often hides beneath logs near wetlands.' },
       ],
       facts: [
         'Adults hide under logs and leaf litter.',
@@ -118,6 +121,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'Small woodland salamander with a pinch at the tail base; common under logs in moist forests.',
       slides: [
         { image: '/ensatina.jpg', alt: 'Ensatina', desc: 'Young hatch as miniature adults (no larval stage).' },
+        { image: '/ensatina_2.jpg', alt: 'Ensatina (second view)', desc: 'Constricted tail base (“waist”) is a key ID feature.' },
       ],
       facts: [
         'Active on wet nights; rests under cover by day.',
@@ -150,6 +154,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'Small, variable gartersnake of meadows, edges, and streambanks; harmless to people.',
       slides: [
         { image: '/nw_gartersnake.jpg', alt: 'Gartersnake', desc: 'Often seen after rain or basking on warm paths.' },
+        { image: '/nw_gartersnake_2.jpg', alt: 'Gartersnake (second view)', desc: 'Striped pattern varies by individual and region.' },
       ],
       facts: [
         'Eats slugs, worms, amphibians, and small fish.',
@@ -164,6 +169,7 @@ export default function ReptilesAmphibiansSplitPage() {
         'Sleek, quick lizard of sunny, rocky clearings; less common in dense shade.',
       slides: [
         { image: '/skink.jpg', alt: 'Western Skink', desc: 'Juveniles often have bright blue tails.' },
+        { image: '/skink_2.jpg', alt: 'Western Skink (second view)', desc: 'Active on warm days near flat rocks and boards.' },
       ],
       facts: [
         'Feeds on small insects and spiders.',
@@ -386,8 +392,8 @@ export default function ReptilesAmphibiansSplitPage() {
                 <div className="text-white text-lg">
                   <h3 className="text-2xl font-bold mb-2">Ponds & Wetlands</h3>
                   <p>
-                    Calm, shallow water with plants is perfect for eggs and tadpoles.{" "}
-                    <span className="font-semibold">Pacific Treefrogs</span> and{" "}
+                    Calm, shallow water with plants is perfect for eggs and tadpoles.{' '}
+                    <span className="font-semibold">Pacific Treefrogs</span> and{' '}
                     <span className="font-semibold">Western Toads</span> breed here. Look for egg clusters
                     on stems (frogs) and long strings (toads). Edges with grasses and reeds are frog hotspots.
                   </p>
@@ -401,8 +407,8 @@ export default function ReptilesAmphibiansSplitPage() {
                 <div className="text-white text-lg">
                   <h3 className="text-2xl font-bold mb-2">Fast, Shaded Streams</h3>
                   <p>
-                    Cold, oxygen-rich water under big trees is key for stream specialists.{" "}
-                    <span className="font-semibold">Coastal Tailed Frogs*</span> (if present) and{" "}
+                    Cold, oxygen-rich water under big trees is key for stream specialists.{' '}
+                    <span className="font-semibold">Coastal Tailed Frogs*</span> (if present) and{' '}
                     <span className="font-semibold">Rough-skinned Newts</span> use clean, flowing water.
                     Watch your step on slick rocks—look, don’t lift rock homes.
                   </p>
@@ -422,9 +428,9 @@ export default function ReptilesAmphibiansSplitPage() {
                 <div className="text-white text-lg">
                   <h3 className="text-2xl font-bold mb-2">Forest Floor & Fallen Logs</h3>
                   <p>
-                    Moist leaf litter and rotting wood are salamander cities.{" "}
-                    <span className="font-semibold">Ensatina</span>,{" "}
-                    <span className="font-semibold">Wandering Salamanders</span>, and{" "}
+                    Moist leaf litter and rotting wood are salamander cities.{' '}
+                    <span className="font-semibold">Ensatina</span>,{' '}
+                    <span className="font-semibold">Wandering Salamanders</span>, and{' '}
                     <span className="font-semibold">Northwestern Salamanders</span> hide here by day.
                     If you gently lift a log, always return it exactly as found.
                   </p>
@@ -438,9 +444,9 @@ export default function ReptilesAmphibiansSplitPage() {
                 <div className="text-white text-lg">
                   <h3 className="text-2xl font-bold mb-2">Sunny Openings & Rocky Edges</h3>
                   <p>
-                    Reptiles need warmth! Small sun patches in the rainforest help{" "}
-                    <span className="font-semibold">Northwestern Alligator Lizards</span>,{" "}
-                    <span className="font-semibold">Western Skinks</span>, and{" "}
+                    Reptiles need warmth! Small sun patches in the rainforest help{' '}
+                    <span className="font-semibold">Northwestern Alligator Lizards</span>,{' '}
+                    <span className="font-semibold">Western Skinks</span>, and{' '}
                     <span className="font-semibold">Gartersnakes</span> warm up. Look near rock piles,
                     log edges, and trail borders on bright days.
                   </p>
