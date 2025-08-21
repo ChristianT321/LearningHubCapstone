@@ -97,7 +97,7 @@ export default function GoFishGame() {
                 Play Again
               </button>
               <button
-                onClick={() => router.push('/test2')}
+                onClick={() => router.push('/tides')}
                 className="bg-purple-700 hover:bg-purple-950 text-white px-6 py-3 rounded-xl shadow transition"
               >
                 Continue
