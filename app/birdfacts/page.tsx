@@ -705,8 +705,8 @@ export default function BirdNotebook() {
           </div>
         </div>
 
-        <button onClick={() => router.push('/matching2')} className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition">
-          Start Matching Game →
+        <button onClick={() => router.push('/birdgame')} className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition">
+          Start Card Game →
         </button>
       </div>
     </main>
