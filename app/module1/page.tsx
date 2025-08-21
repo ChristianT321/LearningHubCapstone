@@ -100,7 +100,7 @@ useEffect(() => {
 
   const slides = [
     {
-      image: '/beaver.jpg',
+      image: '/beaver2.jpg',
       alt: 'Beaver building dam',
       desc: 'Beavers are nature\'s engineers, creating complex dams',
     },

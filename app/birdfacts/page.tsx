@@ -306,13 +306,13 @@ const birdGroups: BirdGroups = {
       images: {
         main: { src: '/Common loon.jpg', alt: 'Common Loon' },
         feather: { src: '/Common loon feather.jpg', alt: 'Loon Feather' },
-        extra: { src: '/Common loon nest.jpg', alt: 'Loon Nest' },
+        extra: { src: '/loonNest.jpg', alt: 'Loon Nest' },
         food: { src: '/Common loon feeding.webp', alt: 'Loon Feeding' },
       },
       intro: 'Common Loons are iconic diving birds known for their haunting calls and checkered black-and-white plumage.',
       featherInfo: 'Their dense feathers trap air for insulation and buoyancy in cold northern lakes.',
       nesting: {
-        image: '/Loon nest.jpg',
+        image: '/loonNest.jpg',
         caption: 'They build floating nests along the edges of quiet lakes.',
         fact: 'Loons have trouble walking on land due to their rear-set legs, so they nest close to the water.',
       },
@@ -705,8 +705,8 @@ export default function BirdNotebook() {
           </div>
         </div>
 
-        <button onClick={() => router.push('/matching2')} className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition">
-          Start Matching Game →
+        <button onClick={() => router.push('/birdgame')} className="mt-8 bg-green-700 hover:bg-green-900 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition">
+          Start Card Game →
         </button>
       </div>
     </main>

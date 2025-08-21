@@ -6,24 +6,63 @@ import { useRouter } from 'next/navigation'
 const trees = [
   {
     name: 'Western red cedar',
+    type: 'coniferous',
     treeImage: '/Western red cedar.jpg',
     leafImage: '/Western red cedar leaf.jpg',
-    treeFact: 'Can grow over 200 feet tall and live for over 1,000 years! Its wood resists rot and smells great.',
-    leafFact: 'Flat, scale-like leaves that smell pleasant and are naturally decay-resistant.',
+    treeFact:
+      'Can grow over 200 feet tall and live for over 1,000 years! Its wood resists rot and smells great.',
+    leafFact:
+      'Flat, scale-like leaves that smell pleasant and are naturally decay-resistant.',
   },
   {
     name: 'Douglas fir',
+    type: 'coniferous',
     treeImage: '/Douglas fir.jpg',
     leafImage: '/Douglas fir leaf.jpg',
-    treeFact: 'One of the tallest trees in the Pacific Northwest, often used in lumber due to its strength.',
-    leafFact: 'Needle-like leaves grow in a spiral and give off a sweet, citrusy scent when crushed.',
+    treeFact:
+      'One of the tallest trees in the Pacific Northwest, often used in lumber due to its strength.',
+    leafFact:
+      'Needle-like leaves grow in a spiral and give off a sweet, citrusy scent when crushed.',
   },
   {
     name: 'Western hemlock',
+    type: 'coniferous',
     treeImage: '/Western hemlock.jpg',
     leafImage: '/Western hemlock leaf.jpg',
-    treeFact: 'Known for its drooping top and preference for cool, shady forest areas.',
-    leafFact: 'Short, flat needles of uneven lengths give branches a soft and fluffy look.',
+    treeFact:
+      'Known for its drooping top and preference for cool, shady forest areas.',
+    leafFact:
+      'Short, flat needles of uneven lengths give branches a soft and fluffy look.',
+  },
+  {
+    name: 'Bigleaf maple',
+    type: 'deciduous',
+    treeImage: '/Bigleafmaple.jpg',
+    leafImage: '/mapleleaf.jpg',
+    treeFact:
+      'The largest maple in North America, growing up to 100 feet tall with broad, spreading branches.',
+    leafFact:
+      'Huge leaves (up to a foot across!) with 5 deeply lobed points, turning golden or reddish in fall.',
+  },
+  {
+    name: 'Red alder',
+    type: 'deciduous',
+    treeImage: '/red_alder_trees.jpg',
+    leafImage: '/redalderleaf.jpg',
+    treeFact:
+      'A fast-growing pioneer species that enriches the soil by fixing nitrogen from the air.',
+    leafFact:
+      'Oval, serrated leaves with a slightly rolled edge and a dull green color.',
+  },
+  {
+    name: 'Black cottonwood',
+    type: 'deciduous',
+    treeImage: '/blackcottonwood.webp',
+    leafImage: '/cottonwoodleaf.jpg',
+    treeFact:
+      'One of the largest deciduous trees in western North America, often found near rivers and wetlands.',
+    leafFact:
+      'Broad, triangular leaves with a shiny green top and a lighter underside that trembles in the wind.',
   },
 ]
 
@@ -67,7 +106,7 @@ export default function TreeFactsPage() {
               Trees that <strong>lose their leaves</strong> each fall to conserve water and energy in winter. Their broad leaves often change color before falling off.
             </p>
             <p className="mt-6 italic text-white">
-              Examples: Maples, oaks, birches
+              Examples: Maples, alders, cottonwoods
             </p>
           </div>
         </section>
@@ -76,9 +115,13 @@ export default function TreeFactsPage() {
           {trees.map((tree) => (
             <div
               key={tree.name}
-              className="bg-blue-950 rounded-2xl shadow-md p-6 flex flex-col gap-6 w-full"
+              className={`rounded-2xl shadow-md p-6 flex flex-col gap-6 w-full ${
+                tree.type === 'coniferous'
+                  ? 'bg-gradient-to-tr from-green-950 to-green-500 text-white'
+                  : 'bg-gradient-to-tr from-orange-900 to-yellow-500 text-white'
+              }`}
             >
-              <h2 className="text-2xl font-bold text-white text-center">{tree.name}</h2>
+              <h2 className="text-2xl font-bold text-center">{tree.name}</h2>
 
               <div className="flex flex-col md:flex-row items-stretch justify-between gap-6">
                 <div className="bg-white rounded-xl p-4 flex flex-col items-center flex-1 shadow gap-3">
@@ -111,12 +154,13 @@ export default function TreeFactsPage() {
             </div>
           ))}
         </div>
+
         <div className="text-center mt-12">
           <button
             onClick={() => router.push('/matching3')}
             className="bg-green-700 hover:bg-green-950 text-white px-8 py-4 text-lg rounded-xl shadow-md transition-colors duration-300 ease-in-out"
           >
-            Start the Tree Quiz
+            Start the Tree Game
           </button>
         </div>
       </div>
