@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -85,7 +86,8 @@ export default function ReptileGamePage() {
       let localScore = 0
       let gameOver = false
       let gameOverText: Phaser.GameObjects.Text
-      let logSpeedMultiplier = 1 
+      let logSpeedMultiplier = 1
+      const lilyPads: Phaser.GameObjects.Image[] = []
 
       game = new Phaser.Game(config)
       window.reptileGameInstance = game
@@ -94,16 +96,25 @@ export default function ReptileGamePage() {
         this.load.image('frog', '/pacific tree frog.png')
         this.load.image('log', '/log.png')
         this.load.image('bg', '/waterbackground.png')
+        this.load.image('lilypad', '/water-lily-clipart-lg.png')
       }
 
       function create(this: Phaser.Scene) {
         this.add.tileSprite(gameWidth / 2, gameHeight / 2, gameWidth, gameHeight, 'bg')
+
+        for (let lane = 0; lane < laneCount; lane++) {
+          const lilyPad = this.add.image(getLaneX(lane), gameHeight - 50, 'lilypad')
+          lilyPad.setScale(0.1)
+          lilyPad.setDepth(0)
+          lilyPads.push(lilyPad)
+        }
 
         cursors = this.input.keyboard!.createCursorKeys()
 
         frog = this.physics.add.sprite(getLaneX(currentLane), gameHeight - 50, 'frog')
         frog.setScale(0.1)
         frog.setCollideWorldBounds(true)
+        frog.setDepth(1)
 
         if (frog.body) {
           frog.body.setSize(frog.width * 0.8, frog.height * 0.8)
@@ -127,9 +138,9 @@ export default function ReptileGamePage() {
             frog.setTint(0xff0000)
 
             logs.getChildren().forEach((log) => {
-              const logBody = (log as Phaser.Physics.Arcade.Sprite).body
-              if (logBody instanceof Phaser.Physics.Arcade.Body) {
-                logBody.setVelocity(0)
+              const body = (log as Phaser.Physics.Arcade.Sprite).body
+              if (body instanceof Phaser.Physics.Arcade.Body) {
+                body.setVelocity(0)
               }
             })
 
@@ -145,9 +156,14 @@ export default function ReptileGamePage() {
       function update(this: Phaser.Scene, time: number, delta: number) {
         if (gameOver) return
 
-        if (Phaser.Input.Keyboard.JustDown(cursors.left!) && currentLane > 0) currentLane--
-        else if (Phaser.Input.Keyboard.JustDown(cursors.right!) && currentLane < laneCount - 1)
+        if (Phaser.Input.Keyboard.JustDown(cursors.left!) && currentLane > 0) {
+          currentLane--
+        } else if (
+          Phaser.Input.Keyboard.JustDown(cursors.right!) &&
+          currentLane < laneCount - 1
+        ) {
           currentLane++
+        }
 
         frog.x = getLaneX(currentLane)
 
@@ -160,10 +176,9 @@ export default function ReptileGamePage() {
 
         logSpeedMultiplier += delta * 0.00006
 
-        logs.getChildren().forEach((log: Phaser.GameObjects.GameObject) => {
+        logs.getChildren().forEach((log) => {
           const sprite = log as Phaser.Physics.Arcade.Sprite
           sprite.y += delta * 0.3 * logSpeedMultiplier
-
           if (sprite.y > gameHeight + 50) {
             sprite.destroy()
             localScore++
@@ -182,38 +197,31 @@ export default function ReptileGamePage() {
         const log = scene.physics.add.sprite(x, -50, 'log')
         log.setScale(0.12)
         log.setImmovable(true)
-
         if (log.body instanceof Phaser.Physics.Arcade.Body) {
           log.body.setSize(log.width * 0.6, log.height * 0.3)
           log.body.setOffset(log.width * 0.2, log.height * 0.4)
         }
-
         logs.add(log)
       }
 
-      async function saveHighscore(studentId: number, newScore: number, highscoreAtStart: number) {
+      async function saveHighscore(
+        studentId: number,
+        newScore: number,
+        highscoreAtStart: number
+      ) {
         if (newScore <= highscoreAtStart) return
-
         try {
           const res = await fetch('http://localhost:3001/student/highscore/reptiles', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ studentId, highscore: newScore }),
           })
-
-          const text = await res.text()
-          if (!res.ok) {
-            console.error('Highscore save error:', text || res.statusText)
-            return
-          }
-          const data = text ? JSON.parse(text) : {}
-          console.log('Highscore updated:', data)
-          setHighscore(data.highscore ?? newScore)
+          const data = await res.json()
+          if (res.ok) setHighscore(data.highscore)
+          else console.error('Highscore save error:', data)
         } catch (err) {
           console.error('API error saving highscore:', err)
         }
-
-        console.log('Score this game:', newScore, '| Stored highscore at start:', highscoreAtStart)
       }
     }
 
@@ -222,52 +230,72 @@ export default function ReptileGamePage() {
     return () => {
       if (game) {
         game.destroy(true)
-        game = null
         window.reptileGameInstance = null
       }
-
       const container = document.getElementById('game-container')
       if (container) container.innerHTML = ''
     }
   }, [studentId, highscore, gameKey])
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-green-100 overflow-y-auto py-8">
-      <h1 className="text-4xl font-bold mb-4 text-blue-600">Reptile & Amphibian Adventure</h1>
-
-      <div className="flex flex-col items-center mb-4">
-        <p className="text-xl text-red-600">Score: {score}</p>
-        <p className="text-xl text-blue-600">High Score: {highscore ?? 0}</p>
+    <div className="relative min-h-screen w-full flex justify-center items-start py-8">
+      {/* Full-screen background */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src="/homeback.png"
+          alt="Home Background"
+          fill
+          priority
+          className="object-cover"
+          style={{ objectPosition: 'center' }}
+        />
       </div>
 
-      <div
-        id="game-container"
-        className="w-[450px] h-[600px] relative overflow-hidden bg-black mb-4"
-      />
+      {/* White panel wrapping all content */}
+      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
+        {/* Title */}
+        <h1 className="text-4xl font-bold mb-6 text-blue-600 text-center">
+          Reptile & Amphibian Adventure
+        </h1>
 
-      <button
-        onClick={() => {
-          setScore(0)
-          setIsGameOver(false)
-          setGameKey((prev) => prev + 1)
-        }}
-        disabled={!isGameOver}
-        className={`px-6 py-2 rounded transition font-semibold ${
-          isGameOver
-            ? 'bg-green-700 text-white hover:bg-green-800 cursor-pointer'
-            : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-        }`}
-      >
-        Play Again
-      </button>
+        {/* Scores */}
+        <div className="flex justify-between mb-6 px-4">
+          <p className="text-xl text-red-600">Score: {score}</p>
+          <p className="text-xl text-blue-600">High Score: {highscore ?? 0}</p>
+        </div>
 
-      {/* Learn more button */}
-      <button
-        onClick={() => router.push('/reptilefacts')}
-        className="mt-4 px-6 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
-      >
-        Learn about Reptiles?
-      </button>
+        {/* Game Canvas */}
+        <div
+          id="game-container"
+          className="w-[450px] h-[600px] bg-black mx-auto mb-6"
+        />
+
+        {/* Buttons */}
+        <div className="flex justify-between px-4">
+          <button
+            onClick={() => {
+              setScore(0)
+              setIsGameOver(false)
+              setGameKey((prev) => prev + 1)
+            }}
+            disabled={!isGameOver}
+            className={`px-6 py-2 rounded font-semibold ${
+              isGameOver
+                ? 'bg-green-700 text-white hover:bg-green-800'
+                : 'bg-gray-400 text-gray-700 cursor-not-allowed'
+            }`}
+          >
+            Play Again
+          </button>
+
+          <button
+            onClick={() => router.push('/test6')}
+            className="px-6 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
