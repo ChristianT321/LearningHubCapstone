@@ -102,107 +102,141 @@ app.delete('/student/:id', async (req, res) => {
   }
 })
 
-// Bulk insert students
 app.post('/students/bulk', async (req, res) => {
-  const students = req.body.students;
+  const rows = req.body.students;
 
-  if (!Array.isArray(students)) {
+  if (!Array.isArray(rows)) {
     return res.status(400).json({ error: 'Expected an array of students' });
   }
 
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+
     const insertedStudents = [];
+    const skippedDuplicates = [];
+    const skippedInvalid = [];
 
-    for (const student of students) {
-      const { firstName, lastName, classCode } = student;
+    for (const r of rows) {
+      // normalize + validate
+      const firstName = (r.firstName ?? '').trim();
+      const lastName  = (r.lastName ?? '').trim();
+      const classCode = (r.classCode ?? '').trim();
 
-      // Prevent duplicate student
-      const exists = await client.query(
-        `SELECT id FROM students WHERE LOWER(first_name) = LOWER($1) AND LOWER(last_name) = LOWER($2) AND LOWER(class_code) = LOWER($3)`,
+      if (!firstName || !lastName || !classCode) {
+        skippedInvalid.push({ firstName, lastName, classCode, reason: 'Missing fields' });
+        continue;
+      }
+
+      // Try to insert; DB blocks duplicates
+      const ins = await client.query(
+        `
+        INSERT INTO students (first_name, last_name, class_code)
+        VALUES ($1,$2,$3)
+        ON CONFLICT DO NOTHING
+        RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"
+        `,
         [firstName, lastName, classCode]
       );
 
-      if (exists.rows.length > 0) {
-        continue; // Skip duplicate
+      if (ins.rowCount === 0) {
+        // Duplicate
+        skippedDuplicates.push({ firstName, lastName, classCode });
+        continue;
       }
 
-      const studentResult = await client.query(
-        `INSERT INTO students (first_name, last_name, class_code)
-         VALUES ($1, $2, $3)
-         RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"`,
-        [firstName || '', lastName || '', classCode || '']
-      );
-
-      const newStudent = studentResult.rows[0];
+      const newStudent = ins.rows[0];
       const studentId = newStudent.id;
 
-      // Insert into progress_tracker
+      // Related tables only for newly inserted students
       await client.query(
         `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete, module5_complete)
-        VALUES ($1, false, false, false, false, false)`,
+         VALUES ($1, false, false, false, false, false)`,
         [studentId]
       );
 
-      // Insert into test_results
       await client.query(
         `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score, test5_score)
-        VALUES ($1, 0, 0, 0, 0, 0)`,
+         VALUES ($1, 0, 0, 0, 0, 0)`,
         [studentId]
-      );      
+      );
 
       insertedStudents.push(newStudent);
     }
 
     await client.query('COMMIT');
-    console.log('Students added to all tables');
-    res.status(201).json(insertedStudents);
+    return res.status(201).json({
+      created: insertedStudents,
+      skippedDuplicates,
+      skippedInvalid,
+    });
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('Error in bulk insert:', err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: 'Internal server error' });
   } finally {
     client.release();
   }
 });
 
 app.post('/student', async (req, res) => {
-  const { firstname, lastname, classcode } = req.body;
+  const firstName = (req.body.firstname ?? '').trim();
+  const lastName  = (req.body.lastname ?? '').trim();
+  const classCode = (req.body.classcode ?? '').trim();
 
-  if (!firstname || !lastname || !classcode) {
+  if (!firstName || !lastName || !classCode) {
     return res.status(400).json({ error: 'Missing required student info' });
   }
 
+  const client = await pool.connect();
   try {
-    // 1. Insert into students table
-    const studentResult = await pool.query(
-      `INSERT INTO students (first_name, last_name, class_code)
-       VALUES ($1, $2, $3)
-       RETURNING id`,
-      [firstname, lastname, classcode]
+    await client.query('BEGIN');
+
+    const ins = await client.query(
+      `
+      INSERT INTO students (first_name, last_name, class_code)
+      VALUES ($1,$2,$3)
+      ON CONFLICT DO NOTHING
+      RETURNING id, first_name AS "firstName", last_name AS "lastName", class_code AS "classCode"
+      `,
+      [firstName, lastName, classCode]
     );
 
-    const studentId = studentResult.rows[0].id;
+    if (ins.rowCount === 0) {
+      // Duplicate detected by DB uniqueness
+      await client.query('ROLLBACK');
+      return res.status(409).json({ error: 'Student already exists in this class' });
+    }
 
-    // 2. Insert into test_results table
-    await pool.query(
+    const student = ins.rows[0];
+    const studentId = student.id;
+
+    await client.query(
       `INSERT INTO test_results (student_id, test1_score, test2_score, test3_score, test4_score, test5_score)
-      VALUES ($1, 0, 0, 0, 0, 0)`,
-      [studentId]
-    );  
-
-    // 3. Insert into progress_tracker table
-    await pool.query(
-      `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete, module5_complete)
-      VALUES ($1, false, false, false, false, false)`,
+       VALUES ($1, 0, 0, 0, 0, 0)`,
       [studentId]
     );
-    res.status(201).json({ message: 'Student created successfully', studentId });
 
+    await client.query(
+      `INSERT INTO progress_tracker (student_id, module1_complete, module2_complete, module3_complete, module4_complete, module5_complete)
+       VALUES ($1, false, false, false, false, false)`,
+      [studentId]
+    );
+
+    await client.query('COMMIT');
+    return res.status(201).json(student);
   } catch (err) {
+    await client.query('ROLLBACK');
     console.error('Error creating student:', err);
-    res.status(500).json({ error: 'Internal server error' });
+
+    // Extra safety if you created a UNIQUE *constraint* instead of the index
+    // (or any other uniqueness violation bubbles up)
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'Student already exists in this class' });
+    }
+    return res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    client.release();
   }
 });
 

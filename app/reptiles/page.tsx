@@ -231,7 +231,7 @@ export default function ReptileGamePage() {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center bg-green-100 overflow-y-auto py-8">
-      <h1 className="text-4xl font-bold mb-4">Reptile & Amphibian Adventure</h1>
+      <h1 className="text-4xl font-bold mb-4 text-blue-600">Reptile & Amphibian Adventure</h1>
 
       <div className="flex flex-col items-center mb-4">
         <p className="text-xl text-red-600">Score: {score}</p>

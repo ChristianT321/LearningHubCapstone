@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -42,7 +42,7 @@ function drawFromDeck(deck: Deck, poolSize: number, n: number): { picked: number
   return { picked, deck: { order, cursor } }
 }
 
-// ---------- Question Pools (your data) ----------
+// ---------- Question Pools ----------
 const ground: QA[] = [
   { question: 'What do black bears do in preparation for winter?', choices: ['Shed all their fur', 'Sleep extra hours', 'Forage and build fat reserves', 'Migrate south'], answer: 'Forage and build fat reserves' },
   { question: 'When do black bears typically emerge from their dens?', choices: ['Late fall', 'Spring', 'Summer', 'Winter'], answer: 'Spring' },
@@ -61,7 +61,7 @@ const water: QA[] = [
   { question: 'Which animal relies on salmon during autumn?', choices: ['Owls', 'Bears', 'Sharks', 'Deer'], answer: 'Bears' },
   { question: 'Where are salmon born?', choices: ['Ocean floor', 'Freshwater rivers', 'Rock pools', 'Mountain peaks'], answer: 'Freshwater rivers' },
   { question: 'What does the callout say about whitefish?', choices: ['They sleep in summer', 'They freeze in lakes', 'They survive where few other fish can', 'They fly over lakes'], answer: 'They survive where few other fish can' },
-  { question: 'How do trout catch their food?', choices: ['Surprise strikes', 'Leaping dances', 'Making traps', 'Calling loudly'], answer: 'Suprise strikes' },
+  { question: 'How do trout catch their food?', choices: ['Surprise strikes', 'Leaping dances', 'Making traps', 'Calling loudly'], answer: 'Surprise strikes' },
   { question: 'Where are whitefish often caught?', choices: ['In the sky', 'Near lake bottoms', 'On the shore', 'In coral reefs'], answer: 'Near lake bottoms' },
   { question: 'What makes lake trout powerful swimmers?', choices: ['Wings', 'Muscular bodies', 'Big tails', 'Helium fins'], answer: 'Muscular bodies' },
   { question: 'What role do lake trout play in their habitat?', choices: ['Clean the lake', 'Top predator', 'Nest protector', 'Egg carrier'], answer: 'Top predator' },
@@ -116,21 +116,31 @@ function buildQuizFromDecks(decks: DeckMap): { questions: QAMeta[]; decks: DeckM
 
 export default function QuizClient() {
   const router = useRouter()
-  const initialDecks: DeckMap = {
-    ground: makeDeck(SECTION_POOLS.ground.length),
-    water: makeDeck(SECTION_POOLS.water.length),
-    birds: makeDeck(SECTION_POOLS.birds.length),
-    trees: makeDeck(SECTION_POOLS.trees.length),
-  }
-  const first = buildQuizFromDecks(initialDecks)
 
-  const [decks, setDecks] = useState<DeckMap>(first.decks)
-  const [questions, setQuestions] = useState<QAMeta[]>(first.questions)
+  // IMPORTANT: no randomness in initial render
+  const [decks, setDecks] = useState<DeckMap | null>(null)
+  const [questions, setQuestions] = useState<QAMeta[] | null>(null)
   const [answers, setAnswers] = useState<Record<number, string>>({})
 
-  const score = Object.entries(answers).filter(([i, a]) => a === questions[+i].answer).length
-  const allAnswered = Object.keys(answers).length === questions.length
-  const passed = score >= 9 // 9/12
+  // Do all randomization AFTER mount
+  useEffect(() => {
+    const initialDecks: DeckMap = {
+      ground: makeDeck(SECTION_POOLS.ground.length),
+      water: makeDeck(SECTION_POOLS.water.length),
+      birds: makeDeck(SECTION_POOLS.birds.length),
+      trees: makeDeck(SECTION_POOLS.trees.length),
+    }
+    const first = buildQuizFromDecks(initialDecks)
+    setDecks(first.decks)
+    setQuestions(first.questions)
+  }, [])
+
+  const score = questions
+    ? Object.entries(answers).filter(([i, a]) => a === questions[+i].answer).length
+    : 0
+
+  const allAnswered = questions ? Object.keys(answers).length === questions.length : false
+  const passed = questions ? score >= 9 : false // 9/12
 
   const handleAnswer = (qIndex: number, choice: string) => {
     if (answers[qIndex]) return
@@ -138,10 +148,32 @@ export default function QuizClient() {
   }
 
   const handleReset = () => {
+    if (!decks) return
     const built = buildQuizFromDecks(decks) // continue cycling through unused first
     setDecks(built.decks)
     setQuestions(built.questions)
     setAnswers({})
+  }
+
+  // Stable initial markup for SSR to avoid hydration mismatch
+  if (!questions) {
+    return (
+      <main className="relative min-h-screen w-full flex items-center justify-center text-center p-4">
+        <div className="fixed inset-0 z-0">
+          <Image
+            src="/forest background.png"
+            alt="Forest Background"
+            fill
+            priority
+            className="object-cover"
+            style={{ objectPosition: 'center' }}
+          />
+        </div>
+        <div className="relative z-10 bg-white/90 rounded-3xl shadow-2xl px-8 py-10">
+          <p className="text-lg font-semibold text-gray-700">Loading quiz…</p>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -182,7 +214,7 @@ export default function QuizClient() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm-grid-cols-2 sm:grid-cols-2 gap-4">
                 {q.choices.map(choice => {
                   const isSelected = answers[index] === choice
                   const isCorrect = choice === q.answer
@@ -227,7 +259,7 @@ export default function QuizClient() {
             Final Score: {score} / {questions.length}
           </p>
 
-        <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={handleReset}
               className="bg-green-700 hover:bg-green-950 text-white px-6 py-3 rounded-xl shadow-md transition"
@@ -236,14 +268,14 @@ export default function QuizClient() {
             </button>
           </div>
 
-           {allAnswered && passed && (
-          <button
-            onClick={() => router.push('/certificate')}
-            className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition mt-4 "
-          >
-            Continue
-          </button>
-        )}
+          {allAnswered && passed && (
+            <button
+              onClick={() => router.push('/reptiles')}
+              className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow transition mt-4"
+            >
+              Continue
+            </button>
+          )}
 
           {allAnswered && (
             <p className={`mt-6 font-semibold text-lg ${passed ? 'text-green-700' : 'text-red-600'}`}>
