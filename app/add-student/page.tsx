@@ -124,17 +124,18 @@ export default function AddStudentPage() {
   }
 
   const handleSaveAll = async () => {
-    if (students.length === 0) {
-      alert('No students to save')
-      return
-    }
+  if (students.length === 0) {
+    alert('No students to save')
+    return
+  }
 
-    try {
-      const studentsToSave = students.map(student => ({
+  try {
+    const studentsToSave = students.map(student => ({
+        // send camelCase — backend also accepts your lowercase variant now
         firstName: (student.firstName ?? '').trim(),
-        lastName: (student.lastName ?? '').trim(),
-        classCode: student.classCode,
-        id: student.id
+        lastName:  (student.lastName  ?? '').trim(),
+        classCode: classCode,
+        id: student.id,
       }))
 
       const response = await fetch('http://localhost:3001/students/bulk', {
@@ -142,19 +143,39 @@ export default function AddStudentPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ students: studentsToSave }),
       })
-      
-      if (!response.ok) throw new Error('Bulk save failed')
-      
-      const savedStudents = await response.json()
-      const normalized = normalizeArray(savedStudents)
-      setStudents(normalized)
-      setNewStudentsCount(normalized.length)
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}))
+        throw new Error(err.error || 'Bulk save failed')
+      }
+
+      const data = await response.json()
+
+      // derive counts robustly
+      const createdCount =
+        (data?.counts?.created ?? (Array.isArray(data?.created) ? data.created.length : 0)) || 0
+      const duplicateCount =
+        (data?.counts?.duplicates ?? (Array.isArray(data?.skippedDuplicates) ? data.skippedDuplicates.length : 0)) || 0
+      const invalidCount =
+        (data?.counts?.invalid ?? (Array.isArray(data?.skippedInvalid) ? data.skippedInvalid.length : 0)) || 0
+
+      setNewStudentsCount(createdCount)
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 3000)
 
-      normalized.forEach((_student, index: number) => {
-        showSaveFeedback(index)
-      })
+      // Optionally log details for you
+      if (invalidCount > 0) console.warn('Skipped invalid:', data.skippedInvalid)
+      if (duplicateCount > 0) console.warn('Skipped duplicates:', data.skippedDuplicates)
+
+      // REFRESH roster so cards pick up IDs for new inserts
+      const refresh = await fetch(`http://localhost:3001/students/${classCode}`)
+      if (refresh.ok) {
+        const freshStudents = await refresh.json()
+        setStudents(normalizeArray(freshStudents))
+      }
+
+      // show quick “saved” flashes on all cards currently visible
+      students.forEach((_s, i) => showSaveFeedback(i))
     } catch (err) {
       console.error('Error saving all students:', err)
       alert('Failed to save all students')
@@ -233,12 +254,23 @@ export default function AddStudentPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ students: filteredNewStudents }),
         })
-        
-        if (!response.ok) throw new Error('Bulk upload failed')
-        
-        const insertedStudents = await response.json()
-        setStudents(prev => [...prev, ...normalizeArray(insertedStudents)])
-        setNewStudentsCount(insertedStudents.length)
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}))
+          throw new Error(err.error || 'Bulk upload failed')
+        }
+
+        const data = await response.json()
+
+        // Use backend shape
+        const createdArray = Array.isArray(data?.created) ? data.created : []
+        const createdCount = data?.counts?.created ?? createdArray.length
+
+        // Normalize only the created ones and append
+        const normalizedCreated = normalizeArray(createdArray)
+        setStudents(prev => [...prev, ...normalizedCreated])
+
+        setNewStudentsCount(createdCount)
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 3000)
       } catch (err) {
